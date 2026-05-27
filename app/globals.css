@@ -838,3 +838,61 @@ button, input, select { font: inherit; }
   .admin-toolbar { grid-template-columns: 1fr; }
   .admin-form-grid { grid-template-columns: 1fr; }
 }
+
+/* Stage 4: simple admin auth */
+.auth-page {
+  min-height: calc(100vh - 70px);
+  display: grid;
+  place-items: center;
+  padding: 48px 16px;
+}
+.auth-card {
+  width: min(520px, 100%);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+.auth-brand { margin-bottom: 24px; }
+.auth-heading h1 {
+  margin: 6px 0 10px;
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+.auth-heading p { color: var(--muted); line-height: 1.55; }
+.auth-form { display: grid; gap: 14px; margin-top: 22px; }
+.auth-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
+}
+.auth-form input {
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: var(--text);
+  outline: none;
+}
+.auth-form input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(29,78,216,.12);
+}
+.auth-alert {
+  margin-top: 16px;
+  border-radius: 16px;
+  padding: 12px 14px;
+  font-weight: 900;
+}
+.auth-alert.error { background: var(--danger-soft); color: var(--danger); }
+.auth-alert.success { background: var(--success-soft); color: var(--success); }
+.auth-note {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.auth-note b { color: var(--text); }
