@@ -39,17 +39,22 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
     where.status = status as PropertyStatus;
   }
 
-  const [properties, total, active, cancelled, archived] = await Promise.all([
+  const [properties, total, active, cancelled, archived, withoutImages, withoutDocuments] = await Promise.all([
     prisma.property.findMany({
       where,
-      include: { images: { orderBy: [{ isMain: "desc" }, { sortOrder: "asc" }], take: 1 } },
+      include: {
+        images: { orderBy: [{ isMain: "desc" }, { sortOrder: "asc" }], take: 1 },
+        _count: { select: { images: true, documents: true } }
+      },
       orderBy: [{ updatedAt: "desc" }],
       take: 150
     }),
     prisma.property.count(),
     prisma.property.count({ where: { status: "ACTIVE" } }),
     prisma.property.count({ where: { status: "CANCELLED" } }),
-    prisma.property.count({ where: { status: "ARCHIVED" } })
+    prisma.property.count({ where: { status: "ARCHIVED" } }),
+    prisma.property.count({ where: { images: { none: {} } } }),
+    prisma.property.count({ where: { documents: { none: {} } } })
   ]);
 
   return (
@@ -59,21 +64,24 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
           <p className="hero-kicker">Admin MVP · ручное управление объектами</p>
           <h1>Админ-панель объектов</h1>
           <p>
-            Здесь можно создавать, редактировать и удалять объекты напрямую в базе. Парсеры и AI пока не подключены.
+            Здесь можно создавать, редактировать и удалять объекты напрямую в базе. Теперь форма объекта также управляет документами.
           </p>
         </div>
         <div className="admin-actions-inline">
           <Link href="/admin/import" className="btn btn-soft">Импорт JSON/CSV</Link>
+          <Link href="/admin/import/logs" className="btn btn-soft">Логи импорта</Link>
           <Link href="/admin/properties/new" className="btn btn-primary">+ Добавить объект</Link>
         </div>
       </section>
 
       <section className="container page-section">
-        <div className="admin-stats">
+        <div className="admin-stats admin-stats-wide">
           <div><span>Всего</span><b>{formatNumber(total)}</b></div>
           <div><span>Активные</span><b>{formatNumber(active)}</b></div>
           <div><span>Отменённые</span><b>{formatNumber(cancelled)}</b></div>
           <div><span>Архив</span><b>{formatNumber(archived)}</b></div>
+          <div><span>Без фото</span><b>{formatNumber(withoutImages)}</b></div>
+          <div><span>Без документов</span><b>{formatNumber(withoutDocuments)}</b></div>
         </div>
 
         <form className="admin-toolbar" action="/admin">
@@ -99,6 +107,7 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
                 <th>Суд / дело</th>
                 <th>Торги</th>
                 <th>Verkehrswert</th>
+                <th>Файлы</th>
                 <th>Статус</th>
                 <th>Действия</th>
               </tr>
@@ -125,6 +134,12 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
                     <small>{property.auctionTime ?? "—"}</small>
                   </td>
                   <td>{formatEuro(property.marketValue)}</td>
+                  <td>
+                    <div className="admin-file-counts">
+                      <span>{property._count.images} фото</span>
+                      <span>{property._count.documents} док.</span>
+                    </div>
+                  </td>
                   <td><span className={`admin-status ${property.status.toLowerCase()}`}>{property.status}</span></td>
                   <td>
                     <div className="admin-row-actions">

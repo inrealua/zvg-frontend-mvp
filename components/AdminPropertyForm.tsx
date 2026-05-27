@@ -9,6 +9,12 @@ type AdminImage = {
   url: string;
 };
 
+type AdminDocument = {
+  url: string;
+  filename: string;
+  documentType: string;
+};
+
 type AdminPropertyFormValue = {
   aktenzeichen: string;
   court: string;
@@ -43,6 +49,7 @@ type AdminPropertyFormValue = {
   source: string;
   sourceUrl: string | null;
   images: AdminImage[];
+  documents?: AdminDocument[];
 };
 
 type Props = {
@@ -56,8 +63,19 @@ const DEFAULT_IMAGES = [
   "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80"
 ].join("\n");
 
+function documentTextareaValue(documents: AdminDocument[] | undefined, documentType: string) {
+  return (documents ?? [])
+    .filter((document) => document.documentType === documentType)
+    .map((document) => `${document.url} | ${document.filename}`)
+    .join("\n");
+}
+
 export function AdminPropertyForm({ action, submitLabel, property }: Props) {
   const imageUrls = property?.images.map((image) => image.url).join("\n") ?? DEFAULT_IMAGES;
+  const gutachtenUrls = documentTextareaValue(property?.documents, "GUTACHTEN");
+  const bekanntmachungUrls = documentTextareaValue(property?.documents, "BEKANNTMACHUNG");
+  const exposeUrls = documentTextareaValue(property?.documents, "EXPOSE");
+  const otherDocumentUrls = documentTextareaValue(property?.documents, "OTHER");
 
   return (
     <form action={action} className="admin-form">
@@ -221,6 +239,31 @@ export function AdminPropertyForm({ action, submitLabel, property }: Props) {
           <label className="admin-wide">
             Фото, по одному URL в строке. Первое фото станет главным.
             <textarea name="imageUrls" rows={5} defaultValue={imageUrls} />
+          </label>
+        </div>
+      </section>
+
+      <section className="admin-form-section">
+        <h2>Документы объекта</h2>
+        <p className="admin-help-text">
+          Один документ — одна строка. Можно писать просто URL или формат: <code>URL | название_файла.pdf</code>.
+        </p>
+        <div className="admin-form-grid">
+          <label className="admin-wide">
+            Gutachten / Verkehrswertgutachten
+            <textarea name="gutachtenUrls" rows={4} defaultValue={gutachtenUrls} placeholder="https://example.com/gutachten.pdf | Gutachten.pdf" />
+          </label>
+          <label className="admin-wide">
+            Amtliche Bekanntmachung
+            <textarea name="bekanntmachungUrls" rows={4} defaultValue={bekanntmachungUrls} placeholder="https://example.com/bekanntmachung.pdf | Bekanntmachung.pdf" />
+          </label>
+          <label className="admin-wide">
+            Exposé
+            <textarea name="exposeUrls" rows={3} defaultValue={exposeUrls} />
+          </label>
+          <label className="admin-wide">
+            Прочие документы
+            <textarea name="otherDocumentUrls" rows={3} defaultValue={otherDocumentUrls} />
           </label>
         </div>
       </section>

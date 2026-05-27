@@ -1780,3 +1780,52 @@ button, input, select { font: inherit; }
     transform: none;
   }
 }
+
+
+/* Stage 12: admin document management */
+.admin-help-text {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.admin-help-text code {
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.45rem;
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.admin-stats-wide {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.admin-file-counts {
+  display: grid;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.admin-file-counts span {
+  display: inline-flex;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  background: #f8fafc;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+@media (max-width: 1100px) {
+  .admin-stats-wide {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-stats-wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

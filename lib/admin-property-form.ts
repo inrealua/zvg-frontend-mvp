@@ -1,4 +1,4 @@
-import { OccupancyStatus, PropertyStatus, PropertyTypeGroup } from "@prisma/client";
+import { DocumentType, OccupancyStatus, PropertyStatus, PropertyTypeGroup } from "@prisma/client";
 
 export const PROPERTY_STATUS_OPTIONS = [
   ["ACTIVE", "Активен"],
@@ -79,6 +79,57 @@ export function parseImageUrls(formData: FormData) {
       isMain: index === 0,
       sortOrder: index
     }));
+}
+
+type ParsedDocument = {
+  url: string;
+  filename: string;
+  documentType: DocumentType;
+  sourceUrl: string | null;
+};
+
+function filenameFromUrl(url: string, fallbackPrefix: string, index: number) {
+  try {
+    const parsed = new URL(url);
+    const pathnameName = parsed.pathname.split("/").filter(Boolean).pop();
+    if (pathnameName) return decodeURIComponent(pathnameName).slice(0, 180);
+  } catch {
+    // оставляем fallback ниже
+  }
+
+  return `${fallbackPrefix}_${index + 1}.pdf`;
+}
+
+function parseDocumentLines(raw: string, documentType: DocumentType, fallbackPrefix: string): ParsedDocument[] {
+  return raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line, index) => {
+      const [urlPart, filenamePart] = line.split("|").map((part) => part.trim());
+      const url = urlPart;
+      const filename = filenamePart || filenameFromUrl(url, fallbackPrefix, index);
+
+      return {
+        url,
+        filename,
+        documentType,
+        sourceUrl: url
+      };
+    });
+}
+
+export function parseDocumentUrls(formData: FormData): ParsedDocument[] {
+  const gutachten = parseDocumentLines(str(formData, "gutachtenUrls"), DocumentType.GUTACHTEN, "gutachten");
+  const bekanntmachung = parseDocumentLines(
+    str(formData, "bekanntmachungUrls"),
+    DocumentType.BEKANNTMACHUNG,
+    "bekanntmachung"
+  );
+  const expose = parseDocumentLines(str(formData, "exposeUrls"), DocumentType.EXPOSE, "expose");
+  const other = parseDocumentLines(str(formData, "otherDocumentUrls"), DocumentType.OTHER, "dokument");
+
+  return [...gutachten, ...bekanntmachung, ...expose, ...other];
 }
 
 export function propertyDataFromForm(formData: FormData) {

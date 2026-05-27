@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { AdminPropertyForm } from "@/components/AdminPropertyForm";
 import { prisma } from "@/lib/prisma";
-import { parseImageUrls, propertyDataFromForm } from "@/lib/admin-property-form";
+import { parseDocumentUrls, parseImageUrls, propertyDataFromForm } from "@/lib/admin-property-form";
 
 type EditPageParams = Promise<{ id: string }>;
 
@@ -12,7 +12,10 @@ export default async function EditPropertyPage({ params }: { params: EditPagePar
   const { id } = await params;
   const property = await prisma.property.findUnique({
     where: { id },
-    include: { images: { orderBy: [{ isMain: "desc" }, { sortOrder: "asc" }] } }
+    include: {
+      images: { orderBy: [{ isMain: "desc" }, { sortOrder: "asc" }] },
+      documents: { orderBy: [{ documentType: "asc" }, { filename: "asc" }] }
+    }
   });
 
   if (!property) notFound();
@@ -21,13 +24,22 @@ export default async function EditPropertyPage({ params }: { params: EditPagePar
     "use server";
     const data = propertyDataFromForm(formData);
     const images = parseImageUrls(formData);
+    const documents = parseDocumentUrls(formData);
 
     await prisma.$transaction(async (tx) => {
       await tx.property.update({ where: { id }, data });
+
       await tx.propertyImage.deleteMany({ where: { propertyId: id } });
       if (images.length > 0) {
         await tx.propertyImage.createMany({
           data: images.map((image) => ({ ...image, propertyId: id }))
+        });
+      }
+
+      await tx.propertyDocument.deleteMany({ where: { propertyId: id } });
+      if (documents.length > 0) {
+        await tx.propertyDocument.createMany({
+          data: documents.map((document) => ({ ...document, propertyId: id }))
         });
       }
     });
