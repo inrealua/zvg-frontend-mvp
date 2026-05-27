@@ -151,6 +151,8 @@ export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterC
   addText("state", "Земля");
   addText("city", "Город");
   addText("postalCode", "PLZ");
+  addText("location", "Umkreis-Ort/PLZ");
+  addNumber("radiusKm", "Radius", (value) => `${value} км`);
   addText("court", "Суд");
 
   const typeGroup = asString(params.typeGroup);

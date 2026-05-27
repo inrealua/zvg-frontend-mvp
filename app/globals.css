@@ -1277,3 +1277,17 @@ button, input, select { font: inherit; }
     grid-template-columns: 1fr;
   }
 }
+
+.notice-bar {
+  margin: 14px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #f8fafc;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.notice-bar b {
+  color: var(--text);
+}

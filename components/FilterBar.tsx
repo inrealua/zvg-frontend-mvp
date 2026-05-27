@@ -11,6 +11,7 @@ import {
   STATUS_OPTIONS,
   WERTGRENZEN_OPTIONS
 } from "@/lib/filter-options";
+import { RADIUS_OPTIONS } from "@/lib/geo";
 
 type FilterBarProps = {
   states: string[];
@@ -79,6 +80,18 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
         <div className="field">
           <label htmlFor="postalCode">PLZ</label>
           <input id="postalCode" name="postalCode" placeholder="например 091" defaultValue={getInitialValue(searchParams, "postalCode")} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="location">Ort/PLZ für Radius</label>
+          <input id="location" name="location" placeholder="Chemnitz или 09111" defaultValue={getInitialValue(searchParams, "location")} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="radiusKm">Umkreis</label>
+          <select id="radiusKm" name="radiusKm" defaultValue={getInitialValue(searchParams, "radiusKm")}>
+            {RADIUS_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
         </div>
 
         <div className="field field-wide">
