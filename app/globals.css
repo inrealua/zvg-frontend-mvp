@@ -2038,3 +2038,120 @@ button, input, select { font: inherit; }
     align-items: flex-start;
   }
 }
+
+/* Stage 14: admin quality center */
+.quality-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.quality-issue-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.quality-issue-card {
+  display: block;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1rem;
+  color: inherit;
+  text-decoration: none;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  min-height: 145px;
+}
+
+.quality-issue-card span {
+  display: block;
+  color: var(--muted);
+  font-weight: 900;
+  font-size: 0.85rem;
+}
+
+.quality-issue-card b {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 1.8rem;
+  color: var(--text);
+}
+
+.quality-issue-card small {
+  display: block;
+  margin-top: 0.55rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.quality-issue-card.danger {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.quality-issue-card.warning {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.quality-issue-card.neutral {
+  background: #f8fafc;
+}
+
+.quality-issue-card.active {
+  outline: 3px solid rgba(37, 99, 235, 0.25);
+  border-color: var(--primary);
+}
+
+.quality-table td small {
+  display: block;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+.quality-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.quality-badges span {
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  font-weight: 900;
+  font-size: 0.78rem;
+  border: 1px solid var(--border);
+}
+
+.quality-badges .ok {
+  color: #166534;
+  background: #dcfce7;
+  border-color: #bbf7d0;
+}
+
+.quality-badges .bad {
+  color: #991b1b;
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+.quality-note {
+  margin: -0.25rem 0 1rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 1200px) {
+  .quality-issue-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .quality-summary,
+  .quality-issue-grid {
+    grid-template-columns: 1fr;
+  }
+}
