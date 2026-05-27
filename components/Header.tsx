@@ -20,6 +20,7 @@ export async function Header() {
         <nav className="main-nav" aria-label="Главная навигация">
           <Link href="/">Объекты</Link>
           <a href="/#map">Карта</a>
+          <Link href="/ueber-uns">О проекте</Link>
           {currentUser ? (
             <>
               <Link href="/cabinet">Кабинет</Link>
@@ -37,6 +38,7 @@ export async function Header() {
               <Link href="/admin/quality">Quality</Link>
               <Link href="/admin/export">Export</Link>
               <Link href="/admin/duplicates">Duplicates</Link>
+              <Link href="/admin/bulk">Bulk</Link>
               <Link href="/admin">Admin</Link>
               <Link href="/admin/import">Import</Link>
             </>

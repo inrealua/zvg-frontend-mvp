@@ -1,10 +1,60 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "ZVGScout — судебные торги Германии",
-  description: "Поиск объектов судебных торгов Германии: фильтры, карта, карточки объектов и данные из MySQL."
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "ZVGScout — судебные торги Германии",
+    template: "%s | ZVGScout"
+  },
+  description:
+    "Поиск объектов судебных торгов Германии: фильтры, карта, карточки объектов, избранное, импорт и администрирование.",
+  applicationName: "ZVGScout",
+  keywords: [
+    "ZVG",
+    "Zwangsversteigerung",
+    "Immobilien",
+    "Gerichtsauktion",
+    "Versteigerung",
+    "Deutschland"
+  ],
+  authors: [{ name: "ZVGScout" }],
+  creator: "ZVGScout",
+  publisher: "ZVGScout",
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: siteUrl,
+    siteName: "ZVGScout",
+    title: "ZVGScout — судебные торги Германии",
+    description:
+      "Карта, фильтры и карточки объектов судебных торгов Германии на базе Next.js и MySQL."
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ZVGScout — судебные торги Германии",
+    description: "Поиск ZVG-объектов по карте, фильтрам, суду, региону, цене и дате торгов."
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1
+    }
+  }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0f172a"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

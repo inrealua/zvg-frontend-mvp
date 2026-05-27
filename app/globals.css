@@ -2446,3 +2446,120 @@ button, input, select { font: inherit; }
     grid-column: 1 / -1;
   }
 }
+
+/* Stage 19: SEO/static pages/footer */
+.site-footer {
+  margin-top: 4rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.22);
+  background: #0f172a;
+  color: #cbd5e1;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.8fr);
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.footer-brand {
+  display: inline-flex;
+  margin-bottom: 0.6rem;
+  color: #ffffff;
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.footer-inner p {
+  margin: 0;
+  max-width: 720px;
+  color: #cbd5e1;
+  line-height: 1.65;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-end;
+  gap: 0.75rem 1rem;
+}
+
+.footer-links a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.footer-copy {
+  grid-column: 1 / -1;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.14);
+  font-size: 0.9rem;
+}
+
+.static-page {
+  padding: 2rem 0 0;
+}
+
+.static-hero {
+  margin-bottom: 1.5rem;
+  padding: 2rem;
+}
+
+.static-hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: -0.04em;
+}
+
+.static-hero p {
+  max-width: 850px;
+  color: #475569;
+  line-height: 1.75;
+}
+
+.static-content {
+  padding: 2rem;
+  line-height: 1.75;
+}
+
+.static-content h2 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+}
+
+.static-content h2:first-child {
+  margin-top: 0;
+}
+
+.static-content p,
+.static-content li {
+  color: #334155;
+}
+
+.static-content ul {
+  padding-left: 1.2rem;
+}
+
+@media (max-width: 780px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-links {
+    justify-content: flex-start;
+  }
+
+  .static-hero,
+  .static-content {
+    padding: 1.25rem;
+  }
+}

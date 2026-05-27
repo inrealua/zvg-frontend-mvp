@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FavoriteButton } from "@/components/FavoriteButton";
@@ -22,6 +23,57 @@ export const dynamic = "force-dynamic";
 type PropertyPageProps = {
   params: Promise<{ id: string }>;
 };
+
+
+export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const property = await prisma.property.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      title: true,
+      address: true,
+      city: true,
+      state: true,
+      propertyType: true,
+      marketValue: true,
+      images: {
+        where: { isMain: true },
+        select: { url: true },
+        take: 1
+      }
+    }
+  });
+
+  if (!property) {
+    return {
+      title: "Objekt nicht gefunden",
+      robots: { index: false, follow: false }
+    };
+  }
+
+  const priceText = property.marketValue ? ` · Verkehrswert ${property.marketValue.toLocaleString("de-DE")} €` : "";
+  const title = `${property.propertyType} in ${property.city}`;
+  const description = `${property.title} · ${property.address}${priceText}`;
+  const imageUrl = property.images[0]?.url;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      images: imageUrl ? [{ url: imageUrl }] : undefined
+    },
+    twitter: {
+      card: imageUrl ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : undefined
+    }
+  };
+}
 
 function yesNo(value: boolean): string {
   return value ? "Да" : "Нет";
