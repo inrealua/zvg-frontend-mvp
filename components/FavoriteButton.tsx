@@ -1,0 +1,42 @@
+"use client";
+
+import { useState } from "react";
+
+export function FavoriteButton({ propertyId, initialIsFavorite = false, compact = false }: { propertyId: string; initialIsFavorite?: boolean; compact?: boolean }) {
+  const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function toggleFavorite() {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const response = await fetch(`/api/favorites/${propertyId}`, {
+      method: isFavorite ? "DELETE" : "POST"
+    });
+
+    if (response.status === 401) {
+      const next = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `/login?next=${next}`;
+      return;
+    }
+
+    if (response.ok) {
+      setIsFavorite(!isFavorite);
+    }
+
+    setIsLoading(false);
+  }
+
+  return (
+    <button
+      type="button"
+      className={compact ? "favorite-pill compact" : "favorite-pill"}
+      onClick={toggleFavorite}
+      disabled={isLoading}
+      aria-pressed={isFavorite}
+    >
+      <span>{isFavorite ? "♥" : "♡"}</span>
+      {compact ? null : <b>{isFavorite ? "В избранном" : "В избранное"}</b>}
+    </button>
+  );
+}

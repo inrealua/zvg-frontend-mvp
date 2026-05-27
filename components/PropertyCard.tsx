@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { formatArea, formatDateTime, formatEuro, shortAddress, statusClass, translateGroup, translateOccupancy, translateStatus } from "@/lib/format";
 
 type PropertyCardImage = {
@@ -30,7 +31,7 @@ export type PropertyCardData = {
   images: PropertyCardImage[];
 };
 
-export function PropertyCard({ property }: { property: PropertyCardData }) {
+export function PropertyCard({ property, isFavorite = false }: { property: PropertyCardData; isFavorite?: boolean }) {
   const mainImage = property.images[0];
 
   return (
@@ -78,7 +79,10 @@ export function PropertyCard({ property }: { property: PropertyCardData }) {
 
         <div className="card-footer">
           <span className="meta">Quelle: Testdaten / DB</span>
-          <Link className="btn btn-soft" href={`/properties/${property.id}`}>Details ansehen</Link>
+          <div className="card-actions">
+            <FavoriteButton propertyId={property.id} initialIsFavorite={isFavorite} compact />
+            <Link className="btn btn-soft" href={`/properties/${property.id}`}>Details ansehen</Link>
+          </div>
         </div>
       </div>
     </article>

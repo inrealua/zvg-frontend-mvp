@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { PropertyDetailMap } from "@/components/PropertyDetailMap";
 import { prisma } from "@/lib/prisma";
 import { formatArea, formatDateTime, formatEuro, shortAddress, statusClass, translateGroup, translateOccupancy, translateStatus } from "@/lib/format";
+import { getCurrentUser } from "@/lib/user-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,10 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
 
   if (!property) notFound();
 
+  const currentUser = await getCurrentUser();
+  const favorite = currentUser
+    ? await prisma.favorite.findUnique({ where: { userId_propertyId: { userId: currentUser.id, propertyId: property.id } } })
+    : null;
   const mainImage = property.images[0];
 
   return (
@@ -43,6 +49,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             <span className={`status-badge ${statusClass(property.status)}`}>{translateStatus(property.status)}</span>
             <b>{formatEuro(property.marketValue)}</b>
             <span>Verkehrswert</span>
+            <FavoriteButton propertyId={property.id} initialIsFavorite={Boolean(favorite)} />
           </div>
         </section>
 

@@ -3,11 +3,31 @@ import { EmptyState } from "@/components/EmptyState";
 import { FilterBar } from "@/components/FilterBar";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyMap } from "@/components/PropertyMap";
+import { SaveSearchButton } from "@/components/SaveSearchButton";
 import { prisma } from "@/lib/prisma";
 import { buildActiveFilterChips, buildPropertyOrderBy, buildPropertyWhere } from "@/lib/search-params";
 import { formatEuro, formatNumber } from "@/lib/format";
+import { getCurrentUser } from "@/lib/user-auth";
 
 type HomeSearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+function buildCurrentFiltersUrl(params: Record<string, string | string[] | undefined>): string {
+  const urlParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (item) urlParams.append(key, item);
+      });
+      return;
+    }
+
+    if (value) urlParams.set(key, value);
+  });
+
+  const query = urlParams.toString();
+  return query ? `/?${query}` : "/";
+}
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +36,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
   const where = buildPropertyWhere(params);
   const orderBy = buildPropertyOrderBy(params);
   const activeChips = buildActiveFilterChips(params);
+  const currentUser = await getCurrentUser();
 
   const [properties, statesRaw, courtsRaw, citiesRaw, totalCount, allCount, aggregate] = await Promise.all([
     prisma.property.findMany({
@@ -61,6 +82,16 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
     imageUrl: property.images[0]?.url ?? null
   }));
 
+  const favoriteRows = currentUser
+    ? await prisma.favorite.findMany({
+        where: { userId: currentUser.id, propertyId: { in: properties.map((property) => property.id) } },
+        select: { propertyId: true }
+      })
+    : [];
+  const favoriteIds = new Set(favoriteRows.map((favorite) => favorite.propertyId));
+  const filtersUrl = buildCurrentFiltersUrl(params);
+  const searchSummary = activeChips.length > 0 ? activeChips.map((chip) => chip.label).join(" · ") : "Все объекты";
+
   return (
     <main>
       <section className="hero">
@@ -101,13 +132,14 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
                 <strong>Список объектов</strong>
                 <span>Сортировка и фильтры работают через URL, поэтому ссылки можно сохранять.</span>
               </div>
+              <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />
             </div>
 
             {properties.length === 0 ? (
               <EmptyState />
             ) : (
               <div className="card-list">
-                {properties.map((property) => <PropertyCard key={property.id} property={property} />)}
+                {properties.map((property) => <PropertyCard key={property.id} property={property} isFavorite={favoriteIds.has(property.id)} />)}
               </div>
             )}
           </div>

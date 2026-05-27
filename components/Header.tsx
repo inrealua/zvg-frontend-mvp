@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getCurrentUser } from "@/lib/user-auth";
 
 export async function Header() {
-  const isAdmin = await isAdminAuthenticated();
+  const [isAdmin, currentUser] = await Promise.all([
+    isAdminAuthenticated(),
+    getCurrentUser()
+  ]);
 
   return (
     <header className="site-header">
@@ -16,15 +20,18 @@ export async function Header() {
         <nav className="main-nav" aria-label="Главная навигация">
           <Link href="/">Объекты</Link>
           <a href="/#map">Карта</a>
-          {isAdmin ? (
+          {currentUser ? (
             <>
-              <Link href="/admin">Admin</Link>
-              <Link href="/admin/logout">Выйти</Link>
+              <Link href="/cabinet">Кабинет</Link>
+              <Link href="/logout">Выйти</Link>
             </>
           ) : (
-            <Link href="/admin/login">Admin login</Link>
+            <>
+              <Link href="/login">Войти</Link>
+              <Link href="/register">Регистрация</Link>
+            </>
           )}
-          <span className="nav-disabled">Кабинет позже</span>
+          {isAdmin ? <Link href="/admin">Admin</Link> : <Link href="/admin/login">Admin</Link>}
         </nav>
       </div>
     </header>
