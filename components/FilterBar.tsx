@@ -6,6 +6,7 @@ import {
   AUCTION_ATTEMPT_OPTIONS,
   BOOLEAN_OPTIONS,
   OCCUPANCY_OPTIONS,
+  PAGE_SIZE_OPTIONS,
   PROPERTY_GROUP_OPTIONS,
   SORT_OPTIONS,
   STATUS_OPTIONS,
@@ -188,6 +189,13 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
           <label htmlFor="sort">Сортировка</label>
           <select id="sort" name="sort" defaultValue={getInitialValue(searchParams, "sort") || "auctionDateAsc"}>
             {SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
+        </div>
+
+        <div className="field">
+          <label htmlFor="perPage">Показывать</label>
+          <select id="perPage" name="perPage" defaultValue={getInitialValue(searchParams, "perPage") || "20"}>
+            {PAGE_SIZE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
         </div>
       </div>

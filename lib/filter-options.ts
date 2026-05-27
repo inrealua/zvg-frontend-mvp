@@ -62,3 +62,10 @@ export const SORT_OPTIONS: SelectOption[] = [
 export function optionLabel(options: SelectOption[], value: string): string {
   return options.find((option) => option.value === value)?.label ?? value;
 }
+
+export const PAGE_SIZE_OPTIONS: SelectOption[] = [
+  { value: "10", label: "10 на странице" },
+  { value: "20", label: "20 на странице" },
+  { value: "50", label: "50 на странице" },
+  { value: "100", label: "100 на странице" }
+];

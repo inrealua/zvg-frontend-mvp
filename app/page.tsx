@@ -3,12 +3,14 @@ import { EmptyState } from "@/components/EmptyState";
 import { FilterBar } from "@/components/FilterBar";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyMap } from "@/components/PropertyMap";
+import { Pagination } from "@/components/Pagination";
 import { SaveSearchButton } from "@/components/SaveSearchButton";
 import { prisma } from "@/lib/prisma";
 import { asNumber, asString, buildActiveFilterChips, buildPropertyOrderBy, buildPropertyWhere } from "@/lib/search-params";
 import { formatEuro, formatNumber } from "@/lib/format";
 import { getCurrentUser } from "@/lib/user-auth";
 import { distanceKm, findKnownLocation, type GeoPoint } from "@/lib/geo";
+import { getPaginationRange, getPaginationState } from "@/lib/pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -102,6 +104,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
   const activeChips = buildActiveFilterChips(params);
   const currentUser = await getCurrentUser();
   const radiusFilter = await resolveRadiusFilter(params);
+  const paginationState = getPaginationState(params);
 
   const [rawProperties, statesRaw, courtsRaw, citiesRaw, allCount] = await Promise.all([
     prisma.property.findMany({
@@ -140,16 +143,20 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
         .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0))
     : rawProperties.map((property) => ({ property, distance: null as number | null }));
 
-  const properties = propertiesWithDistance.slice(0, 200).map((item) => item.property);
   const totalCount = propertiesWithDistance.length;
-  const marketStats = calculateMarketStats(propertiesWithDistance.map((item) => item.property));
+  const pagination = getPaginationRange(totalCount, paginationState);
+  const properties = propertiesWithDistance
+    .slice(pagination.startIndex, pagination.endIndex)
+    .map((item) => item.property);
+  const allFilteredProperties = propertiesWithDistance.map((item) => item.property);
+  const marketStats = calculateMarketStats(allFilteredProperties);
 
   const states = statesRaw.map((item) => item.state);
   const courts = courtsRaw.map((item) => item.court);
   const cities = citiesRaw.map((item) => item.city);
-  const activeCount = properties.filter((property) => property.status === "ACTIVE").length;
-  const cancelledCount = properties.filter((property) => property.status === "CANCELLED").length;
-  const mapProperties = properties.map((property) => ({
+  const activeCount = allFilteredProperties.filter((property) => property.status === "ACTIVE").length;
+  const cancelledCount = allFilteredProperties.filter((property) => property.status === "CANCELLED").length;
+  const mapProperties = allFilteredProperties.slice(0, 500).map((property) => ({
     id: property.id,
     title: property.title,
     address: property.address,
@@ -204,7 +211,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
         ) : null}
 
         <div className="summary-strip">
-          <div><span>Показано</span><b>{properties.length}</b></div>
+          <div><span>Страница</span><b>{pagination.page} / {pagination.totalPages}</b></div>
           <div><span>Всего найдено</span><b>{totalCount}</b></div>
           <div><span>Активные</span><b>{activeCount}</b></div>
           <div><span>Отменённые</span><b>{cancelledCount}</b></div>
@@ -217,7 +224,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
             <div className="results-head">
               <div>
                 <strong>Список объектов</strong>
-                <span>Фильтры работают через URL, поэтому ссылки можно сохранять.</span>
+                <span>Фильтры работают через URL. Теперь список разделён на страницы, а карта показывает все найденные объекты.</span>
               </div>
               <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />
             </div>
@@ -225,9 +232,19 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
             {properties.length === 0 ? (
               <EmptyState />
             ) : (
-              <div className="card-list">
-                {properties.map((property) => <PropertyCard key={property.id} property={property} isFavorite={favoriteIds.has(property.id)} />)}
-              </div>
+              <>
+                <div className="card-list">
+                  {properties.map((property) => <PropertyCard key={property.id} property={property} isFavorite={favoriteIds.has(property.id)} />)}
+                </div>
+                <Pagination
+                  params={params}
+                  page={pagination.page}
+                  totalPages={pagination.totalPages}
+                  totalItems={totalCount}
+                  fromItem={pagination.fromItem}
+                  toItem={pagination.toItem}
+                />
+              </>
             )}
           </div>
 

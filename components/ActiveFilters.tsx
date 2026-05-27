@@ -13,6 +13,7 @@ export function ActiveFilters({ chips }: { chips: ActiveFilterChip[] }) {
   function removeFilter(key: string) {
     const next = new URLSearchParams(searchParams.toString());
     next.delete(key);
+    next.delete("page");
     const query = next.toString();
     router.push(query ? `${pathname}?${query}` : pathname);
   }

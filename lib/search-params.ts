@@ -6,6 +6,7 @@ import {
   optionLabel,
   PROPERTY_GROUP_OPTIONS,
   SORT_OPTIONS,
+  PAGE_SIZE_OPTIONS,
   STATUS_OPTIONS,
   WERTGRENZEN_OPTIONS
 } from "@/lib/filter-options";
@@ -184,6 +185,9 @@ export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterC
 
   const sort = asString(params.sort);
   if (sort && sort !== "auctionDateAsc") chips.push({ key: "sort", label: `Сортировка: ${optionLabel(SORT_OPTIONS, sort)}` });
+
+  const perPage = asString(params.perPage);
+  if (perPage && perPage !== "20") chips.push({ key: "perPage", label: `На странице: ${optionLabel(PAGE_SIZE_OPTIONS, perPage)}` });
 
   return chips;
 }
