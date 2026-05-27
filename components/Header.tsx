@@ -33,6 +33,7 @@ export async function Header() {
           )}
           {isAdmin ? (
             <>
+              <Link href="/admin/dashboard">Dashboard</Link>
               <Link href="/admin">Admin</Link>
               <Link href="/admin/import">Import</Link>
             </>
