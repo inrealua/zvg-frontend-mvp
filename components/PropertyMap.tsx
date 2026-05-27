@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formatDate, formatEuro, translateGroup } from "@/lib/format";
 import { escapeHtml, loadLeaflet, type LatLngTuple, type LeafletMapInstance } from "@/lib/leaflet-loader";
 
@@ -48,7 +49,14 @@ function popupHtml(property: MapProperty): string {
   `;
 }
 
+function roundCoordinate(value: number): string {
+  return value.toFixed(6);
+}
+
 export function PropertyMap({ properties }: { properties: MapProperty[] }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<LeafletMapInstance | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -57,6 +65,40 @@ export function PropertyMap({ properties }: { properties: MapProperty[] }) {
     () => properties.filter((property) => property.latitude !== null && property.longitude !== null),
     [properties]
   );
+
+  const mapBoundsActive =
+    searchParams.has("minLat") &&
+    searchParams.has("maxLat") &&
+    searchParams.has("minLng") &&
+    searchParams.has("maxLng");
+
+  function applyVisibleMapArea() {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    const bounds = map.getBounds();
+    const next = new URLSearchParams(searchParams.toString());
+
+    next.set("minLat", roundCoordinate(bounds.getSouth()));
+    next.set("maxLat", roundCoordinate(bounds.getNorth()));
+    next.set("minLng", roundCoordinate(bounds.getWest()));
+    next.set("maxLng", roundCoordinate(bounds.getEast()));
+    next.delete("page");
+
+    router.push(`${pathname}?${next.toString()}`);
+  }
+
+  function clearVisibleMapArea() {
+    const next = new URLSearchParams(searchParams.toString());
+    next.delete("minLat");
+    next.delete("maxLat");
+    next.delete("minLng");
+    next.delete("maxLng");
+    next.delete("page");
+
+    const query = next.toString();
+    router.push(query ? `${pathname}?${query}` : pathname);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -131,10 +173,25 @@ export function PropertyMap({ properties }: { properties: MapProperty[] }) {
       <div className="map-head">
         <div>
           <h2>Карта объектов</h2>
-          <p className="meta">OpenStreetMap/Leaflet. Колесо мыши отключено, чтобы карта не мешала скроллу страницы.</p>
+          <p className="meta">OpenStreetMap/Leaflet. Можно ограничить список текущей видимой областью карты.</p>
         </div>
         <span className="map-count">{withCoordinates.length}</span>
       </div>
+
+      <div className="map-actions">
+        <button type="button" className="btn btn-primary btn-small" onClick={applyVisibleMapArea} disabled={withCoordinates.length === 0 || Boolean(error)}>
+          Искать в этой области карты
+        </button>
+        {mapBoundsActive ? (
+          <button type="button" className="btn btn-ghost btn-small" onClick={clearVisibleMapArea}>
+            Убрать область карты
+          </button>
+        ) : null}
+      </div>
+
+      {mapBoundsActive ? (
+        <div className="map-area-note">Активен фильтр по видимой области карты. Для изменения приблизь/сдвинь карту и нажми кнопку снова.</div>
+      ) : null}
 
       {error ? (
         <div className="map-error">

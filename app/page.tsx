@@ -188,8 +188,8 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
             <p className="hero-kicker">MVP · Datenbank zuerst · Import direkt in MySQL</p>
             <h1>Объекты судебных торгов Германии в одной базе</h1>
             <p>
-              Теперь фильтры поддерживают поиск по радиусу от города или PLZ. Данные всё ещё берутся напрямую из базы,
-              без парсеров и без AI-модуля.
+              Добавлен фильтр по видимой области карты: можно приблизить карту, нажать кнопку и получить только объекты
+              внутри выбранного фрагмента карты. Данные берутся напрямую из базы, без парсеров и без AI-модуля.
             </p>
           </div>
           <div className="hero-stats">
@@ -224,7 +224,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
             <div className="results-head">
               <div>
                 <strong>Список объектов</strong>
-                <span>Фильтры работают через URL. Теперь список разделён на страницы, а карта показывает все найденные объекты.</span>
+                <span>Фильтры работают через URL. Список разделён на страницы, а карта может ограничивать выдачу по видимой области.</span>
               </div>
               <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />
             </div>

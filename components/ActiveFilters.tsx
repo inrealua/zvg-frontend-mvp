@@ -10,10 +10,13 @@ export function ActiveFilters({ chips }: { chips: ActiveFilterChip[] }) {
 
   if (chips.length === 0) return null;
 
-  function removeFilter(key: string) {
+  function removeFilter(chip: ActiveFilterChip) {
     const next = new URLSearchParams(searchParams.toString());
-    next.delete(key);
+    const keysToRemove = chip.removeKeys && chip.removeKeys.length > 0 ? chip.removeKeys : [chip.key];
+
+    keysToRemove.forEach((key) => next.delete(key));
     next.delete("page");
+
     const query = next.toString();
     router.push(query ? `${pathname}?${query}` : pathname);
   }
@@ -26,7 +29,7 @@ export function ActiveFilters({ chips }: { chips: ActiveFilterChip[] }) {
     <div className="active-filters" aria-label="Активные фильтры">
       <span className="active-filter-title">Активные фильтры:</span>
       {chips.map((chip) => (
-        <button key={chip.key} type="button" className="filter-chip" onClick={() => removeFilter(chip.key)}>
+        <button key={chip.key} type="button" className="filter-chip" onClick={() => removeFilter(chip)}>
           {chip.label} <span aria-hidden="true">×</span>
         </button>
       ))}

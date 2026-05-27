@@ -1,8 +1,16 @@
 export type LatLngTuple = [number, number];
 
+export type LeafletBounds = {
+  getSouth: () => number;
+  getNorth: () => number;
+  getWest: () => number;
+  getEast: () => number;
+};
+
 export type LeafletMapInstance = {
   setView: (center: LatLngTuple, zoom: number) => LeafletMapInstance;
   fitBounds: (bounds: unknown, options?: Record<string, unknown>) => LeafletMapInstance;
+  getBounds: () => LeafletBounds;
   remove: () => void;
 };
 

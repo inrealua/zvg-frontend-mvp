@@ -1388,3 +1388,28 @@ button, input, select { font: inherit; }
     justify-content: center;
   }
 }
+
+/* Stage 9: map area search */
+.map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.btn-small {
+  min-height: 36px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.map-area-note {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.06);
+  color: #1e3a8a;
+  font-size: 13px;
+  line-height: 1.35;
+}

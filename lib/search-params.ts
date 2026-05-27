@@ -17,6 +17,7 @@ export type SearchParamRecord = Record<string, string | string[] | undefined>;
 export type ActiveFilterChip = {
   key: string;
   label: string;
+  removeKeys?: string[];
 };
 
 const allowedTypeGroups = new Set(Object.values(PropertyTypeGroup));
@@ -33,6 +34,33 @@ export function asNumber(value: string | string[] | undefined): number | undefin
   if (!text) return undefined;
   const parsed = Number(text);
   return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function validCoordinate(value: number | undefined, min: number, max: number): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value >= min && value <= max;
+}
+
+function getMapBounds(params: SearchParamRecord) {
+  const minLatRaw = asNumber(params.minLat);
+  const maxLatRaw = asNumber(params.maxLat);
+  const minLngRaw = asNumber(params.minLng);
+  const maxLngRaw = asNumber(params.maxLng);
+
+  if (
+    !validCoordinate(minLatRaw, -90, 90) ||
+    !validCoordinate(maxLatRaw, -90, 90) ||
+    !validCoordinate(minLngRaw, -180, 180) ||
+    !validCoordinate(maxLngRaw, -180, 180)
+  ) {
+    return null;
+  }
+
+  return {
+    minLat: Math.min(minLatRaw, maxLatRaw),
+    maxLat: Math.max(minLatRaw, maxLatRaw),
+    minLng: Math.min(minLngRaw, maxLngRaw),
+    maxLng: Math.max(minLngRaw, maxLngRaw)
+  };
 }
 
 function asDate(value: string | string[] | undefined): Date | undefined {
@@ -62,6 +90,7 @@ export function buildPropertyWhere(params: SearchParamRecord): Prisma.PropertyWh
   const denkmalschutz = asString(params.denkmalschutz);
   const wertgrenzen = asString(params.wertgrenzen);
   const auctionAttempt = asNumber(params.auctionAttempt);
+  const mapBounds = getMapBounds(params);
 
   const where: Prisma.PropertyWhereInput = {};
 
@@ -121,6 +150,11 @@ export function buildPropertyWhere(params: SearchParamRecord): Prisma.PropertyWh
   if (wertgrenzen === "no") where.wertgrenzenWeggefallen = false;
   if (auctionAttempt === 1 || auctionAttempt === 2) where.auctionAttempt = auctionAttempt;
   if (auctionAttempt !== undefined && auctionAttempt >= 3) where.auctionAttempt = { gte: 3 };
+
+  if (mapBounds) {
+    where.latitude = { gte: mapBounds.minLat, lte: mapBounds.maxLat };
+    where.longitude = { gte: mapBounds.minLng, lte: mapBounds.maxLng };
+  }
 
   return where;
 }
@@ -188,6 +222,15 @@ export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterC
 
   const perPage = asString(params.perPage);
   if (perPage && perPage !== "20") chips.push({ key: "perPage", label: `На странице: ${optionLabel(PAGE_SIZE_OPTIONS, perPage)}` });
+
+  const mapBounds = getMapBounds(params);
+  if (mapBounds) {
+    chips.push({
+      key: "mapBounds",
+      label: "Область карты",
+      removeKeys: ["minLat", "maxLat", "minLng", "maxLng"]
+    });
+  }
 
   return chips;
 }
