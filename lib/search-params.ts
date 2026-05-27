@@ -63,6 +63,35 @@ function getMapBounds(params: SearchParamRecord) {
   };
 }
 
+
+export type ParsedPolygonPoint = {
+  latitude: number;
+  longitude: number;
+};
+
+export function parsePolygonParam(value: string | string[] | undefined): ParsedPolygonPoint[] {
+  const text = asString(value);
+  if (!text) return [];
+
+  const points = text
+    .split(";")
+    .map((pair) => pair.trim())
+    .filter(Boolean)
+    .map((pair) => {
+      const [latText, lngText] = pair.split(",");
+      const latitude = Number(latText);
+      const longitude = Number(lngText);
+
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+      if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) return null;
+
+      return { latitude, longitude };
+    })
+    .filter((point): point is ParsedPolygonPoint => point !== null);
+
+  return points.length >= 3 ? points.slice(0, 80) : [];
+}
+
 function asDate(value: string | string[] | undefined): Date | undefined {
   const text = asString(value);
   if (!text) return undefined;
@@ -229,6 +258,14 @@ export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterC
       key: "mapBounds",
       label: "Область карты",
       removeKeys: ["minLat", "maxLat", "minLng", "maxLng"]
+    });
+  }
+
+  const polygonPoints = parsePolygonParam(params.poly);
+  if (polygonPoints.length >= 3) {
+    chips.push({
+      key: "poly",
+      label: `Polygon-Suche: ${polygonPoints.length} Punkte`
     });
   }
 

@@ -1,5 +1,12 @@
 export type LatLngTuple = [number, number];
 
+export type LeafletClickEvent = {
+  latlng: {
+    lat: number;
+    lng: number;
+  };
+};
+
 export type LeafletBounds = {
   getSouth: () => number;
   getNorth: () => number;
@@ -12,11 +19,14 @@ export type LeafletMapInstance = {
   fitBounds: (bounds: unknown, options?: Record<string, unknown>) => LeafletMapInstance;
   getBounds: () => LeafletBounds;
   remove: () => void;
+  on: (eventName: "click", callback: (event: LeafletClickEvent) => void) => LeafletMapInstance;
+  off: (eventName: "click", callback: (event: LeafletClickEvent) => void) => LeafletMapInstance;
 };
 
 export type LeafletLayer = {
   addTo: (map: LeafletMapInstance) => LeafletLayer;
   bindPopup?: (content: string) => LeafletLayer;
+  remove?: () => void;
 };
 
 export type LeafletNamespace = {
@@ -24,6 +34,9 @@ export type LeafletNamespace = {
   tileLayer: (url: string, options?: Record<string, unknown>) => LeafletLayer;
   divIcon: (options?: Record<string, unknown>) => unknown;
   marker: (coordinates: LatLngTuple, options?: Record<string, unknown>) => LeafletLayer;
+  polygon: (coordinates: LatLngTuple[], options?: Record<string, unknown>) => LeafletLayer;
+  polyline: (coordinates: LatLngTuple[], options?: Record<string, unknown>) => LeafletLayer;
+  circleMarker: (coordinates: LatLngTuple, options?: Record<string, unknown>) => LeafletLayer;
   latLngBounds: (coordinates: LatLngTuple[]) => unknown;
 };
 

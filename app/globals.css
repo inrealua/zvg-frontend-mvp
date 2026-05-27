@@ -1413,3 +1413,38 @@ button, input, select { font: inherit; }
   font-size: 13px;
   line-height: 1.35;
 }
+
+/* Stage 10: polygon search */
+.polygon-toolbar {
+  margin-bottom: 10px;
+  padding: 12px;
+  border: 1px solid rgba(245, 158, 11, 0.26);
+  border-radius: 16px;
+  background: rgba(245, 158, 11, 0.08);
+  display: grid;
+  gap: 10px;
+}
+
+.polygon-toolbar b {
+  display: block;
+  margin-bottom: 2px;
+  color: #92400e;
+}
+
+.polygon-toolbar span {
+  color: #78350f;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.polygon-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.leaflet-map-drawing {
+  cursor: crosshair;
+  outline: 3px solid rgba(245, 158, 11, 0.24);
+  outline-offset: -3px;
+}

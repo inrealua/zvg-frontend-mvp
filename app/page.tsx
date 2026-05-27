@@ -6,11 +6,12 @@ import { PropertyMap } from "@/components/PropertyMap";
 import { Pagination } from "@/components/Pagination";
 import { SaveSearchButton } from "@/components/SaveSearchButton";
 import { prisma } from "@/lib/prisma";
-import { asNumber, asString, buildActiveFilterChips, buildPropertyOrderBy, buildPropertyWhere } from "@/lib/search-params";
+import { asNumber, asString, buildActiveFilterChips, buildPropertyOrderBy, buildPropertyWhere, parsePolygonParam } from "@/lib/search-params";
 import { formatEuro, formatNumber } from "@/lib/format";
 import { getCurrentUser } from "@/lib/user-auth";
 import { distanceKm, findKnownLocation, type GeoPoint } from "@/lib/geo";
 import { getPaginationRange, getPaginationState } from "@/lib/pagination";
+import { pointInPolygon } from "@/lib/polygon";
 
 export const dynamic = "force-dynamic";
 
@@ -105,6 +106,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
   const currentUser = await getCurrentUser();
   const radiusFilter = await resolveRadiusFilter(params);
   const paginationState = getPaginationState(params);
+  const polygonPoints = parsePolygonParam(params.poly);
 
   const [rawProperties, statesRaw, courtsRaw, citiesRaw, allCount] = await Promise.all([
     prisma.property.findMany({
@@ -143,12 +145,23 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
         .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0))
     : rawProperties.map((property) => ({ property, distance: null as number | null }));
 
-  const totalCount = propertiesWithDistance.length;
+  const propertiesWithPolygon = polygonPoints.length >= 3
+    ? propertiesWithDistance.filter((item) => {
+        const latitude = item.property.latitude;
+        const longitude = item.property.longitude;
+
+        if (typeof latitude !== "number" || typeof longitude !== "number") return false;
+
+        return pointInPolygon({ latitude, longitude }, polygonPoints);
+      })
+    : propertiesWithDistance;
+
+  const totalCount = propertiesWithPolygon.length;
   const pagination = getPaginationRange(totalCount, paginationState);
-  const properties = propertiesWithDistance
+  const properties = propertiesWithPolygon
     .slice(pagination.startIndex, pagination.endIndex)
     .map((item) => item.property);
-  const allFilteredProperties = propertiesWithDistance.map((item) => item.property);
+  const allFilteredProperties = propertiesWithPolygon.map((item) => item.property);
   const marketStats = calculateMarketStats(allFilteredProperties);
 
   const states = statesRaw.map((item) => item.state);
@@ -188,8 +201,8 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
             <p className="hero-kicker">MVP · Datenbank zuerst · Import direkt in MySQL</p>
             <h1>Объекты судебных торгов Германии в одной базе</h1>
             <p>
-              Добавлен фильтр по видимой области карты: можно приблизить карту, нажать кнопку и получить только объекты
-              внутри выбранного фрагмента карты. Данные берутся напрямую из базы, без парсеров и без AI-модуля.
+              Добавлен polygon search: можно нарисовать на карте произвольную область и получить только объекты внутри неё.
+              Данные берутся напрямую из базы, без парсеров и без AI-модуля.
             </p>
           </div>
           <div className="hero-stats">
@@ -210,6 +223,12 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
           </div>
         ) : null}
 
+        {polygonPoints.length >= 3 ? (
+          <div className="notice-bar">
+            Polygon-Suche активна: список показывает объекты внутри нарисованной области карты. Точек полигона: <b>{polygonPoints.length}</b>.
+          </div>
+        ) : null}
+
         <div className="summary-strip">
           <div><span>Страница</span><b>{pagination.page} / {pagination.totalPages}</b></div>
           <div><span>Всего найдено</span><b>{totalCount}</b></div>
@@ -224,7 +243,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
             <div className="results-head">
               <div>
                 <strong>Список объектов</strong>
-                <span>Фильтры работают через URL. Список разделён на страницы, а карта может ограничивать выдачу по видимой области.</span>
+                <span>Фильтры работают через URL. Список разделён на страницы, карта может ограничивать выдачу областью или polygon search.</span>
               </div>
               <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />
             </div>
