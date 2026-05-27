@@ -170,3 +170,30 @@ model SavedSearch {
   @@unique([userId, filtersHash])
   @@index([userId])
 }
+
+enum ImportStatus {
+  SUCCESS
+  PARTIAL
+  FAILED
+}
+
+model ImportLog {
+  id            String        @id @default(cuid())
+  source        String        @default("ADMIN_IMPORT")
+  mode          String        @default("JSON")
+  status        ImportStatus  @default(SUCCESS)
+  totalItems    Int           @default(0)
+  createdItems  Int           @default(0)
+  updatedItems  Int           @default(0)
+  skippedItems  Int           @default(0)
+  failedItems   Int           @default(0)
+  errorMessage  String?       @db.Text
+  logJson       Json?
+  startedAt     DateTime      @default(now())
+  finishedAt    DateTime?
+  createdAt     DateTime      @default(now())
+
+  @@index([createdAt])
+  @@index([status])
+}
+

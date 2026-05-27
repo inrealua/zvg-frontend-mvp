@@ -31,7 +31,12 @@ export async function Header() {
               <Link href="/register">Регистрация</Link>
             </>
           )}
-          {isAdmin ? <Link href="/admin">Admin</Link> : <Link href="/admin/login">Admin</Link>}
+          {isAdmin ? (
+            <>
+              <Link href="/admin">Admin</Link>
+              <Link href="/admin/import">Import</Link>
+            </>
+          ) : <Link href="/admin/login">Admin</Link>}
         </nav>
       </div>
     </header>

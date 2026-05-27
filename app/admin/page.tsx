@@ -62,7 +62,10 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
             Здесь можно создавать, редактировать и удалять объекты напрямую в базе. Парсеры и AI пока не подключены.
           </p>
         </div>
-        <Link href="/admin/properties/new" className="btn btn-primary">+ Добавить объект</Link>
+        <div className="admin-actions-inline">
+          <Link href="/admin/import" className="btn btn-soft">Импорт JSON/CSV</Link>
+          <Link href="/admin/properties/new" className="btn btn-primary">+ Добавить объект</Link>
+        </div>
       </section>
 
       <section className="container page-section">
