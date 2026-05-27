@@ -84,6 +84,8 @@ export default async function AdminImportPage({ searchParams }: { searchParams: 
         </div>
         <div className="admin-actions-inline">
           <Link href="/admin" className="btn">← К объектам</Link>
+          <Link href="/admin/import/validate" className="btn btn-soft">Проверить данные</Link>
+          <Link href="/admin/import/templates" className="btn btn-soft">Шаблоны</Link>
           <Link href="/admin/import/logs" className="btn btn-soft">Логи импорта</Link>
         </div>
       </section>
@@ -123,7 +125,7 @@ export default async function AdminImportPage({ searchParams }: { searchParams: 
 
         <aside className="admin-card import-help-card">
           <h2>Примеры</h2>
-          <p className="muted-text">Скопируй пример в поле импорта, чтобы проверить работу.</p>
+          <p className="muted-text">Скопируй пример в поле импорта, скачай шаблон или сначала проверь данные через валидацию без записи в базу.</p>
           <details open>
             <summary>JSON пример</summary>
             <pre>{sampleJson}</pre>
@@ -132,6 +134,10 @@ export default async function AdminImportPage({ searchParams }: { searchParams: 
             <summary>CSV пример</summary>
             <pre>{sampleCsv}</pre>
           </details>
+          <div className="admin-actions-inline import-help-actions">
+            <Link href="/admin/import/templates" className="btn btn-soft">Открыть шаблоны</Link>
+            <Link href="/admin/import/validate" className="btn btn-soft">Проверить перед импортом</Link>
+          </div>
           <h3>Поддерживаемые поля</h3>
           <p className="muted-text">
             aktenzeichen, court, state, city, postalCode, street, houseNumber, address, latitude, longitude, title,
