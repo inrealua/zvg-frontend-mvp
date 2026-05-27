@@ -41,14 +41,14 @@ function formatNumber(value: number): string {
 function buildSummary(selected: string[], options: SelectOption[], emptyLabel: string): string {
   if (selected.length === 0) return emptyLabel;
   const labels = selected.map((value) => options.find((option) => option.value === value)?.label ?? value);
-  if (labels.length <= 2) return labels.join(", ");
-  return `${labels.slice(0, 2).join(", ")} +${labels.length - 2}`;
+  if (labels.length === 1) return labels[0];
+  return `Выбрано: ${labels.length}`;
 }
 
 function buildStateSummary(selected: string[]): string {
   if (selected.length === 0) return "Все земли";
-  if (selected.length <= 2) return selected.join(", ");
-  return `${selected.slice(0, 2).join(", ")} +${selected.length - 2}`;
+  if (selected.length === 1) return selected[0];
+  return `Выбрано: ${selected.length}`;
 }
 
 function MultiSelectDropdown({
@@ -80,7 +80,7 @@ function MultiSelectDropdown({
           <small>{title}</small>
           <b>{summary}</b>
         </span>
-        <i>{values.length > 0 ? values.length : ""}</i>
+        {values.length > 0 ? <em className="multi-count">{values.length}</em> : null}
       </summary>
       <div className="dropdown-panel">
         <div className="dropdown-panel-head">
@@ -121,7 +121,7 @@ function StateMultiSelect({ states, selected }: { states: string[]; selected: st
           <small>Bundesland</small>
           <b>{buildStateSummary(values)}</b>
         </span>
-        <i>{values.length > 0 ? values.length : ""}</i>
+        {values.length > 0 ? <em className="multi-count">{values.length}</em> : null}
       </summary>
       <div className="dropdown-panel dropdown-panel-wide">
         <div className="dropdown-panel-head">
@@ -253,10 +253,10 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
 
   return (
     <form className={compact ? "filters filters-compact filters-redesigned" : "filters filters-redesigned"} onSubmit={onSubmit}>
-      <div className="filter-topline">
+      <div className="filter-topline clean-filter-head">
         <div>
           <h2>Фильтр объектов</h2>
-          <p>Многовыбор теперь компактный. Радиус строится от выбранного города или PLZ.</p>
+          <p>Выберите параметры. Многовыбор открывается выпадающим списком.</p>
         </div>
         <button type="button" onClick={clearFilters} className="btn btn-ghost">Сбросить</button>
       </div>

@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
+import { unstable_noStore as noStore } from "next/cache";
 import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -107,12 +108,18 @@ async function getUserByToken(token: string | undefined): Promise<CurrentUser | 
 }
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
+  noStore();
   const cookieStore = await cookies();
   return getUserByToken(cookieStore.get(USER_SESSION_COOKIE)?.value);
 }
 
 export async function getCurrentUserFromRequest(request: NextRequest): Promise<CurrentUser | null> {
-  return getUserByToken(request.cookies.get(USER_SESSION_COOKIE)?.value);
+  noStore();
+  const tokenFromRequest = request.cookies.get(USER_SESSION_COOKIE)?.value;
+  if (tokenFromRequest) return getUserByToken(tokenFromRequest);
+
+  const cookieStore = await cookies();
+  return getUserByToken(cookieStore.get(USER_SESSION_COOKIE)?.value);
 }
 
 export function getSafeNextUrl(rawNext: string | null, fallback = "/cabinet"): string {

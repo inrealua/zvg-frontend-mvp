@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { unstable_noStore as noStore } from "next/cache";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getCurrentUser } from "@/lib/user-auth";
 
 export async function Header() {
+  noStore();
   const [isAdmin, currentUser] = await Promise.all([
     isAdminAuthenticated(),
     getCurrentUser()

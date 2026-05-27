@@ -3054,3 +3054,225 @@ button, input, select { font: inherit; }
     grid-template-columns: 1fr;
   }
 }
+
+/* Stage 22: cleaner filter layout and stable auth rendering */
+.filters-redesigned {
+  padding: 22px;
+  border-radius: 28px;
+  overflow: visible;
+}
+
+.clean-filter-head {
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e5edf7;
+  margin-bottom: 18px;
+}
+
+.filters-grid-redesigned {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+  overflow: visible;
+}
+
+.filters-grid-redesigned > .field {
+  grid-column: span 3;
+  min-width: 0;
+}
+
+.filters-grid-redesigned .field-search {
+  grid-column: span 4;
+}
+
+.filters-grid-redesigned .field-court {
+  grid-column: span 3;
+}
+
+.filters-grid-redesigned .field label,
+.dropdown-multi summary small,
+.range-title span {
+  letter-spacing: .01em;
+}
+
+.dropdown-multi {
+  position: relative;
+  min-width: 0;
+  z-index: 5;
+}
+
+.dropdown-multi[open] {
+  z-index: 80;
+}
+
+.dropdown-multi summary {
+  height: 48px;
+  min-height: 48px;
+  border-radius: 15px;
+  padding: 7px 12px;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, .03);
+}
+
+.dropdown-multi summary:hover {
+  border-color: #93c5fd;
+}
+
+.dropdown-multi summary span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.1;
+}
+
+.dropdown-multi summary b {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.dropdown-multi summary::after {
+  content: "⌄";
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  color: #64748b;
+  font-size: 16px;
+  margin-left: auto;
+}
+
+.dropdown-multi .multi-count {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: #1d4ed8;
+  color: #fff;
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 900;
+  margin-left: 4px;
+}
+
+.dropdown-multi summary i {
+  display: none !important;
+}
+
+.dropdown-panel,
+.dropdown-panel-wide {
+  width: 340px;
+  max-width: min(340px, calc(100vw - 40px));
+  max-height: 310px;
+  padding: 10px;
+  border-radius: 18px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.dropdown-panel-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5edf7;
+}
+
+.dropdown-options,
+.dropdown-options.state-options {
+  grid-template-columns: 1fr;
+  gap: 7px;
+  padding-top: 8px;
+}
+
+.check-card {
+  min-height: 38px;
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px 9px;
+  font-size: 13px;
+  line-height: 1.15;
+  overflow: hidden;
+}
+
+.check-card span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.check-card input {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+}
+
+.check-card:has(input:checked) {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.dual-range-field {
+  grid-column: span 4 !important;
+  min-height: 96px;
+  background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+  border-color: #d7e2f2;
+}
+
+.dual-range input[type="range"] {
+  box-shadow: none !important;
+}
+
+.range-scale span {
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .filters-grid-redesigned {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .filters-grid-redesigned > .field,
+  .filters-grid-redesigned .field-search,
+  .filters-grid-redesigned .field-court,
+  .dual-range-field {
+    grid-column: span 3 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .filters-redesigned {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .clean-filter-head {
+    align-items: flex-start;
+  }
+
+  .filters-grid-redesigned {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-grid-redesigned > .field,
+  .filters-grid-redesigned .field-search,
+  .filters-grid-redesigned .field-court,
+  .dual-range-field {
+    grid-column: span 1 !important;
+  }
+
+  .dropdown-panel,
+  .dropdown-panel-wide {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 8px;
+    box-shadow: none;
+  }
+}
