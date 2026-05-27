@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum PropertyStatus {
+  ACTIVE
+  CANCELLED
+  ARCHIVED
+  SOLD
+  UNKNOWN
+}
+
+enum PropertyTypeGroup {
+  WOHNHAEUSER
+  WOHNUNGEN
+  GEWERBE
+  GRUNDSTUECKE
+  LAND_WALD
+  GARAGEN
+  SONSTIGE
+}
+
+enum OccupancyStatus {
+  VACANT
+  RENTED
+  OWNER_OCCUPIED
+  UNKNOWN
+}
+
+enum DocumentType {
+  GUTACHTEN
+  BEKANNTMACHUNG
+  EXPOSE
+  FOTO
+  OTHER
+}
+
+model Property {
+  id                       String            @id @default(cuid())
+  aktenzeichen             String
+  normalizedAktenzeichen   String
+  court                    String
+  state                    String
+  city                     String
+  postalCode               String
+  street                   String
+  houseNumber              String?
+  address                  String
+  latitude                 Float?
+  longitude                Float?
+
+  title                    String
+  propertyType             String
+  propertyTypeGroup        PropertyTypeGroup
+  status                   PropertyStatus    @default(ACTIVE)
+  occupancyStatus          OccupancyStatus   @default(UNKNOWN)
+
+  auctionDate              DateTime?
+  auctionTime              String?
+  auctionLocation          String?
+  marketValue              Int?
+  livingArea               Float?
+  usableArea               Float?
+  totalArea                Float?
+  plotArea                 Float?
+  yearBuilt                Int?
+  hasDenkmalschutz         Boolean           @default(false)
+  wertgrenzenWeggefallen   Boolean           @default(false)
+  auctionAttempt           Int               @default(1)
+
+  description              String            @db.Text
+  locationDescription      String?           @db.Text
+  cancellationText         String?           @db.Text
+  source                   String            @default("TEST_SEED")
+  sourceUrl                String?
+  lastSourceUpdate         DateTime?
+
+  images                   PropertyImage[]
+  documents                PropertyDocument[]
+
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @updatedAt
+
+  @@index([state])
+  @@index([court])
+  @@index([city])
+  @@index([postalCode])
+  @@index([propertyTypeGroup])
+  @@index([status])
+  @@index([auctionDate])
+  @@index([marketValue])
+}
+
+model PropertyImage {
+  id          String    @id @default(cuid())
+  propertyId  String
+  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url         String    @db.VarChar(1000)
+  alt         String?
+  isMain      Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([propertyId])
+}
+
+model PropertyDocument {
+  id            String        @id @default(cuid())
+  propertyId    String
+  property      Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url           String        @db.VarChar(1000)
+  filename      String
+  documentType  DocumentType  @default(OTHER)
+  sourceUrl     String?       @db.VarChar(1000)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([propertyId])
+}
