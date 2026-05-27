@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatEuro, translateGroup } from "@/lib/format";
 
 type MapProperty = {
   id: string;
@@ -16,7 +17,8 @@ function markerClass(property: MapProperty): string {
   if (property.propertyTypeGroup === "GEWERBE") return "map-marker gewerbe";
   if (property.propertyTypeGroup === "GRUNDSTUECKE" || property.propertyTypeGroup === "LAND_WALD") return "map-marker grund";
   if (property.propertyTypeGroup === "WOHNUNGEN") return "map-marker wohnung";
-  return "map-marker";
+  if (property.propertyTypeGroup === "GARAGEN") return "map-marker garage";
+  return "map-marker wohnhaus";
 }
 
 function position(property: MapProperty): { left: string; top: string } {
@@ -35,22 +37,44 @@ function position(property: MapProperty): { left: string; top: string } {
 }
 
 export function PropertyMap({ properties }: { properties: MapProperty[] }) {
+  const withCoordinates = properties.filter((property) => property.latitude !== null && property.longitude !== null);
+
   return (
-    <aside className="map-panel">
-      <h2 style={{ margin: "0 0 6px" }}>Карта объектов</h2>
-      <p className="meta" style={{ marginTop: 0 }}>MVP-карта без внешних библиотек. На следующем этапе можно заменить на Leaflet/OpenStreetMap.</p>
+    <aside className="map-panel" id="map">
+      <div className="map-head">
+        <div>
+          <h2>Карта объектов</h2>
+          <p className="meta">MVP-карта без Leaflet. Следующим этапом заменим на OpenStreetMap.</p>
+        </div>
+        <span className="map-count">{withCoordinates.length}</span>
+      </div>
+
       <div className="fake-map" aria-label="Карта объектов">
-        {properties.map((property) => (
+        <div className="map-label north">DE</div>
+        {withCoordinates.map((property) => (
           <Link
             key={property.id}
             href={`/properties/${property.id}`}
             className={markerClass(property)}
             style={position(property)}
-            title={`${property.title}, ${property.city}`}
-          />
+            title={`${property.title} · ${property.city} · ${formatEuro(property.marketValue)}`}
+          >
+            <span className="marker-tooltip">
+              <b>{property.city}</b><br />
+              {translateGroup(property.propertyTypeGroup)}<br />
+              {formatEuro(property.marketValue)}
+            </span>
+          </Link>
         ))}
       </div>
-      <p className="meta" style={{ marginBottom: 0 }}>Показано маркеров: {properties.length}</p>
+
+      <div className="map-legend">
+        <span><i className="legend-dot wohnhaus" /> Häuser</span>
+        <span><i className="legend-dot wohnung" /> Wohnungen</span>
+        <span><i className="legend-dot grund" /> Grundstücke</span>
+        <span><i className="legend-dot gewerbe" /> Gewerbe</span>
+        <span><i className="legend-dot cancelled" /> aufgehoben</span>
+      </div>
     </aside>
   );
 }

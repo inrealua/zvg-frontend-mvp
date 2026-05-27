@@ -1,0 +1,6 @@
+npm run build
+npm run dev
+
+git add .
+git commit -m "Improve public frontend layout and filters"
+git push

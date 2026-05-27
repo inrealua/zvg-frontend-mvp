@@ -2,7 +2,15 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent } from "react";
-import { OCCUPANCY_OPTIONS, PROPERTY_GROUP_OPTIONS, STATUS_OPTIONS } from "@/lib/filter-options";
+import {
+  AUCTION_ATTEMPT_OPTIONS,
+  BOOLEAN_OPTIONS,
+  OCCUPANCY_OPTIONS,
+  PROPERTY_GROUP_OPTIONS,
+  SORT_OPTIONS,
+  STATUS_OPTIONS,
+  WERTGRENZEN_OPTIONS
+} from "@/lib/filter-options";
 
 type FilterBarProps = {
   states: string[];
@@ -28,7 +36,8 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
       if (text.length > 0) next.set(key, text);
     }
 
-    router.push(`/?${next.toString()}`);
+    const query = next.toString();
+    router.push(query ? `/?${query}` : "/");
   }
 
   function clearFilters() {
@@ -37,10 +46,18 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
 
   return (
     <form className="filters" onSubmit={onSubmit}>
+      <div className="filter-topline">
+        <div>
+          <h2>Фильтр объектов</h2>
+          <p>Данные берутся напрямую из MySQL. Импорт позже будет писать сразу в эту же базу.</p>
+        </div>
+        <button type="button" onClick={clearFilters} className="btn btn-ghost">Сбросить</button>
+      </div>
+
       <div className="filters-grid">
-        <div className="field">
+        <div className="field field-wide">
           <label htmlFor="q">Поиск</label>
-          <input id="q" name="q" placeholder="Адрес, город, Aktenzeichen" defaultValue={getInitialValue(searchParams, "q")} />
+          <input id="q" name="q" placeholder="Адрес, город, Aktenzeichen, суд" defaultValue={getInitialValue(searchParams, "q")} />
         </div>
 
         <div className="field">
@@ -60,7 +77,12 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
         </div>
 
         <div className="field">
-          <label htmlFor="court">Суд</label>
+          <label htmlFor="postalCode">PLZ</label>
+          <input id="postalCode" name="postalCode" placeholder="например 091" defaultValue={getInitialValue(searchParams, "postalCode")} />
+        </div>
+
+        <div className="field field-wide">
+          <label htmlFor="court">Amtsgericht</label>
           <select id="court" name="court" defaultValue={getInitialValue(searchParams, "court")}>
             <option value="">Все суды</option>
             {courts.map((court) => <option key={court} value={court}>{court}</option>)}
@@ -99,32 +121,67 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
         </div>
 
         <div className="field">
-          <label htmlFor="minArea">Жилая площадь от</label>
-          <input id="minArea" name="minArea" type="number" min="0" placeholder="50" defaultValue={getInitialValue(searchParams, "minArea")} />
+          <label htmlFor="minLivingArea">Wohnfläche от</label>
+          <input id="minLivingArea" name="minLivingArea" type="number" min="0" placeholder="50" defaultValue={getInitialValue(searchParams, "minLivingArea")} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="maxLivingArea">Wohnfläche до</label>
+          <input id="maxLivingArea" name="maxLivingArea" type="number" min="0" placeholder="200" defaultValue={getInitialValue(searchParams, "maxLivingArea")} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="minPlotArea">Grundstück от</label>
+          <input id="minPlotArea" name="minPlotArea" type="number" min="0" placeholder="300" defaultValue={getInitialValue(searchParams, "minPlotArea")} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="maxPlotArea">Grundstück до</label>
+          <input id="maxPlotArea" name="maxPlotArea" type="number" min="0" placeholder="1500" defaultValue={getInitialValue(searchParams, "maxPlotArea")} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="dateFrom">Торги от</label>
+          <input id="dateFrom" name="dateFrom" type="date" defaultValue={getInitialValue(searchParams, "dateFrom")} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="dateTo">Торги до</label>
+          <input id="dateTo" name="dateTo" type="date" defaultValue={getInitialValue(searchParams, "dateTo")} />
         </div>
 
         <div className="field">
           <label htmlFor="denkmalschutz">Denkmalschutz</label>
           <select id="denkmalschutz" name="denkmalschutz" defaultValue={getInitialValue(searchParams, "denkmalschutz")}>
-            <option value="">Не важно</option>
-            <option value="yes">Да</option>
-            <option value="no">Нет</option>
+            {BOOLEAN_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
         </div>
 
         <div className="field">
           <label htmlFor="wertgrenzen">Wertgrenzen</label>
           <select id="wertgrenzen" name="wertgrenzen" defaultValue={getInitialValue(searchParams, "wertgrenzen")}>
-            <option value="">Не важно</option>
-            <option value="yes">Сняты</option>
-            <option value="no">Не сняты</option>
+            {WERTGRENZEN_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
+        </div>
+
+        <div className="field">
+          <label htmlFor="auctionAttempt">Количество терминов</label>
+          <select id="auctionAttempt" name="auctionAttempt" defaultValue={getInitialValue(searchParams, "auctionAttempt")}>
+            {AUCTION_ATTEMPT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+          </select>
+        </div>
+
+        <div className="field">
+          <label htmlFor="sort">Сортировка</label>
+          <select id="sort" name="sort" defaultValue={getInitialValue(searchParams, "sort") || "auctionDateAsc"}>
+            {SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
         </div>
       </div>
 
       <div className="filter-actions">
-        <button type="submit" className="btn btn-primary">Применить фильтры</button>
-        <button type="button" onClick={clearFilters} className="btn">Очистить</button>
+        <button type="submit" className="btn btn-primary">Показать объекты</button>
+        <button type="button" onClick={clearFilters} className="btn">Очистить фильтры</button>
       </div>
     </form>
   );

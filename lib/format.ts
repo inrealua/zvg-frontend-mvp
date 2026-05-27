@@ -15,11 +15,23 @@ export function formatArea(value: number | null | undefined): string {
 export function formatDate(value: Date | string | null | undefined): string {
   if (!value) return "—";
   const date = typeof value === "string" ? new Date(value) : value;
+  if (Number.isNaN(date.getTime())) return "—";
   return new Intl.DateTimeFormat("de-DE", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric"
   }).format(date);
+}
+
+export function formatDateTime(value: Date | string | null | undefined, time?: string | null): string {
+  const date = formatDate(value);
+  if (date === "—") return "—";
+  return time ? `${date}, ${time}` : date;
+}
+
+export function formatNumber(value: number | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return new Intl.NumberFormat("de-DE", { maximumFractionDigits: 0 }).format(value);
 }
 
 export function translateStatus(status: string): string {
@@ -54,4 +66,14 @@ export function translateOccupancy(status: string): string {
     UNKNOWN: "Неизвестно"
   };
   return map[status] ?? status;
+}
+
+export function statusClass(status: string): string {
+  if (status === "CANCELLED") return "cancelled";
+  if (status === "ARCHIVED" || status === "SOLD" || status === "UNKNOWN") return "neutral";
+  return "active";
+}
+
+export function shortAddress(address: string): string {
+  return address.replace(/, Deutschland$/i, "");
 }
