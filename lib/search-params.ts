@@ -17,6 +17,7 @@ export type SearchParamRecord = Record<string, string | string[] | undefined>;
 export type ActiveFilterChip = {
   key: string;
   label: string;
+  value?: string;
   removeKeys?: string[];
 };
 
@@ -27,6 +28,12 @@ const allowedOccupancy = new Set(Object.values(OccupancyStatus));
 export function asString(value: string | string[] | undefined): string {
   if (Array.isArray(value)) return value[0] ?? "";
   return value ?? "";
+}
+
+export function asStringArray(value: string | string[] | undefined): string[] {
+  if (Array.isArray(value)) return value.map((item) => item.trim()).filter(Boolean);
+  if (typeof value === "string" && value.trim()) return [value.trim()];
+  return [];
 }
 
 export function asNumber(value: string | string[] | undefined): number | undefined {
@@ -63,7 +70,6 @@ function getMapBounds(params: SearchParamRecord) {
   };
 }
 
-
 export type ParsedPolygonPoint = {
   latitude: number;
   longitude: number;
@@ -99,15 +105,19 @@ function asDate(value: string | string[] | undefined): Date | undefined {
   return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
+function validValues<T extends string>(values: string[], allowed: Set<T>): T[] {
+  return values.filter((value): value is T => allowed.has(value as T));
+}
+
 export function buildPropertyWhere(params: SearchParamRecord): Prisma.PropertyWhereInput {
   const q = asString(params.q);
-  const state = asString(params.state);
+  const states = asStringArray(params.state);
   const city = asString(params.city);
   const postalCode = asString(params.postalCode);
   const court = asString(params.court);
-  const typeGroup = asString(params.typeGroup);
-  const status = asString(params.status);
-  const occupancy = asString(params.occupancy);
+  const typeGroups = validValues(asStringArray(params.typeGroup), allowedTypeGroups as Set<PropertyTypeGroup>);
+  const statuses = validValues(asStringArray(params.status), allowedStatuses as Set<PropertyStatus>);
+  const occupancies = validValues(asStringArray(params.occupancy), allowedOccupancy as Set<OccupancyStatus>);
   const minPrice = asNumber(params.minPrice);
   const maxPrice = asNumber(params.maxPrice);
   const minLivingArea = asNumber(params.minLivingArea);
@@ -135,13 +145,17 @@ export function buildPropertyWhere(params: SearchParamRecord): Prisma.PropertyWh
     ];
   }
 
-  if (state) where.state = state;
+  if (states.length === 1) where.state = states[0];
+  if (states.length > 1) where.state = { in: states };
   if (city) where.city = city;
   if (postalCode) where.postalCode = { startsWith: postalCode };
   if (court) where.court = court;
-  if (allowedTypeGroups.has(typeGroup as PropertyTypeGroup)) where.propertyTypeGroup = typeGroup as PropertyTypeGroup;
-  if (allowedStatuses.has(status as PropertyStatus)) where.status = status as PropertyStatus;
-  if (allowedOccupancy.has(occupancy as OccupancyStatus)) where.occupancyStatus = occupancy as OccupancyStatus;
+  if (typeGroups.length === 1) where.propertyTypeGroup = typeGroups[0];
+  if (typeGroups.length > 1) where.propertyTypeGroup = { in: typeGroups };
+  if (statuses.length === 1) where.status = statuses[0];
+  if (statuses.length > 1) where.status = { in: statuses };
+  if (occupancies.length === 1) where.occupancyStatus = occupancies[0];
+  if (occupancies.length > 1) where.occupancyStatus = { in: occupancies };
 
   if (minPrice !== undefined || maxPrice !== undefined) {
     where.marketValue = {
@@ -194,10 +208,14 @@ export function buildPropertyOrderBy(params: SearchParamRecord): Prisma.Property
   if (sort === "auctionDateDesc") return [{ auctionDate: "desc" }, { marketValue: "asc" }];
   if (sort === "priceAsc") return [{ marketValue: "asc" }, { auctionDate: "asc" }];
   if (sort === "priceDesc") return [{ marketValue: "desc" }, { auctionDate: "asc" }];
-  if (sort === "livingAreaDesc") return [{ livingArea: "desc" }, { auctionDate: "asc" }];
-  if (sort === "updatedDesc") return [{ updatedAt: "desc" }, { auctionDate: "asc" }];
 
   return [{ status: "asc" }, { auctionDate: "asc" }, { marketValue: "asc" }];
+}
+
+function addMultiChips(chips: ActiveFilterChip[], key: string, prefix: string, values: string[], labeler = (value: string) => value) {
+  values.forEach((value) => {
+    chips.push({ key, value, label: `${prefix}: ${labeler(value)}` });
+  });
 }
 
 export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterChip[] {
@@ -212,21 +230,15 @@ export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterC
   };
 
   addText("q", "Поиск");
-  addText("state", "Земля");
+  addMultiChips(chips, "state", "Земля", asStringArray(params.state));
   addText("city", "Город");
   addText("postalCode", "PLZ");
-  addText("location", "Umkreis-Ort/PLZ");
   addNumber("radiusKm", "Radius", (value) => `${value} км`);
   addText("court", "Суд");
 
-  const typeGroup = asString(params.typeGroup);
-  if (typeGroup) chips.push({ key: "typeGroup", label: `Тип: ${optionLabel(PROPERTY_GROUP_OPTIONS, typeGroup)}` });
-
-  const status = asString(params.status);
-  if (status) chips.push({ key: "status", label: `Статус: ${optionLabel(STATUS_OPTIONS, status)}` });
-
-  const occupancy = asString(params.occupancy);
-  if (occupancy) chips.push({ key: "occupancy", label: `Использование: ${optionLabel(OCCUPANCY_OPTIONS, occupancy)}` });
+  addMultiChips(chips, "typeGroup", "Тип", asStringArray(params.typeGroup), (value) => optionLabel(PROPERTY_GROUP_OPTIONS, value));
+  addMultiChips(chips, "status", "Статус", asStringArray(params.status), (value) => optionLabel(STATUS_OPTIONS, value));
+  addMultiChips(chips, "occupancy", "Использование", asStringArray(params.occupancy), (value) => optionLabel(OCCUPANCY_OPTIONS, value));
 
   addNumber("minPrice", "Цена от", formatEuro);
   addNumber("maxPrice", "Цена до", formatEuro);
@@ -254,19 +266,12 @@ export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterC
 
   const mapBounds = getMapBounds(params);
   if (mapBounds) {
-    chips.push({
-      key: "mapBounds",
-      label: "Область карты",
-      removeKeys: ["minLat", "maxLat", "minLng", "maxLng"]
-    });
+    chips.push({ key: "mapBounds", label: "Область карты", removeKeys: ["minLat", "maxLat", "minLng", "maxLng"] });
   }
 
   const polygonPoints = parsePolygonParam(params.poly);
   if (polygonPoints.length >= 3) {
-    chips.push({
-      key: "poly",
-      label: `Polygon-Suche: ${polygonPoints.length} Punkte`
-    });
+    chips.push({ key: "poly", label: `Polygon-Suche: ${polygonPoints.length} Punkte` });
   }
 
   return chips;

@@ -84,7 +84,7 @@ function toLeafletCoordinates(points: DrawPoint[]): LatLngTuple[] {
   return points.map((point) => [point.lat, point.lng]);
 }
 
-export function PropertyMap({ properties }: { properties: MapProperty[] }) {
+export function PropertyMap({ properties, variant = "default" }: { properties: MapProperty[]; variant?: "default" | "wide" | "large" }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -199,7 +199,7 @@ export function PropertyMap({ properties }: { properties: MapProperty[] }) {
         }
 
         const map = L.map(mapElementRef.current, {
-          scrollWheelZoom: false,
+          scrollWheelZoom: true,
           attributionControl: true
         }).setView(DEFAULT_CENTER, 6);
 
@@ -345,7 +345,7 @@ export function PropertyMap({ properties }: { properties: MapProperty[] }) {
   }, [polygonParam, mapReadyTick]);
 
   return (
-    <aside className="map-panel" id="map">
+    <aside className={`map-panel ${variant === "wide" ? "map-panel-wide" : ""} ${variant === "large" ? "map-panel-large" : ""}`} id="map">
       <div className="map-head">
         <div>
           <h2>Карта объектов</h2>

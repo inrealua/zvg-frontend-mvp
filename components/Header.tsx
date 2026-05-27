@@ -19,7 +19,8 @@ export async function Header() {
         </Link>
         <nav className="main-nav" aria-label="Главная навигация">
           <Link href="/">Объекты</Link>
-          <a href="/#map">Карта</a>
+          <Link href="/map">Карта</Link>
+          <Link href="/archive">Архив</Link>
           <Link href="/ueber-uns">О проекте</Link>
           {currentUser ? (
             <>

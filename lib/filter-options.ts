@@ -15,16 +15,12 @@ export const PROPERTY_GROUP_OPTIONS: SelectOption[] = [
 ];
 
 export const STATUS_OPTIONS: SelectOption[] = [
-  { value: "", label: "Все статусы" },
+  { value: "", label: "Все актуальные" },
   { value: "ACTIVE", label: "Активен" },
-  { value: "CANCELLED", label: "Торги отменены" },
-  { value: "ARCHIVED", label: "Архив" },
-  { value: "SOLD", label: "Продан" },
-  { value: "UNKNOWN", label: "Неизвестно" }
+  { value: "CANCELLED", label: "Торги отменены" }
 ];
 
 export const OCCUPANCY_OPTIONS: SelectOption[] = [
-  { value: "", label: "Любое использование" },
   { value: "VACANT", label: "Свободен" },
   { value: "RENTED", label: "Сдан в аренду" },
   { value: "OWNER_OCCUPIED", label: "Используется собственником" },
@@ -54,9 +50,7 @@ export const SORT_OPTIONS: SelectOption[] = [
   { value: "auctionDateAsc", label: "Дата торгов: ближайшие" },
   { value: "auctionDateDesc", label: "Дата торгов: поздние" },
   { value: "priceAsc", label: "Цена: дешёвые" },
-  { value: "priceDesc", label: "Цена: дорогие" },
-  { value: "livingAreaDesc", label: "Wohnfläche: больше" },
-  { value: "updatedDesc", label: "Недавно обновлённые" }
+  { value: "priceDesc", label: "Цена: дорогие" }
 ];
 
 export function optionLabel(options: SelectOption[], value: string): string {

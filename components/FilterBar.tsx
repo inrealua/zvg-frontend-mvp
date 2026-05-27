@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useState } from "react";
 import {
   AUCTION_ATTEMPT_OPTIONS,
   BOOLEAN_OPTIONS,
@@ -10,22 +10,91 @@ import {
   PROPERTY_GROUP_OPTIONS,
   SORT_OPTIONS,
   STATUS_OPTIONS,
-  WERTGRENZEN_OPTIONS
+  WERTGRENZEN_OPTIONS,
+  type SelectOption
 } from "@/lib/filter-options";
 import { RADIUS_OPTIONS } from "@/lib/geo";
+
+const PRICE_MAX = 600_000;
+const AREA_MAX = 500;
+const PLOT_MAX = 5000;
 
 type FilterBarProps = {
   states: string[];
   courts: string[];
   cities: string[];
+  compact?: boolean;
 };
 
 function getInitialValue(params: URLSearchParams, key: string): string {
   return params.get(key) ?? "";
 }
 
-export function FilterBar({ states, courts, cities }: FilterBarProps) {
+function getInitialValues(params: URLSearchParams, key: string): string[] {
+  return params.getAll(key);
+}
+
+function MultiCheckboxGroup({ title, name, options, selected }: { title: string; name: string; options: SelectOption[]; selected: string[] }) {
+  const values = new Set(selected);
+  const realOptions = options.filter((option) => option.value);
+
+  return (
+    <fieldset className="field multi-field">
+      <legend>{title}</legend>
+      <div className="multi-options">
+        {realOptions.map((option) => (
+          <label key={option.value} className="multi-option">
+            <input name={name} type="checkbox" value={option.value} defaultChecked={values.has(option.value)} />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+function StateCheckboxGroup({ states, selected }: { states: string[]; selected: string[] }) {
+  const values = new Set(selected);
+
+  return (
+    <fieldset className="field multi-field field-wide">
+      <legend>Bundesland</legend>
+      <div className="multi-options compact-options">
+        {states.map((state) => (
+          <label key={state} className="multi-option">
+            <input name="state" type="checkbox" value={state} defaultChecked={values.has(state)} />
+            <span>{state}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+function RangeInput({ label, name, max, step, defaultValue, suffix = "" }: { label: string; name: string; max: number; step: number; defaultValue: string; suffix?: string }) {
+  const [value, setValue] = useState(defaultValue || "");
+  const display = value ? `${Number(value).toLocaleString("de-DE")}${suffix}` : "не задано";
+
+  return (
+    <div className="field range-field">
+      <label htmlFor={name}>{label}: <b>{display}</b></label>
+      <input
+        id={name}
+        type="range"
+        min="0"
+        max={max}
+        step={step}
+        value={value || "0"}
+        onChange={(event) => setValue(event.target.value === "0" ? "" : event.target.value)}
+      />
+      <input type="hidden" name={name} value={value} />
+    </div>
+  );
+}
+
+export function FilterBar({ states, courts, cities, compact = false }: FilterBarProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -35,23 +104,25 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
 
     for (const [key, value] of formData.entries()) {
       const text = String(value).trim();
-      if (text.length > 0) next.set(key, text);
+      if (text.length > 0) next.append(key, text);
     }
 
+    next.delete("page");
+
     const query = next.toString();
-    router.push(query ? `/?${query}` : "/");
+    router.push(query ? `${pathname}?${query}` : pathname);
   }
 
   function clearFilters() {
-    router.push("/");
+    router.push(pathname);
   }
 
   return (
-    <form className="filters" onSubmit={onSubmit}>
+    <form className={compact ? "filters filters-compact" : "filters"} onSubmit={onSubmit}>
       <div className="filter-topline">
         <div>
           <h2>Фильтр объектов</h2>
-          <p>Данные берутся напрямую из MySQL. Импорт позже будет писать сразу в эту же базу.</p>
+          <p>Радиус теперь строится от выбранного города или PLZ. Отдельное поле Ort/PLZ für Radius убрано.</p>
         </div>
         <button type="button" onClick={clearFilters} className="btn btn-ghost">Сбросить</button>
       </div>
@@ -62,13 +133,7 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
           <input id="q" name="q" placeholder="Адрес, город, Aktenzeichen, суд" defaultValue={getInitialValue(searchParams, "q")} />
         </div>
 
-        <div className="field">
-          <label htmlFor="state">Bundesland</label>
-          <select id="state" name="state" defaultValue={getInitialValue(searchParams, "state")}>
-            <option value="">Все земли</option>
-            {states.map((state) => <option key={state} value={state}>{state}</option>)}
-          </select>
-        </div>
+        <StateCheckboxGroup states={states} selected={getInitialValues(searchParams, "state")} />
 
         <div className="field">
           <label htmlFor="city">Город</label>
@@ -84,12 +149,7 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
         </div>
 
         <div className="field">
-          <label htmlFor="location">Ort/PLZ für Radius</label>
-          <input id="location" name="location" placeholder="Chemnitz или 09111" defaultValue={getInitialValue(searchParams, "location")} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="radiusKm">Umkreis</label>
+          <label htmlFor="radiusKm">Umkreis от города/PLZ</label>
           <select id="radiusKm" name="radiusKm" defaultValue={getInitialValue(searchParams, "radiusKm")}>
             {RADIUS_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
@@ -103,12 +163,8 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
           </select>
         </div>
 
-        <div className="field">
-          <label htmlFor="typeGroup">Тип объекта</label>
-          <select id="typeGroup" name="typeGroup" defaultValue={getInitialValue(searchParams, "typeGroup")}>
-            {PROPERTY_GROUP_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </div>
+        <MultiCheckboxGroup title="Тип объекта" name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} />
+        <MultiCheckboxGroup title="Использование" name="occupancy" options={OCCUPANCY_OPTIONS} selected={getInitialValues(searchParams, "occupancy")} />
 
         <div className="field">
           <label htmlFor="status">Статус</label>
@@ -117,42 +173,12 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
           </select>
         </div>
 
-        <div className="field">
-          <label htmlFor="occupancy">Использование</label>
-          <select id="occupancy" name="occupancy" defaultValue={getInitialValue(searchParams, "occupancy")}>
-            {OCCUPANCY_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </div>
-
-        <div className="field">
-          <label htmlFor="minPrice">Цена от</label>
-          <input id="minPrice" name="minPrice" type="number" min="0" placeholder="0" defaultValue={getInitialValue(searchParams, "minPrice")} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="maxPrice">Цена до</label>
-          <input id="maxPrice" name="maxPrice" type="number" min="0" placeholder="100000" defaultValue={getInitialValue(searchParams, "maxPrice")} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="minLivingArea">Wohnfläche от</label>
-          <input id="minLivingArea" name="minLivingArea" type="number" min="0" placeholder="50" defaultValue={getInitialValue(searchParams, "minLivingArea")} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="maxLivingArea">Wohnfläche до</label>
-          <input id="maxLivingArea" name="maxLivingArea" type="number" min="0" placeholder="200" defaultValue={getInitialValue(searchParams, "maxLivingArea")} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="minPlotArea">Grundstück от</label>
-          <input id="minPlotArea" name="minPlotArea" type="number" min="0" placeholder="300" defaultValue={getInitialValue(searchParams, "minPlotArea")} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="maxPlotArea">Grundstück до</label>
-          <input id="maxPlotArea" name="maxPlotArea" type="number" min="0" placeholder="1500" defaultValue={getInitialValue(searchParams, "maxPlotArea")} />
-        </div>
+        <RangeInput label="Цена от" name="minPrice" max={PRICE_MAX} step={5000} defaultValue={getInitialValue(searchParams, "minPrice")} suffix=" €" />
+        <RangeInput label="Цена до" name="maxPrice" max={PRICE_MAX} step={5000} defaultValue={getInitialValue(searchParams, "maxPrice")} suffix=" €" />
+        <RangeInput label="Wohnfläche от" name="minLivingArea" max={AREA_MAX} step={5} defaultValue={getInitialValue(searchParams, "minLivingArea")} suffix=" m²" />
+        <RangeInput label="Wohnfläche до" name="maxLivingArea" max={AREA_MAX} step={5} defaultValue={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" />
+        <RangeInput label="Grundstück от" name="minPlotArea" max={PLOT_MAX} step={50} defaultValue={getInitialValue(searchParams, "minPlotArea")} suffix=" m²" />
+        <RangeInput label="Grundstück до" name="maxPlotArea" max={PLOT_MAX} step={50} defaultValue={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" />
 
         <div className="field">
           <label htmlFor="dateFrom">Торги от</label>
