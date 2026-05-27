@@ -17,7 +17,12 @@ export type CurrentUser = {
 };
 
 function getSessionSecret(): string {
-  return process.env.USER_SESSION_SECRET || process.env.ADMIN_SESSION_TOKEN || process.env.ADMIN_PASSWORD || "dev-user-session-secret-change-me";
+  const secret = process.env.USER_SESSION_SECRET;
+  if (!secret) {
+    // Не используем другой fallback в production, чтобы cookie не подписывались разными секретами.
+    return "dev-user-session-secret-change-me";
+  }
+  return secret;
 }
 
 function base64UrlJson(value: unknown): string {
@@ -33,6 +38,20 @@ function timingSafeEqual(a: string, b: string): boolean {
   const bBuffer = Buffer.from(b);
   if (aBuffer.length !== bBuffer.length) return false;
   return crypto.timingSafeEqual(aBuffer, bBuffer);
+}
+
+function getCookieValueFromHeader(cookieHeader: string | null, name: string): string | undefined {
+  if (!cookieHeader) return undefined;
+
+  const parts = cookieHeader.split(";");
+  for (const part of parts) {
+    const [rawKey, ...rawValueParts] = part.trim().split("=");
+    if (rawKey === name) {
+      return rawValueParts.join("=");
+    }
+  }
+
+  return undefined;
 }
 
 export function normalizeEmail(email: string): string {
@@ -115,9 +134,22 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
 
 export async function getCurrentUserFromRequest(request: NextRequest): Promise<CurrentUser | null> {
   noStore();
-  const tokenFromRequest = request.cookies.get(USER_SESSION_COOKIE)?.value;
-  if (tokenFromRequest) return getUserByToken(tokenFromRequest);
 
+  // 1) Стандартный способ NextRequest.
+  const tokenFromRequest = request.cookies.get(USER_SESSION_COOKIE)?.value;
+  if (tokenFromRequest) {
+    const user = await getUserByToken(tokenFromRequest);
+    if (user) return user;
+  }
+
+  // 2) Надёжный fallback для Vercel/production: вручную читаем raw Cookie header.
+  const tokenFromHeader = getCookieValueFromHeader(request.headers.get("cookie"), USER_SESSION_COOKIE);
+  if (tokenFromHeader) {
+    const user = await getUserByToken(tokenFromHeader);
+    if (user) return user;
+  }
+
+  // 3) Fallback для server components / actions.
   const cookieStore = await cookies();
   return getUserByToken(cookieStore.get(USER_SESSION_COOKIE)?.value);
 }
