@@ -36,6 +36,7 @@ export async function Header() {
               <Link href="/admin/dashboard">Dashboard</Link>
               <Link href="/admin/quality">Quality</Link>
               <Link href="/admin/export">Export</Link>
+              <Link href="/admin/duplicates">Duplicates</Link>
               <Link href="/admin">Admin</Link>
               <Link href="/admin/import">Import</Link>
             </>

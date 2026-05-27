@@ -2231,3 +2231,144 @@ button, input, select { font: inherit; }
   .export-layout { grid-template-columns: 1fr; }
   .export-grid { grid-template-columns: 1fr; }
 }
+
+/* Stage 16: duplicate management */
+.duplicate-kpi-grid {
+  margin: 18px 0 22px;
+}
+
+.duplicate-list {
+  display: grid;
+  gap: 22px;
+}
+
+.duplicate-card {
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.duplicate-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+}
+
+.duplicate-card-head h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.duplicate-card-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.duplicate-count {
+  display: inline-flex;
+  min-width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #f97316;
+  color: #fff;
+  font-weight: 800;
+}
+
+.duplicate-table td small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.recommended-row {
+  background: #fff7ed;
+}
+
+.radio-cell {
+  display: grid;
+  gap: 6px;
+  align-items: center;
+  justify-items: start;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.radio-cell input {
+  width: 18px;
+  height: 18px;
+}
+
+.quality-badges .neutral {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.duplicate-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.duplicate-actions p {
+  margin: 0;
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.admin-danger-button {
+  border: 0;
+  border-radius: 14px;
+  background: #dc2626;
+  color: #fff;
+  padding: 11px 16px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-danger-button:hover {
+  background: #b91c1c;
+}
+
+.notice {
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  font-weight: 700;
+}
+
+.notice.success {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.notice.error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+@media (max-width: 900px) {
+  .duplicate-card-head,
+  .duplicate-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-danger-button {
+    width: 100%;
+  }
+}
