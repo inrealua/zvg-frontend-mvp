@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import {
   AUCTION_ATTEMPT_OPTIONS,
   BOOLEAN_OPTIONS,
@@ -34,60 +34,194 @@ function getInitialValues(params: URLSearchParams, key: string): string[] {
   return params.getAll(key);
 }
 
-function MultiCheckboxGroup({ title, name, options, selected }: { title: string; name: string; options: SelectOption[]; selected: string[] }) {
-  const values = new Set(selected);
+function formatNumber(value: number): string {
+  return value.toLocaleString("de-DE");
+}
+
+function buildSummary(selected: string[], options: SelectOption[], emptyLabel: string): string {
+  if (selected.length === 0) return emptyLabel;
+  const labels = selected.map((value) => options.find((option) => option.value === value)?.label ?? value);
+  if (labels.length <= 2) return labels.join(", ");
+  return `${labels.slice(0, 2).join(", ")} +${labels.length - 2}`;
+}
+
+function buildStateSummary(selected: string[]): string {
+  if (selected.length === 0) return "Все земли";
+  if (selected.length <= 2) return selected.join(", ");
+  return `${selected.slice(0, 2).join(", ")} +${selected.length - 2}`;
+}
+
+function MultiSelectDropdown({
+  title,
+  name,
+  options,
+  selected,
+  emptyLabel
+}: {
+  title: string;
+  name: string;
+  options: SelectOption[];
+  selected: string[];
+  emptyLabel: string;
+}) {
   const realOptions = options.filter((option) => option.value);
+  const [values, setValues] = useState<string[]>(selected);
+  const selectedSet = useMemo(() => new Set(values), [values]);
+  const summary = buildSummary(values, realOptions, emptyLabel);
+
+  function toggle(value: string, checked: boolean) {
+    setValues((current) => checked ? [...current, value] : current.filter((item) => item !== value));
+  }
 
   return (
-    <fieldset className="field multi-field">
-      <legend>{title}</legend>
-      <div className="multi-options">
-        {realOptions.map((option) => (
-          <label key={option.value} className="multi-option">
-            <input name={name} type="checkbox" value={option.value} defaultChecked={values.has(option.value)} />
-            <span>{option.label}</span>
-          </label>
-        ))}
+    <details className="field dropdown-multi">
+      <summary>
+        <span>
+          <small>{title}</small>
+          <b>{summary}</b>
+        </span>
+        <i>{values.length > 0 ? values.length : ""}</i>
+      </summary>
+      <div className="dropdown-panel">
+        <div className="dropdown-panel-head">
+          <b>{title}</b>
+          <span>{values.length > 0 ? `Выбрано: ${values.length}` : "Можно выбрать несколько"}</span>
+        </div>
+        <div className="dropdown-options">
+          {realOptions.map((option) => (
+            <label key={option.value} className="check-card">
+              <input
+                name={name}
+                type="checkbox"
+                value={option.value}
+                checked={selectedSet.has(option.value)}
+                onChange={(event) => toggle(option.value, event.target.checked)}
+              />
+              <span>{option.label}</span>
+            </label>
+          ))}
+        </div>
       </div>
-    </fieldset>
+    </details>
   );
 }
 
-function StateCheckboxGroup({ states, selected }: { states: string[]; selected: string[] }) {
-  const values = new Set(selected);
+function StateMultiSelect({ states, selected }: { states: string[]; selected: string[] }) {
+  const [values, setValues] = useState<string[]>(selected);
+  const selectedSet = useMemo(() => new Set(values), [values]);
+
+  function toggle(value: string, checked: boolean) {
+    setValues((current) => checked ? [...current, value] : current.filter((item) => item !== value));
+  }
 
   return (
-    <fieldset className="field multi-field field-wide">
-      <legend>Bundesland</legend>
-      <div className="multi-options compact-options">
-        {states.map((state) => (
-          <label key={state} className="multi-option">
-            <input name="state" type="checkbox" value={state} defaultChecked={values.has(state)} />
-            <span>{state}</span>
-          </label>
-        ))}
+    <details className="field dropdown-multi">
+      <summary>
+        <span>
+          <small>Bundesland</small>
+          <b>{buildStateSummary(values)}</b>
+        </span>
+        <i>{values.length > 0 ? values.length : ""}</i>
+      </summary>
+      <div className="dropdown-panel dropdown-panel-wide">
+        <div className="dropdown-panel-head">
+          <b>Bundesland</b>
+          <span>{values.length > 0 ? `Выбрано: ${values.length}` : "Можно выбрать несколько земель"}</span>
+        </div>
+        <div className="dropdown-options state-options">
+          {states.map((state) => (
+            <label key={state} className="check-card">
+              <input
+                name="state"
+                type="checkbox"
+                value={state}
+                checked={selectedSet.has(state)}
+                onChange={(event) => toggle(state, event.target.checked)}
+              />
+              <span>{state}</span>
+            </label>
+          ))}
+        </div>
       </div>
-    </fieldset>
+    </details>
   );
 }
 
-function RangeInput({ label, name, max, step, defaultValue, suffix = "" }: { label: string; name: string; max: number; step: number; defaultValue: string; suffix?: string }) {
-  const [value, setValue] = useState(defaultValue || "");
-  const display = value ? `${Number(value).toLocaleString("de-DE")}${suffix}` : "не задано";
+function DualRange({
+  label,
+  minName,
+  maxName,
+  max,
+  step,
+  minDefault,
+  maxDefault,
+  suffix = ""
+}: {
+  label: string;
+  minName: string;
+  maxName: string;
+  max: number;
+  step: number;
+  minDefault: string;
+  maxDefault: string;
+  suffix?: string;
+}) {
+  const initialMin = Number(minDefault || "0");
+  const initialMax = Number(maxDefault || String(max));
+  const [minValue, setMinValue] = useState(Number.isFinite(initialMin) ? Math.max(0, Math.min(initialMin, max)) : 0);
+  const [maxValue, setMaxValue] = useState(Number.isFinite(initialMax) ? Math.max(0, Math.min(initialMax, max)) : max);
+
+  const safeMin = Math.min(minValue, maxValue);
+  const safeMax = Math.max(minValue, maxValue);
+  const minPercent = (safeMin / max) * 100;
+  const maxPercent = (safeMax / max) * 100;
+  const isDefault = safeMin === 0 && safeMax === max;
+
+  const display = isDefault
+    ? "не задано"
+    : `${formatNumber(safeMin)}${suffix} — ${formatNumber(safeMax)}${suffix}`;
 
   return (
-    <div className="field range-field">
-      <label htmlFor={name}>{label}: <b>{display}</b></label>
-      <input
-        id={name}
-        type="range"
-        min="0"
-        max={max}
-        step={step}
-        value={value || "0"}
-        onChange={(event) => setValue(event.target.value === "0" ? "" : event.target.value)}
-      />
-      <input type="hidden" name={name} value={value} />
+    <div className="field dual-range-field">
+      <div className="range-title">
+        <span>{label}</span>
+        <b>{display}</b>
+      </div>
+
+      <div
+        className="dual-range"
+        style={{
+          ["--range-start" as string]: `${minPercent}%`,
+          ["--range-end" as string]: `${maxPercent}%`
+        }}
+      >
+        <input
+          type="range"
+          min="0"
+          max={max}
+          step={step}
+          value={safeMin}
+          onChange={(event) => setMinValue(Math.min(Number(event.target.value), safeMax))}
+          aria-label={`${label} от`}
+        />
+        <input
+          type="range"
+          min="0"
+          max={max}
+          step={step}
+          value={safeMax}
+          onChange={(event) => setMaxValue(Math.max(Number(event.target.value), safeMin))}
+          aria-label={`${label} до`}
+        />
+      </div>
+
+      <div className="range-scale">
+        <span>0{suffix}</span>
+        <span>{formatNumber(max)}{suffix}</span>
+      </div>
+
+      <input type="hidden" name={minName} value={safeMin > 0 ? String(safeMin) : ""} />
+      <input type="hidden" name={maxName} value={safeMax < max ? String(safeMax) : ""} />
     </div>
   );
 }
@@ -118,22 +252,22 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
   }
 
   return (
-    <form className={compact ? "filters filters-compact" : "filters"} onSubmit={onSubmit}>
+    <form className={compact ? "filters filters-compact filters-redesigned" : "filters filters-redesigned"} onSubmit={onSubmit}>
       <div className="filter-topline">
         <div>
           <h2>Фильтр объектов</h2>
-          <p>Радиус теперь строится от выбранного города или PLZ. Отдельное поле Ort/PLZ für Radius убрано.</p>
+          <p>Многовыбор теперь компактный. Радиус строится от выбранного города или PLZ.</p>
         </div>
         <button type="button" onClick={clearFilters} className="btn btn-ghost">Сбросить</button>
       </div>
 
-      <div className="filters-grid">
-        <div className="field field-wide">
+      <div className="filters-grid filters-grid-redesigned">
+        <div className="field field-search">
           <label htmlFor="q">Поиск</label>
           <input id="q" name="q" placeholder="Адрес, город, Aktenzeichen, суд" defaultValue={getInitialValue(searchParams, "q")} />
         </div>
 
-        <StateCheckboxGroup states={states} selected={getInitialValues(searchParams, "state")} />
+        <StateMultiSelect states={states} selected={getInitialValues(searchParams, "state")} />
 
         <div className="field">
           <label htmlFor="city">Город</label>
@@ -149,13 +283,13 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         </div>
 
         <div className="field">
-          <label htmlFor="radiusKm">Umkreis от города/PLZ</label>
+          <label htmlFor="radiusKm">Umkreis</label>
           <select id="radiusKm" name="radiusKm" defaultValue={getInitialValue(searchParams, "radiusKm")}>
             {RADIUS_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
         </div>
 
-        <div className="field field-wide">
+        <div className="field field-court">
           <label htmlFor="court">Amtsgericht</label>
           <select id="court" name="court" defaultValue={getInitialValue(searchParams, "court")}>
             <option value="">Все суды</option>
@@ -163,8 +297,8 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
           </select>
         </div>
 
-        <MultiCheckboxGroup title="Тип объекта" name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} />
-        <MultiCheckboxGroup title="Использование" name="occupancy" options={OCCUPANCY_OPTIONS} selected={getInitialValues(searchParams, "occupancy")} />
+        <MultiSelectDropdown title="Тип объекта" name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} emptyLabel="Все типы" />
+        <MultiSelectDropdown title="Использование" name="occupancy" options={OCCUPANCY_OPTIONS} selected={getInitialValues(searchParams, "occupancy")} emptyLabel="Любое использование" />
 
         <div className="field">
           <label htmlFor="status">Статус</label>
@@ -173,12 +307,9 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
           </select>
         </div>
 
-        <RangeInput label="Цена от" name="minPrice" max={PRICE_MAX} step={5000} defaultValue={getInitialValue(searchParams, "minPrice")} suffix=" €" />
-        <RangeInput label="Цена до" name="maxPrice" max={PRICE_MAX} step={5000} defaultValue={getInitialValue(searchParams, "maxPrice")} suffix=" €" />
-        <RangeInput label="Wohnfläche от" name="minLivingArea" max={AREA_MAX} step={5} defaultValue={getInitialValue(searchParams, "minLivingArea")} suffix=" m²" />
-        <RangeInput label="Wohnfläche до" name="maxLivingArea" max={AREA_MAX} step={5} defaultValue={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" />
-        <RangeInput label="Grundstück от" name="minPlotArea" max={PLOT_MAX} step={50} defaultValue={getInitialValue(searchParams, "minPlotArea")} suffix=" m²" />
-        <RangeInput label="Grundstück до" name="maxPlotArea" max={PLOT_MAX} step={50} defaultValue={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" />
+        <DualRange label="Цена" minName="minPrice" maxName="maxPrice" max={PRICE_MAX} step={5000} minDefault={getInitialValue(searchParams, "minPrice")} maxDefault={getInitialValue(searchParams, "maxPrice")} suffix=" €" />
+        <DualRange label="Wohnfläche" minName="minLivingArea" maxName="maxLivingArea" max={AREA_MAX} step={5} minDefault={getInitialValue(searchParams, "minLivingArea")} maxDefault={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" />
+        <DualRange label="Grundstück" minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" />
 
         <div className="field">
           <label htmlFor="dateFrom">Торги от</label>

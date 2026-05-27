@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/user-auth";
+import { getCurrentUserFromRequest } from "@/lib/user-auth";
 
 type FavoriteRouteContext = {
   params: Promise<{ propertyId: string }>;
 };
 
-export async function POST(_request: NextRequest, context: FavoriteRouteContext) {
-  const user = await getCurrentUser();
+export async function POST(request: NextRequest, context: FavoriteRouteContext) {
+  const user = await getCurrentUserFromRequest(request);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { propertyId } = await context.params;
@@ -23,8 +23,8 @@ export async function POST(_request: NextRequest, context: FavoriteRouteContext)
   return NextResponse.json({ success: true });
 }
 
-export async function DELETE(_request: NextRequest, context: FavoriteRouteContext) {
-  const user = await getCurrentUser();
+export async function DELETE(request: NextRequest, context: FavoriteRouteContext) {
+  const user = await getCurrentUserFromRequest(request);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { propertyId } = await context.params;

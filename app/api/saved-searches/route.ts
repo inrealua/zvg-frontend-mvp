@@ -1,10 +1,10 @@
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/user-auth";
+import { getCurrentUserFromRequest } from "@/lib/user-auth";
 
 export async function POST(request: NextRequest) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUserFromRequest(request);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json().catch(() => null) as { filtersUrl?: string; summary?: string } | null;

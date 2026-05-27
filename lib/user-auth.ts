@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
+import type { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export const USER_SESSION_COOKIE = "zvg_user_session";
@@ -91,9 +92,7 @@ export function userSessionCookieOptions() {
   };
 }
 
-export async function getCurrentUser(): Promise<CurrentUser | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(USER_SESSION_COOKIE)?.value;
+async function getUserByToken(token: string | undefined): Promise<CurrentUser | null> {
   if (!token) return null;
 
   const session = verifyUserSessionToken(token);
@@ -105,6 +104,15 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   });
 
   return user;
+}
+
+export async function getCurrentUser(): Promise<CurrentUser | null> {
+  const cookieStore = await cookies();
+  return getUserByToken(cookieStore.get(USER_SESSION_COOKIE)?.value);
+}
+
+export async function getCurrentUserFromRequest(request: NextRequest): Promise<CurrentUser | null> {
+  return getUserByToken(request.cookies.get(USER_SESSION_COOKIE)?.value);
 }
 
 export function getSafeNextUrl(rawNext: string | null, fallback = "/cabinet"): string {

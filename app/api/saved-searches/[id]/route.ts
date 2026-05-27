@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/user-auth";
+import { getCurrentUserFromRequest } from "@/lib/user-auth";
 
 type SavedSearchRouteContext = {
   params: Promise<{ id: string }>;
 };
 
-export async function DELETE(_request: NextRequest, context: SavedSearchRouteContext) {
-  const user = await getCurrentUser();
+export async function DELETE(request: NextRequest, context: SavedSearchRouteContext) {
+  const user = await getCurrentUserFromRequest(request);
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await context.params;
