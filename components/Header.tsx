@@ -1,14 +1,11 @@
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { getCurrentUser } from "@/lib/user-auth";
+import { AuthNav } from "@/components/AuthNav";
 
 export async function Header() {
   noStore();
-  const [isAdmin, currentUser] = await Promise.all([
-    isAdminAuthenticated(),
-    getCurrentUser()
-  ]);
+  const isAdmin = await isAdminAuthenticated();
 
   return (
     <header className="site-header">
@@ -24,17 +21,7 @@ export async function Header() {
           <Link href="/map">Карта</Link>
           <Link href="/archive">Архив</Link>
           <Link href="/ueber-uns">О проекте</Link>
-          {currentUser ? (
-            <>
-              <Link href="/cabinet">Кабинет</Link>
-              <Link href="/logout">Выйти</Link>
-            </>
-          ) : (
-            <>
-              <Link href="/login">Войти</Link>
-              <Link href="/register">Регистрация</Link>
-            </>
-          )}
+          <AuthNav />
           {isAdmin ? (
             <>
               <Link href="/admin/dashboard">Dashboard</Link>
@@ -45,7 +32,9 @@ export async function Header() {
               <Link href="/admin">Admin</Link>
               <Link href="/admin/import">Import</Link>
             </>
-          ) : <Link href="/admin/login">Admin</Link>}
+          ) : (
+            <Link href="/admin/login">Admin</Link>
+          )}
         </nav>
       </div>
     </header>

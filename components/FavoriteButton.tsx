@@ -1,22 +1,25 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function FavoriteButton({ propertyId, initialIsFavorite = false, compact = false }: { propertyId: string; initialIsFavorite?: boolean; compact?: boolean }) {
+  const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
 
   async function toggleFavorite() {
     if (isLoading) return;
     setIsLoading(true);
-    setMessage(null);
 
     try {
       const response = await fetch(`/api/favorites/${propertyId}`, {
         method: isFavorite ? "DELETE" : "POST",
-        credentials: "same-origin",
-        cache: "no-store"
+        credentials: "include",
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-store"
+        }
       });
 
       if (response.status === 401) {
@@ -27,29 +30,23 @@ export function FavoriteButton({ propertyId, initialIsFavorite = false, compact 
 
       if (response.ok) {
         setIsFavorite(!isFavorite);
-      } else {
-        setMessage("Не удалось сохранить избранное");
+        router.refresh();
       }
-    } catch {
-      setMessage("Ошибка соединения");
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <span className="favorite-wrap">
-      <button
-        type="button"
-        className={compact ? "favorite-pill compact" : "favorite-pill"}
-        onClick={toggleFavorite}
-        disabled={isLoading}
-        aria-pressed={isFavorite}
-      >
-        <span>{isFavorite ? "♥" : "♡"}</span>
-        {compact ? null : <b>{isFavorite ? "В избранном" : "В избранное"}</b>}
-      </button>
-      {message ? <small className="favorite-message">{message}</small> : null}
-    </span>
+    <button
+      type="button"
+      className={compact ? "favorite-pill compact" : "favorite-pill"}
+      onClick={toggleFavorite}
+      disabled={isLoading}
+      aria-pressed={isFavorite}
+    >
+      <span>{isFavorite ? "♥" : "♡"}</span>
+      {compact ? null : <b>{isFavorite ? "В избранном" : "В избранное"}</b>}
+    </button>
   );
 }
