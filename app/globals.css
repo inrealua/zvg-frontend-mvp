@@ -2155,3 +2155,79 @@ button, input, select { font: inherit; }
     grid-template-columns: 1fr;
   }
 }
+
+/* Stage 15: admin export */
+.export-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, .9fr);
+  gap: 18px;
+  align-items: start;
+}
+.export-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow-sm);
+  padding: 22px;
+}
+.export-card h2 { margin: 0 0 8px; font-size: 21px; }
+.export-card p { color: var(--muted); line-height: 1.55; }
+.export-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+.export-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 800;
+}
+.export-grid input,
+.export-grid select {
+  height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 13px;
+  padding: 0 12px;
+  background: #fff;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+.export-grid input:focus,
+.export-grid select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(29,78,216,.12);
+}
+.export-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.export-help ul {
+  margin: 12px 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.export-help code {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2px 6px;
+}
+.muted-note { font-size: 13px; }
+.export-quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+@media (max-width: 900px) {
+  .export-layout { grid-template-columns: 1fr; }
+  .export-grid { grid-template-columns: 1fr; }
+}
