@@ -13,8 +13,8 @@ export function Header() {
         <nav className="main-nav" aria-label="Главная навигация">
           <Link href="/">Объекты</Link>
           <a href="/#map">Карта</a>
+          <Link href="/admin">Admin</Link>
           <span className="nav-disabled">Кабинет позже</span>
-          <span className="nav-disabled">Admin позже</span>
         </nav>
       </div>
     </header>
