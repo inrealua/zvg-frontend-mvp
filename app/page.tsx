@@ -47,6 +47,19 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
   const cities = citiesRaw.map((item) => item.city);
   const activeCount = properties.filter((property) => property.status === "ACTIVE").length;
   const cancelledCount = properties.filter((property) => property.status === "CANCELLED").length;
+  const mapProperties = properties.map((property) => ({
+    id: property.id,
+    title: property.title,
+    address: property.address,
+    latitude: property.latitude,
+    longitude: property.longitude,
+    status: property.status,
+    propertyTypeGroup: property.propertyTypeGroup,
+    city: property.city,
+    marketValue: property.marketValue,
+    auctionDate: property.auctionDate ? property.auctionDate.toISOString() : null,
+    imageUrl: property.images[0]?.url ?? null
+  }));
 
   return (
     <main>
@@ -99,7 +112,7 @@ export default async function HomePage({ searchParams }: { searchParams: HomeSea
             )}
           </div>
 
-          <PropertyMap properties={properties} />
+          <PropertyMap properties={mapProperties} />
         </div>
       </section>
     </main>

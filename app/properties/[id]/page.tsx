@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PropertyDetailMap } from "@/components/PropertyDetailMap";
 import { prisma } from "@/lib/prisma";
 import { formatArea, formatDateTime, formatEuro, shortAddress, statusClass, translateGroup, translateOccupancy, translateStatus } from "@/lib/format";
 
@@ -109,11 +110,21 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
             </section>
 
             <section className="panel">
-              <h2>Мини-карта</h2>
-              <div className="mini-map">
-                <span>{property.latitude?.toFixed(4) ?? "—"}, {property.longitude?.toFixed(4) ?? "—"}</span>
-              </div>
-              <p className="meta">На следующем этапе подключим реальную OpenStreetMap/Leaflet-карту.</p>
+              <h2>Карта объекта</h2>
+              <PropertyDetailMap
+                property={{
+                  id: property.id,
+                  title: property.title,
+                  address: property.address,
+                  latitude: property.latitude,
+                  longitude: property.longitude,
+                  status: property.status,
+                  propertyTypeGroup: property.propertyTypeGroup,
+                  city: property.city,
+                  marketValue: property.marketValue
+                }}
+              />
+              <p className="meta">Координаты: {property.latitude?.toFixed(4) ?? "—"}, {property.longitude?.toFixed(4) ?? "—"}</p>
             </section>
 
             <section className="panel">

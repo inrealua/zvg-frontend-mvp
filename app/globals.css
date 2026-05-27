@@ -521,3 +521,158 @@ button, input, select { font: inherit; }
   .gallery { grid-template-columns: repeat(2, 1fr); }
   .fake-map { height: 420px; }
 }
+
+/* Stage 2: real OpenStreetMap / Leaflet map */
+.leaflet-map {
+  width: 100%;
+  height: 680px;
+  min-height: 520px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #eef2f7;
+  z-index: 1;
+}
+
+.detail-leaflet-map {
+  width: 100%;
+  height: 280px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #eef2f7;
+  z-index: 1;
+}
+
+.map-error,
+.mini-map.empty {
+  min-height: 260px;
+  border-radius: 18px;
+  border: 1px dashed var(--border);
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  text-align: center;
+  padding: 20px;
+}
+
+.osm-marker {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 999px;
+  border: 3px solid #fff;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.24);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.osm-marker span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #fff;
+  display: block;
+}
+
+.osm-marker-wohnhaus { background: #7c3aed; }
+.osm-marker-wohnung { background: #2563eb; }
+.osm-marker-grund { background: #16a34a; }
+.osm-marker-gewerbe { background: #ea580c; }
+.osm-marker-garage { background: #64748b; }
+.osm-marker-cancelled { background: #dc2626; }
+
+.leaflet-popup-content-wrapper {
+  border-radius: 18px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.22);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  min-width: 220px;
+}
+
+.osm-popup-card {
+  width: 240px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.osm-popup-card img,
+.osm-popup-placeholder {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+}
+
+.osm-popup-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.osm-popup-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  color: var(--text);
+}
+
+.osm-popup-body.compact {
+  min-width: 160px;
+}
+
+.osm-popup-body b {
+  font-size: 15px;
+}
+
+.osm-popup-body span,
+.osm-popup-body small {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.osm-popup-body a {
+  display: inline-flex;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--primary);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.leaflet-control-attribution {
+  font-size: 10px;
+}
+
+@media (max-width: 900px) {
+  .leaflet-map {
+    height: 520px;
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .leaflet-map {
+    height: 420px;
+    min-height: 360px;
+    border-radius: 18px;
+  }
+
+  .detail-leaflet-map {
+    height: 240px;
+  }
+}

@@ -1,72 +1,149 @@
-import Link from "next/link";
-import { formatEuro, translateGroup } from "@/lib/format";
+"use client";
 
-type MapProperty = {
+import { useEffect, useMemo, useRef, useState } from "react";
+import { formatDate, formatEuro, translateGroup } from "@/lib/format";
+import { escapeHtml, loadLeaflet, type LatLngTuple, type LeafletMapInstance } from "@/lib/leaflet-loader";
+
+export type MapProperty = {
   id: string;
   title: string;
+  address: string;
   latitude: number | null;
   longitude: number | null;
   status: string;
   propertyTypeGroup: string;
   city: string;
   marketValue: number | null;
+  auctionDate: string | null;
+  imageUrl: string | null;
 };
 
+const DEFAULT_CENTER: LatLngTuple = [51.1657, 10.4515];
+
 function markerClass(property: MapProperty): string {
-  if (property.status === "CANCELLED") return "map-marker cancelled";
-  if (property.propertyTypeGroup === "GEWERBE") return "map-marker gewerbe";
-  if (property.propertyTypeGroup === "GRUNDSTUECKE" || property.propertyTypeGroup === "LAND_WALD") return "map-marker grund";
-  if (property.propertyTypeGroup === "WOHNUNGEN") return "map-marker wohnung";
-  if (property.propertyTypeGroup === "GARAGEN") return "map-marker garage";
-  return "map-marker wohnhaus";
+  if (property.status === "CANCELLED") return "osm-marker osm-marker-cancelled";
+  if (property.propertyTypeGroup === "GEWERBE") return "osm-marker osm-marker-gewerbe";
+  if (property.propertyTypeGroup === "GRUNDSTUECKE" || property.propertyTypeGroup === "LAND_WALD") return "osm-marker osm-marker-grund";
+  if (property.propertyTypeGroup === "WOHNUNGEN") return "osm-marker osm-marker-wohnung";
+  if (property.propertyTypeGroup === "GARAGEN") return "osm-marker osm-marker-garage";
+  return "osm-marker osm-marker-wohnhaus";
 }
 
-function position(property: MapProperty): { left: string; top: string } {
-  const lat = property.latitude ?? 51;
-  const lon = property.longitude ?? 11;
-  const minLat = 47.2;
-  const maxLat = 55.2;
-  const minLon = 5.8;
-  const maxLon = 15.2;
-  const left = ((lon - minLon) / (maxLon - minLon)) * 100;
-  const top = 100 - ((lat - minLat) / (maxLat - minLat)) * 100;
-  return {
-    left: `${Math.min(96, Math.max(4, left))}%`,
-    top: `${Math.min(96, Math.max(4, top))}%`
-  };
+function popupHtml(property: MapProperty): string {
+  const image = property.imageUrl
+    ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(property.title)}" />`
+    : `<div class="osm-popup-placeholder">Нет фото</div>`;
+
+  return `
+    <div class="osm-popup-card">
+      ${image}
+      <div class="osm-popup-body">
+        <b>${escapeHtml(property.city)}</b>
+        <span>${escapeHtml(translateGroup(property.propertyTypeGroup))}</span>
+        <span>${escapeHtml(formatEuro(property.marketValue))}</span>
+        <small>${escapeHtml(formatDate(property.auctionDate))}</small>
+        <a href="/properties/${encodeURIComponent(property.id)}">Подробнее</a>
+      </div>
+    </div>
+  `;
 }
 
 export function PropertyMap({ properties }: { properties: MapProperty[] }) {
-  const withCoordinates = properties.filter((property) => property.latitude !== null && property.longitude !== null);
+  const mapElementRef = useRef<HTMLDivElement | null>(null);
+  const mapInstanceRef = useRef<LeafletMapInstance | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const withCoordinates = useMemo(
+    () => properties.filter((property) => property.latitude !== null && property.longitude !== null),
+    [properties]
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function initMap() {
+      if (!mapElementRef.current) return;
+
+      try {
+        setError(null);
+        const L = await loadLeaflet();
+        if (cancelled || !mapElementRef.current) return;
+
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.remove();
+          mapInstanceRef.current = null;
+        }
+
+        const map = L.map(mapElementRef.current, {
+          scrollWheelZoom: false,
+          attributionControl: true
+        }).setView(DEFAULT_CENTER, 6);
+
+        mapInstanceRef.current = map;
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap contributors"
+        }).addTo(map);
+
+        const bounds: LatLngTuple[] = [];
+
+        withCoordinates.forEach((property) => {
+          if (property.latitude === null || property.longitude === null) return;
+          const coordinates: LatLngTuple = [property.latitude, property.longitude];
+          bounds.push(coordinates);
+
+          const icon = L.divIcon({
+            className: markerClass(property),
+            html: "<span></span>",
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+          });
+
+          const marker = L.marker(coordinates, { icon }).addTo(map);
+          marker.bindPopup?.(popupHtml(property));
+        });
+
+        if (bounds.length === 1) {
+          map.setView(bounds[0], 11);
+        } else if (bounds.length > 1) {
+          map.fitBounds(L.latLngBounds(bounds), { padding: [28, 28], maxZoom: 11 });
+        }
+      } catch (mapError) {
+        const message = mapError instanceof Error ? mapError.message : "Map loading failed";
+        setError(message);
+      }
+    }
+
+    initMap();
+
+    return () => {
+      cancelled = true;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [withCoordinates]);
 
   return (
     <aside className="map-panel" id="map">
       <div className="map-head">
         <div>
           <h2>Карта объектов</h2>
-          <p className="meta">MVP-карта без Leaflet. Следующим этапом заменим на OpenStreetMap.</p>
+          <p className="meta">OpenStreetMap/Leaflet. Колесо мыши отключено, чтобы карта не мешала скроллу страницы.</p>
         </div>
         <span className="map-count">{withCoordinates.length}</span>
       </div>
 
-      <div className="fake-map" aria-label="Карта объектов">
-        <div className="map-label north">DE</div>
-        {withCoordinates.map((property) => (
-          <Link
-            key={property.id}
-            href={`/properties/${property.id}`}
-            className={markerClass(property)}
-            style={position(property)}
-            title={`${property.title} · ${property.city} · ${formatEuro(property.marketValue)}`}
-          >
-            <span className="marker-tooltip">
-              <b>{property.city}</b><br />
-              {translateGroup(property.propertyTypeGroup)}<br />
-              {formatEuro(property.marketValue)}
-            </span>
-          </Link>
-        ))}
-      </div>
+      {error ? (
+        <div className="map-error">
+          <b>Карта не загрузилась</b>
+          <span>{error}</span>
+        </div>
+      ) : (
+        <div ref={mapElementRef} className="leaflet-map" aria-label="Карта объектов" />
+      )}
 
       <div className="map-legend">
         <span><i className="legend-dot wohnhaus" /> Häuser</span>
