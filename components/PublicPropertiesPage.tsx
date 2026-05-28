@@ -267,7 +267,7 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
     : [];
   const favoriteIds = new Set(favoriteRows.map((favorite) => favorite.propertyId));
   const filtersUrl = buildCurrentFiltersUrl(params, mode);
-  const searchSummary = activeChips.length > 0 ? activeChips.map((chip) => chip.label).join(" · ") : "Все объекты";
+  const searchSummary = activeChips.length > 0 ? activeChips.map((chip) => chip.label).join(" · ") : "Alle Objekte";
 
   const filterBlock = <FilterBar states={states} courts={courts} cities={cities} compact={mode === "map"} />;
   const activeFilterBlock = <ActiveFilters chips={activeChips} />;
@@ -276,13 +276,13 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
     <>
       {radiusFilter ? (
         <div className="notice-bar">
-          Radius-Suche: центр <b>{radiusFilter.center.label}</b>, радиус <b>{radiusFilter.radiusKm} км</b>. Список отсортирован по расстоянию.
+          Umkreissuche aktiv: Zentrum <b>{radiusFilter.center.label}</b>, Radius <b>{radiusFilter.radiusKm} km</b>. Die Ergebnisse sind nach Entfernung sortiert.
         </div>
       ) : null}
 
       {polygonPoints.length >= 3 ? (
         <div className="notice-bar">
-          Polygon-Suche активна: список показывает объекты внутри нарисованной области карты. Точек полигона: <b>{polygonPoints.length}</b>.
+          Polygon-Suche aktiv: Die Liste zeigt nur Objekte innerhalb der gezeichneten Kartenfläche. Polygonpunkte: <b>{polygonPoints.length}</b>.
         </div>
       ) : null}
     </>
@@ -313,7 +313,7 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
         <EmptyState />
       ) : (
         <>
-          <div className="card-list">
+          <div className={mode === "objects" ? "card-list home-property-grid" : "card-list"}>
             {properties.map((property) => <PropertyCard key={property.id} property={property} isFavorite={favoriteIds.has(property.id)} />)}
           </div>
           {mode !== "objects" ? (

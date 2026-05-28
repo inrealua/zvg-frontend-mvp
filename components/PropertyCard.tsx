@@ -36,11 +36,11 @@ export function PropertyCard({ property, isFavorite = false }: { property: Prope
 
   return (
     <article className="property-card">
-      <Link className="card-image-wrap" href={`/properties/${property.id}`} aria-label={`Открыть ${property.title}`}>
+      <Link className="card-image-wrap" href={`/properties/${property.id}`} aria-label={`Objekt öffnen: ${property.title}`}>
         {mainImage ? (
           <img src={mainImage.url} alt={mainImage.alt ?? property.title} />
         ) : (
-          <div className="image-placeholder">Нет фото</div>
+          <div className="image-placeholder">Kein Foto</div>
         )}
         <span className={`status-badge image-badge ${statusClass(property.status)}`}>{translateStatus(property.status)}</span>
       </Link>
