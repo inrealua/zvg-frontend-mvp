@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
-import { createUserSessionToken } from "@/lib/user-auth";
-import { setUserSessionCookie } from "@/lib/session-cookie";
+import {
+  createUserSessionToken,
+  USER_SESSION_COOKIE,
+  userSessionCookieOptions,
+} from "@/lib/user-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -21,23 +24,27 @@ type GoogleUserInfo = {
   picture?: string;
 };
 
-function getBaseUrl(request: NextRequest) {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    `${request.nextUrl.protocol}//${request.nextUrl.host}`
-  ).replace(/\/$/, "");
+function getRequestBaseUrl(request: NextRequest) {
+  return `${request.nextUrl.protocol}//${request.nextUrl.host}`.replace(/\/$/, "");
 }
 
 function readNextFromState(state: string | null) {
   if (!state) return "/cabinet";
+
   try {
     const parsed = JSON.parse(Buffer.from(state, "base64url").toString("utf8"));
-    if (typeof parsed.next === "string" && parsed.next.startsWith("/")) {
+
+    if (
+      typeof parsed.next === "string" &&
+      parsed.next.startsWith("/") &&
+      !parsed.next.startsWith("//")
+    ) {
       return parsed.next;
     }
   } catch {
     // ignore invalid state
   }
+
   return "/cabinet";
 }
 
@@ -47,7 +54,7 @@ export async function GET(request: NextRequest) {
   const next = readNextFromState(state);
 
   if (!code) {
-    return NextResponse.redirect(new URL(`/login?error=google`, request.url));
+    return NextResponse.redirect(new URL("/login?error=google", request.url));
   }
 
   const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -60,7 +67,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const baseUrl = getBaseUrl(request);
+  const baseUrl = getRequestBaseUrl(request);
   const redirectUri = `${baseUrl}/api/auth/google/callback`;
 
   const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
@@ -79,19 +86,22 @@ export async function GET(request: NextRequest) {
 
   if (!tokenResponse.ok || !tokenJson.access_token) {
     console.error("Google token exchange failed", tokenJson);
-    return NextResponse.redirect(new URL(`/login?error=google`, request.url));
+    return NextResponse.redirect(new URL("/login?error=google", request.url));
   }
 
-  const userInfoResponse = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
-    headers: { Authorization: `Bearer ${tokenJson.access_token}` },
-    cache: "no-store",
-  });
+  const userInfoResponse = await fetch(
+    "https://openidconnect.googleapis.com/v1/userinfo",
+    {
+      headers: { Authorization: `Bearer ${tokenJson.access_token}` },
+      cache: "no-store",
+    }
+  );
 
   const googleUser = (await userInfoResponse.json()) as GoogleUserInfo;
 
   if (!userInfoResponse.ok || !googleUser.email) {
     console.error("Google userinfo failed", googleUser);
-    return NextResponse.redirect(new URL(`/login?error=google`, request.url));
+    return NextResponse.redirect(new URL("/login?error=google", request.url));
   }
 
   const email = googleUser.email.trim().toLowerCase();
@@ -112,10 +122,17 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  const token = await createUserSessionToken(user.id);
-  const response = NextResponse.redirect(new URL(next, request.url), { status: 303 });
+  const token = createUserSessionToken(user.id);
+  const response = NextResponse.redirect(new URL(next, request.url), {
+    status: 303,
+  });
 
-  setUserSessionCookie(response, token);
+  response.cookies.set(
+    USER_SESSION_COOKIE,
+    token,
+    userSessionCookieOptions()
+  );
+
   response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
   response.headers.set("Pragma", "no-cache");
   response.headers.set("Expires", "0");

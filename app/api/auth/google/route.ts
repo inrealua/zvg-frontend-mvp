@@ -3,11 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-function getBaseUrl(request: NextRequest) {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    `${request.nextUrl.protocol}//${request.nextUrl.host}`
-  ).replace(/\/$/, "");
+function getRequestBaseUrl(request: NextRequest) {
+  return `${request.nextUrl.protocol}//${request.nextUrl.host}`.replace(/\/$/, "");
+}
+
+function getSafeNext(rawNext: string | null) {
+  if (!rawNext) return "/cabinet";
+  if (!rawNext.startsWith("/")) return "/cabinet";
+  if (rawNext.startsWith("//")) return "/cabinet";
+  return rawNext;
 }
 
 export async function GET(request: NextRequest) {
@@ -20,9 +24,9 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const baseUrl = getBaseUrl(request);
+  const baseUrl = getRequestBaseUrl(request);
   const callbackUrl = `${baseUrl}/api/auth/google/callback`;
-  const next = request.nextUrl.searchParams.get("next") || "/cabinet";
+  const next = getSafeNext(request.nextUrl.searchParams.get("next"));
 
   const statePayload = Buffer.from(
     JSON.stringify({ next, createdAt: Date.now() }),
