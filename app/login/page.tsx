@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser, getSafeNextUrl } from "@/lib/user-auth";
+import { GoogleLoginButton } from "@/components/GoogleLoginButton";
 
 type LoginPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -36,6 +37,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         <form className="auth-form" action="/api/auth/login" method="post">
           <input type="hidden" name="next" value={nextUrl} />
+          <GoogleLoginButton next="/cabinet" />
           <label>
             Email
             <input name="email" type="email" autoComplete="email" required />
