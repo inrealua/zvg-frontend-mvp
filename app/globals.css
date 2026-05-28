@@ -4786,3 +4786,276 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* === Stage 29: navigation, search layout, cards and map polish === */
+.design-nav a[href="/"]::after {
+  content: "";
+}
+
+/* Make the map/advanced-search sidebar readable: one clear vertical column. */
+.map-filter-sidebar .advanced-filters,
+.map-search-page .advanced-filters {
+  width: 100%;
+  overflow: visible !important;
+}
+
+.map-filter-sidebar .advanced-filter-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+}
+
+.map-filter-sidebar .advanced-filter-grid > *,
+.map-filter-sidebar .advanced-filter-grid .span-3,
+.map-filter-sidebar .advanced-filter-grid .span-4,
+.map-filter-sidebar .advanced-filter-grid .span-5,
+.map-filter-sidebar .advanced-filter-grid .span-6,
+.map-filter-sidebar .advanced-filter-grid .span-12 {
+  width: 100% !important;
+  grid-column: auto !important;
+}
+
+.map-filter-sidebar .field,
+.map-filter-sidebar .advanced-check-group,
+.map-filter-sidebar .advanced-range-card {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.map-filter-sidebar .field input,
+.map-filter-sidebar .field select,
+.map-filter-sidebar .advanced-filters input,
+.map-filter-sidebar .advanced-filters select {
+  width: 100% !important;
+  min-height: 50px;
+  font-size: 0.96rem;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* Full page filters, when not in a narrow sidebar, stay as a calm grid. */
+.page-section > .advanced-filters:not(.filters-compact) .advanced-filter-grid:not(.map-filter-sidebar .advanced-filter-grid) {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.advanced-check-group {
+  overflow: visible !important;
+}
+
+.advanced-check-group legend {
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.advanced-check-options,
+.state-check-options {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+}
+
+.map-filter-sidebar .advanced-check-options,
+.map-filter-sidebar .state-check-options {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+
+.advanced-check {
+  justify-content: flex-start !important;
+  white-space: normal !important;
+  line-height: 1.2;
+}
+
+/* Range sliders: no overlay, no tiny broken boxes. */
+.range-row {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(240px, 1fr)) !important;
+  gap: 18px !important;
+}
+
+.map-filter-sidebar .range-row {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+}
+
+.advanced-range-card {
+  min-height: 112px !important;
+  padding: 18px 18px 16px !important;
+  overflow: hidden !important;
+}
+
+.advanced-range-card .range-title {
+  min-height: 22px;
+}
+
+.advanced-range-card .range-title b {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.dual-range,
+.advanced-filters .dual-range {
+  width: 100% !important;
+  height: 34px !important;
+  margin: 18px 0 6px !important;
+  position: relative !important;
+}
+
+.dual-range input[type="range"] {
+  width: 100% !important;
+  height: 34px !important;
+}
+
+/* Homepage cards: centered lower metadata and more breathing room between chips. */
+.home-property-grid .property-card {
+  overflow: hidden;
+}
+
+.home-property-grid .card-content {
+  text-align: left;
+}
+
+.home-property-grid .price-box {
+  text-align: center !important;
+  border-radius: 18px;
+}
+
+.home-property-grid .kpis .kpi {
+  text-align: center;
+}
+
+.home-property-grid .tag-row {
+  justify-content: center !important;
+  gap: 10px !important;
+  margin-top: 12px;
+}
+
+.home-property-grid .tag-row span {
+  padding: 7px 12px !important;
+  line-height: 1.1;
+}
+
+.home-property-grid .card-actions {
+  align-items: center;
+}
+
+.home-property-grid .card-actions .btn {
+  text-align: center;
+}
+
+/* Regular property cards also get safer chip spacing. */
+.property-card .tag-row {
+  gap: 10px !important;
+  row-gap: 9px !important;
+}
+
+.property-card .tag-row span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* More distinguishable but still muted marker palette. */
+.osm-marker {
+  border: 3px solid #fff !important;
+  box-shadow: 0 8px 18px rgba(18, 41, 33, 0.24) !important;
+}
+.osm-marker-wohnhaus { background: #1f5e4a !important; }
+.osm-marker-wohnung { background: #2f6174 !important; }
+.osm-marker-grund { background: #6f8a46 !important; }
+.osm-marker-gewerbe { background: #b06a3c !important; }
+.osm-marker-garage { background: #665576 !important; }
+.osm-marker-cancelled { background: #9b3f3b !important; }
+
+.map-legend .legend-haus,
+.map-legend .legend-dot.wohnhaus { background: #1f5e4a !important; }
+.map-legend .legend-wohnung,
+.map-legend .legend-dot.wohnung { background: #2f6174 !important; }
+.map-legend .legend-grund,
+.map-legend .legend-dot.grund { background: #6f8a46 !important; }
+.map-legend .legend-gewerbe,
+.map-legend .legend-dot.gewerbe { background: #b06a3c !important; }
+.map-legend .legend-garage,
+.map-legend .legend-dot.garage { background: #665576 !important; }
+.map-legend .legend-cancelled,
+.map-legend .legend-dot.cancelled { background: #9b3f3b !important; }
+
+/* Popup card: less empty, better aligned. */
+.osm-popup-card-balanced {
+  width: 340px !important;
+  border-radius: 22px !important;
+  overflow: hidden;
+}
+
+.osm-popup-card-balanced img,
+.osm-popup-card-balanced .osm-popup-placeholder {
+  height: 132px !important;
+  width: 100%;
+  object-fit: cover;
+}
+
+.osm-popup-card-balanced .osm-popup-body {
+  padding: 16px !important;
+  gap: 10px !important;
+}
+
+.osm-popup-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.osm-popup-status {
+  color: #2f5e4e !important;
+  background: rgba(47, 94, 78, 0.08);
+  border: 1px solid rgba(47, 94, 78, 0.14);
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 0.72rem !important;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.osm-popup-card-balanced .osm-popup-address {
+  color: var(--muted) !important;
+  line-height: 1.35;
+}
+
+.osm-popup-card-balanced .osm-popup-facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.osm-popup-card-balanced .osm-popup-facts small {
+  min-height: 56px !important;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Detail mini map: allow mouse wheel zoom and interaction. */
+.detail-leaflet-map,
+.detail-leaflet-map.leaflet-container {
+  pointer-events: auto !important;
+  touch-action: pan-x pan-y pinch-zoom !important;
+}
+
+.detail-leaflet-map .leaflet-control-container,
+.detail-leaflet-map .leaflet-pane,
+.detail-leaflet-map .leaflet-top,
+.detail-leaflet-map .leaflet-bottom {
+  pointer-events: auto !important;
+}
+
+@media (max-width: 900px) {
+  .range-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .osm-popup-card-balanced {
+    width: 280px !important;
+  }
+}

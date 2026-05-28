@@ -48,7 +48,7 @@ export function PropertyDetailMap({ property }: { property: DetailMapProperty })
 
         const coordinates: LatLngTuple = [property.latitude, property.longitude];
         const map = L.map(mapElementRef.current, {
-          scrollWheelZoom: false,
+          scrollWheelZoom: true,
           attributionControl: true
         }).setView(coordinates, 14);
 
@@ -92,13 +92,13 @@ export function PropertyDetailMap({ property }: { property: DetailMapProperty })
   }, [property]);
 
   if (property.latitude === null || property.longitude === null) {
-    return <div className="mini-map empty">Координаты объекта пока отсутствуют</div>;
+    return <div className="mini-map empty">Koordinaten des Objekts sind noch nicht vorhanden</div>;
   }
 
   if (error) {
     return (
       <div className="mini-map empty">
-        <b>Карта не загрузилась</b>
+        <b>Karte konnte nicht geladen werden</b>
         <span>{error}</span>
       </div>
     );

@@ -40,13 +40,18 @@ function popupHtml(property: MapProperty): string {
     ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(property.title)}" />`
     : `<div class="osm-popup-placeholder">Kein Foto</div>`;
 
+  const statusLabel = property.status === "CANCELLED" ? "Termin aufgehoben" : "Aktuell";
+
   return `
-    <div class="osm-popup-card osm-popup-card-redesigned">
+    <div class="osm-popup-card osm-popup-card-redesigned osm-popup-card-balanced">
       ${image}
       <div class="osm-popup-body">
-        <div class="osm-popup-type">${escapeHtml(translateGroup(property.propertyTypeGroup))}</div>
+        <div class="osm-popup-topline">
+          <span class="osm-popup-type">${escapeHtml(translateGroup(property.propertyTypeGroup))}</span>
+          <span class="osm-popup-status">${escapeHtml(statusLabel)}</span>
+        </div>
         <b>${escapeHtml(property.title)}</b>
-        <span>${escapeHtml(property.address || property.city)}</span>
+        <span class="osm-popup-address">${escapeHtml(property.address || property.city)}</span>
         <div class="osm-popup-facts">
           <small>Termin<br><strong>${escapeHtml(formatDate(property.auctionDate))}</strong></small>
           <small>Verkehrswert<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
