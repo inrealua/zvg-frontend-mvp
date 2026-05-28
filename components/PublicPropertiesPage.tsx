@@ -160,9 +160,9 @@ function pageCopy(mode: PageMode) {
 
   return {
     kicker: "Geprüfte Immobilienauktionen · zvg-de.com",
-    title: "Immobilienauktionen in Deutschland.",
-    text: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien aus Zwangsversteigerungen mit klaren Filtern, Karte und strukturierten Objektinformationen.",
-    listTitle: "Aktuelle Immobilienauktionen",
+    title: "Alle gerichtlichen Versteigerungen an einem Ort.",
+    text: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien, Grundstücke und weitere ZVG-Objekte aus gerichtlichen Versteigerungen mit klaren Filtern, Karte und strukturierten Informationen.",
+    listTitle: "Aktuelle gerichtliche Versteigerungen",
     listText: "Aktuelle Objekte: vergangene Termine werden automatisch im Archiv geführt."
   };
 }
@@ -375,7 +375,7 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
             <p>{copy.text}</p>
           </div>
           <div className="hero-stats">
-            <div><span>{formatNumber(allCount)}</span><b>Aktuelle Immobilien</b></div>
+            <div><span>{formatNumber(allCount)}</span><b>Objekte in der Datenbank</b></div>
             <div><span>16</span><b>Bundesländer</b></div>
             <div><span>100%</span><b>kostenlos suchen</b></div>
           </div>

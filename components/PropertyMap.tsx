@@ -285,8 +285,8 @@ export function PropertyMap({ properties, variant = "default" }: { properties: M
         const pointLayer = L.circleMarker([point.lat, point.lng], {
           radius: 6,
           weight: 2,
-          color: "#111827",
-          fillColor: "#f59e0b",
+          color: "#2f5e4e",
+          fillColor: "#c9942e",
           fillOpacity: 0.9
         }).addTo(map);
         pointLayer.bindPopup?.(`Punkt ${index + 1}`);
@@ -295,13 +295,13 @@ export function PropertyMap({ properties, variant = "default" }: { properties: M
 
       if (drawPoints.length >= 3) {
         drawnShapeRef.current = L.polygon(toLeafletCoordinates(drawPoints), {
-          color: "#f59e0b",
+          color: "#c9942e",
           weight: 3,
           fillOpacity: 0.16
         }).addTo(map);
       } else if (drawPoints.length >= 2) {
         drawnShapeRef.current = L.polyline(toLeafletCoordinates(drawPoints), {
-          color: "#f59e0b",
+          color: "#c9942e",
           weight: 3,
           dashArray: "6 6"
         }).addTo(map);
@@ -330,7 +330,7 @@ export function PropertyMap({ properties, variant = "default" }: { properties: M
       if (activePolygonPoints.length >= 3) {
         const coordinates = toLeafletCoordinates(activePolygonPoints);
         activePolygonRef.current = L.polygon(coordinates, {
-          color: "#2563eb",
+          color: "#2f5e4e",
           weight: 3,
           fillOpacity: 0.12
         }).addTo(map);
@@ -348,27 +348,27 @@ export function PropertyMap({ properties, variant = "default" }: { properties: M
     <aside className={`map-panel ${variant === "wide" ? "map-panel-wide" : ""} ${variant === "large" ? "map-panel-large" : ""}`} id="map">
       <div className="map-head">
         <div>
-          <h2>Карта объектов</h2>
-          <p className="meta">OpenStreetMap/Leaflet. Можно искать по видимой области карты или нарисовать polygon search.</p>
+          <h2>Karte der Objekte</h2>
+          <p className="meta">Suchen Sie in der sichtbaren Kartenfläche oder zeichnen Sie eine eigene Suchregion.</p>
         </div>
         <span className="map-count">{withCoordinates.length}</span>
       </div>
 
       <div className="map-actions">
         <button type="button" className="btn btn-primary btn-small" onClick={applyVisibleMapArea} disabled={withCoordinates.length === 0 || Boolean(error)}>
-          Искать в этой области карты
+          In diesem Kartenausschnitt suchen
         </button>
         {mapBoundsActive ? (
           <button type="button" className="btn btn-ghost btn-small" onClick={clearVisibleMapArea}>
-            Убрать область карты
+            Kartenausschnitt entfernen
           </button>
         ) : null}
         <button type="button" className="btn btn-ghost btn-small" onClick={startPolygonDrawing} disabled={Boolean(error)}>
-          Нарисовать область
+          Region zeichnen
         </button>
         {polygonActive ? (
           <button type="button" className="btn btn-ghost btn-small" onClick={removePolygonFilter}>
-            Убрать polygon
+            Polygon entfernen
           </button>
         ) : null}
       </div>
@@ -376,38 +376,38 @@ export function PropertyMap({ properties, variant = "default" }: { properties: M
       {drawingMode ? (
         <div className="polygon-toolbar">
           <div>
-            <b>Polygon drawing</b>
-            <span>Кликай по карте, чтобы поставить точки. Минимум 3 точки.</span>
+            <b>Region zeichnen</b>
+            <span>Klicken Sie auf die Karte, um Punkte zu setzen. Mindestens 3 Punkte.</span>
           </div>
           <div className="polygon-toolbar-actions">
             <button type="button" className="btn btn-primary btn-small" onClick={applyPolygonSearch} disabled={drawPoints.length < 3}>
-              Применить polygon ({drawPoints.length})
+              Polygon anwenden ({drawPoints.length})
             </button>
             <button type="button" className="btn btn-ghost btn-small" onClick={clearDraftPolygon} disabled={drawPoints.length === 0}>
-              Очистить точки
+              Punkte löschen
             </button>
             <button type="button" className="btn btn-ghost btn-small" onClick={cancelPolygonDrawing}>
-              Отмена
+              Abbrechen
             </button>
           </div>
         </div>
       ) : null}
 
       {mapBoundsActive ? (
-        <div className="map-area-note">Активен фильтр по видимой области карты. Для изменения приблизь/сдвинь карту и нажми кнопку снова.</div>
+        <div className="map-area-note">Filter nach sichtbarer Kartenfläche ist aktiv. Karte verschieben oder zoomen und erneut anwenden.</div>
       ) : null}
 
       {polygonActive ? (
-        <div className="map-area-note">Активен polygon search. Объекты фильтруются по нарисованной области. Область сохраняется в URL.</div>
+        <div className="map-area-note">Polygon-Suche ist aktiv. Die Objekte werden nach der gezeichneten Region gefiltert.</div>
       ) : null}
 
       {error ? (
         <div className="map-error">
-          <b>Карта не загрузилась</b>
+          <b>Karte konnte nicht geladen werden</b>
           <span>{error}</span>
         </div>
       ) : (
-        <div ref={mapElementRef} className={drawingMode ? "leaflet-map leaflet-map-drawing" : "leaflet-map"} aria-label="Карта объектов" />
+        <div ref={mapElementRef} className={drawingMode ? "leaflet-map leaflet-map-drawing" : "leaflet-map"} aria-label="Karte der Objekte" />
       )}
 
       <div className="map-legend">

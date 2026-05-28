@@ -3744,3 +3744,323 @@ body {
   .property-card { grid-template-columns: 1fr; }
   .card-image-wrap { min-height: 220px; }
 }
+
+/* =========================================================
+   STAGE 26 — Design cleanup after visual review
+   Fixes: filter layout, multi-select behavior/appearance, softer map markers,
+   and clearer ZVG positioning.
+   ========================================================= */
+.hero h1 { max-width: 860px; }
+.hero p { max-width: 760px; }
+
+.filters-redesigned {
+  padding: 22px;
+  overflow: visible;
+}
+
+.clean-filter-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.filters-grid-redesigned {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+  align-items: end;
+  overflow: visible;
+}
+
+.filters-grid-redesigned > .field,
+.filters-grid-redesigned .field-search,
+.filters-grid-redesigned .field-court,
+.filters-grid-redesigned .dual-range-field {
+  grid-column: auto !important;
+}
+
+.filter-span-2 { grid-column: span 2 !important; }
+.filter-span-3 { grid-column: span 3 !important; }
+.filter-span-4 { grid-column: span 4 !important; }
+
+.filters-grid-redesigned .field label {
+  min-height: 16px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.filters-grid-redesigned .field input,
+.filters-grid-redesigned .field select,
+.multi-select-trigger {
+  width: 100%;
+  height: 50px;
+  border: 1px solid var(--border-strong);
+  border-radius: 15px;
+  background: #fff;
+  color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+
+.multi-select-field {
+  position: relative;
+  z-index: 8;
+  min-width: 0;
+}
+
+.multi-select-field.is-open { z-index: 120; }
+
+.multi-select-trigger {
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.multi-select-trigger:hover {
+  border-color: rgba(47, 94, 78, .45);
+  background: #fbfaf7;
+}
+
+.multi-select-field.is-open .multi-select-trigger {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(47, 94, 78, .12);
+}
+
+.multi-select-trigger span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.multi-select-trigger small {
+  color: #506070;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.multi-select-trigger b {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.multi-select-trigger i {
+  margin-left: auto;
+  color: var(--primary);
+  font-style: normal;
+  font-size: 16px;
+}
+
+.multi-select-trigger .multi-count {
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: var(--primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.multi-select-panel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  width: min(360px, calc(100vw - 42px));
+  max-height: 320px;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .98);
+  box-shadow: 0 24px 70px rgba(23, 32, 42, .16);
+}
+
+.multi-select-panel-wide { width: min(440px, calc(100vw - 42px)); }
+
+.multi-select-panel-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 2px 10px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, .98);
+}
+
+.multi-select-panel-head b {
+  display: block;
+  font-size: 14px;
+}
+
+.multi-select-panel-head span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.multi-select-panel-head button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 6px 9px;
+  color: var(--primary-dark);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.multi-select-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.multi-select-options.state-options {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.multi-select-option {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 10px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.multi-select-option:hover {
+  border-color: rgba(47, 94, 78, .3);
+  background: var(--primary-soft);
+}
+
+.multi-select-option input {
+  flex: 0 0 auto;
+  width: 15px !important;
+  height: 15px !important;
+  accent-color: var(--primary);
+}
+
+.multi-select-option:has(input:checked) {
+  border-color: rgba(47, 94, 78, .48);
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.dual-range-field {
+  grid-column: span 4 !important;
+  min-height: 100px;
+}
+
+.filter-actions {
+  padding-top: 4px;
+}
+
+
+/* Soft map style: markers should feel like part of the muted green design, not bright category pins. */
+.leaflet-tile {
+  filter: saturate(.72) contrast(.94) brightness(1.02);
+}
+
+.osm-marker {
+  width: 24px !important;
+  height: 24px !important;
+  border: 3px solid rgba(255, 255, 255, .92);
+  box-shadow: 0 8px 18px rgba(23, 32, 42, .22);
+}
+
+.osm-marker span {
+  width: 7px;
+  height: 7px;
+  background: rgba(255, 255, 255, .95);
+}
+
+.osm-marker-wohnhaus { background: #2f5e4e; }
+.osm-marker-wohnung { background: #5f796d; }
+.osm-marker-grund { background: #78907f; }
+.osm-marker-gewerbe { background: #9a6a45; }
+.osm-marker-garage { background: #7a8690; }
+.osm-marker-cancelled { background: #9f4b45; }
+
+.legend-dot.wohnhaus { background: #2f5e4e; }
+.legend-dot.wohnung { background: #5f796d; }
+.legend-dot.grund { background: #78907f; }
+.legend-dot.gewerbe { background: #9a6a45; }
+.legend-dot.cancelled { background: #9f4b45; }
+
+.leaflet-marker-icon {
+  transition: transform .16s ease, filter .16s ease;
+}
+.leaflet-marker-icon:hover {
+  filter: brightness(1.05);
+  transform: scale(1.07);
+}
+
+.map-head h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: var(--primary);
+  opacity: .55;
+}
+
+@media (max-width: 1180px) {
+  .filter-span-2,
+  .filter-span-3,
+  .filter-span-4,
+  .dual-range-field {
+    grid-column: span 6 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .filter-span-2,
+  .filter-span-3,
+  .filter-span-4,
+  .dual-range-field {
+    grid-column: span 1 !important;
+  }
+
+  .multi-select-panel,
+  .multi-select-panel-wide {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    top: auto;
+    bottom: 14px;
+    width: auto;
+    max-width: none;
+    max-height: min(70vh, 520px);
+    z-index: 999;
+  }
+
+  .multi-select-options.state-options {
+    grid-template-columns: 1fr;
+  }
+}
