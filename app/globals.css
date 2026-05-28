@@ -5059,3 +5059,187 @@ body {
     width: 280px !important;
   }
 }
+
+/* === Stage 30: fix homepage card chip spacing + advanced multi-select proportions === */
+
+/* 1) Homepage cards: tags must never touch the Details button. */
+.home-property-grid .property-card {
+  min-height: 0;
+}
+
+.home-property-grid .card-content {
+  gap: 12px;
+}
+
+.home-property-grid .tag-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+  margin-bottom: 18px !important;
+  padding-bottom: 2px !important;
+}
+
+.home-property-grid .tag-row span {
+  flex: 0 0 auto;
+  max-width: 100%;
+  min-height: 30px;
+  padding: 8px 13px !important;
+  line-height: 1 !important;
+  white-space: nowrap;
+}
+
+.home-property-grid .card-footer {
+  margin-top: auto !important;
+  padding-top: 0 !important;
+  display: block !important;
+}
+
+.home-property-grid .card-actions {
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.home-property-grid .card-actions .btn-soft,
+.home-property-grid .card-actions a.btn {
+  min-height: 48px !important;
+  width: 100% !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-radius: 18px !important;
+}
+
+/* 2) Advanced search multi-select blocks: clean compact cards, no oversized empty boxes. */
+.advanced-check-group {
+  border: 1px solid rgba(47, 94, 78, 0.18) !important;
+  border-radius: 22px !important;
+  padding: 16px !important;
+  background: rgba(255,255,255,0.78) !important;
+  overflow: visible !important;
+}
+
+.advanced-check-group legend {
+  width: 100%;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0 2px !important;
+  margin: 0 0 12px !important;
+}
+
+.advanced-check-group legend span,
+.advanced-check-group legend b {
+  display: block !important;
+  position: static !important;
+  transform: none !important;
+  color: var(--text) !important;
+}
+
+.advanced-check-group legend span {
+  font-size: 0.86rem !important;
+  font-weight: 900 !important;
+}
+
+.advanced-check-group legend b {
+  font-size: 0.86rem !important;
+  font-weight: 900 !important;
+  color: var(--primary) !important;
+  text-align: right !important;
+}
+
+.advanced-check-options,
+.state-check-options,
+.map-filter-sidebar .advanced-check-options,
+.map-filter-sidebar .state-check-options {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.map-filter-sidebar .advanced-check-options,
+.map-filter-sidebar .state-check-options {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.advanced-check,
+.map-filter-sidebar .advanced-check {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  padding: 10px 12px !important;
+  border: 1px solid rgba(47, 94, 78, 0.18) !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: var(--text) !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+}
+
+.advanced-check input,
+.map-filter-sidebar .advanced-check input {
+  position: static !important;
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  accent-color: var(--primary) !important;
+  appearance: auto !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.advanced-check span,
+.map-filter-sidebar .advanced-check span {
+  display: block !important;
+  position: static !important;
+  transform: none !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+  line-height: 1.15 !important;
+  font-weight: 850 !important;
+  font-size: 0.9rem !important;
+}
+
+.advanced-check.is-selected,
+.advanced-check:has(input:checked) {
+  border-color: rgba(47, 94, 78, 0.55) !important;
+  background: rgba(47, 94, 78, 0.08) !important;
+  box-shadow: inset 0 0 0 1px rgba(47, 94, 78, 0.08) !important;
+}
+
+/* Sidebar is narrow: keep 2 neat columns where possible, 1 column on mobile. */
+@media (max-width: 1200px) {
+  .map-filter-sidebar .advanced-check-options,
+  .map-filter-sidebar .state-check-options {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .advanced-check-options,
+  .state-check-options,
+  .map-filter-sidebar .advanced-check-options,
+  .map-filter-sidebar .state-check-options {
+    grid-template-columns: 1fr !important;
+  }
+}
