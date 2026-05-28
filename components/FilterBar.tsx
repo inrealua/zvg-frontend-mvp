@@ -255,24 +255,24 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
     <form className={compact ? "filters filters-compact filters-redesigned" : "filters filters-redesigned"} onSubmit={onSubmit}>
       <div className="filter-topline clean-filter-head">
         <div>
-          <h2>Фильтр объектов</h2>
-          <p>Выберите параметры. Многовыбор открывается выпадающим списком.</p>
+          <h2>Immobilien suchen</h2>
+          <p>Filtern Sie nach Ort, Bundesland, Objektart, Termin und Verkehrswert.</p>
         </div>
-        <button type="button" onClick={clearFilters} className="btn btn-ghost">Сбросить</button>
+        <button type="button" onClick={clearFilters} className="btn btn-ghost">Zurücksetzen</button>
       </div>
 
       <div className="filters-grid filters-grid-redesigned">
         <div className="field field-search">
-          <label htmlFor="q">Поиск</label>
-          <input id="q" name="q" placeholder="Адрес, город, Aktenzeichen, суд" defaultValue={getInitialValue(searchParams, "q")} />
+          <label htmlFor="q">Suche</label>
+          <input id="q" name="q" placeholder="Ort, PLZ, Adresse, Aktenzeichen, Gericht" defaultValue={getInitialValue(searchParams, "q")} />
         </div>
 
         <StateMultiSelect states={states} selected={getInitialValues(searchParams, "state")} />
 
         <div className="field">
-          <label htmlFor="city">Город</label>
+          <label htmlFor="city">Ort</label>
           <select id="city" name="city" defaultValue={getInitialValue(searchParams, "city")}>
-            <option value="">Все города</option>
+            <option value="">Alle Orte</option>
             {cities.map((city) => <option key={city} value={city}>{city}</option>)}
           </select>
         </div>
@@ -290,18 +290,18 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         </div>
 
         <div className="field field-court">
-          <label htmlFor="court">Amtsgericht</label>
+          <label htmlFor="court">Gericht</label>
           <select id="court" name="court" defaultValue={getInitialValue(searchParams, "court")}>
-            <option value="">Все суды</option>
+            <option value="">Alle Gerichte</option>
             {courts.map((court) => <option key={court} value={court}>{court}</option>)}
           </select>
         </div>
 
-        <MultiSelectDropdown title="Тип объекта" name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} emptyLabel="Все типы" />
-        <MultiSelectDropdown title="Использование" name="occupancy" options={OCCUPANCY_OPTIONS} selected={getInitialValues(searchParams, "occupancy")} emptyLabel="Любое использование" />
+        <MultiSelectDropdown title="Тип объекта" name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} emptyLabel="Alle Arten" />
+        <MultiSelectDropdown title="Использование" name="occupancy" options={OCCUPANCY_OPTIONS} selected={getInitialValues(searchParams, "occupancy")} emptyLabel="Alle Nutzungen" />
 
         <div className="field">
-          <label htmlFor="status">Статус</label>
+          <label htmlFor="status">Status</label>
           <select id="status" name="status" defaultValue={getInitialValue(searchParams, "status")}>
             {STATUS_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
@@ -312,12 +312,12 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         <DualRange label="Grundstück" minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" />
 
         <div className="field">
-          <label htmlFor="dateFrom">Торги от</label>
+          <label htmlFor="dateFrom">Termin ab</label>
           <input id="dateFrom" name="dateFrom" type="date" defaultValue={getInitialValue(searchParams, "dateFrom")} />
         </div>
 
         <div className="field">
-          <label htmlFor="dateTo">Торги до</label>
+          <label htmlFor="dateTo">Termin bis</label>
           <input id="dateTo" name="dateTo" type="date" defaultValue={getInitialValue(searchParams, "dateTo")} />
         </div>
 
@@ -336,7 +336,7 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         </div>
 
         <div className="field">
-          <label htmlFor="auctionAttempt">Количество терминов</label>
+          <label htmlFor="auctionAttempt">Termin-Nr.</label>
           <select id="auctionAttempt" name="auctionAttempt" defaultValue={getInitialValue(searchParams, "auctionAttempt")}>
             {AUCTION_ATTEMPT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
@@ -350,7 +350,7 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         </div>
 
         <div className="field">
-          <label htmlFor="perPage">Показывать</label>
+          <label htmlFor="perPage">Anzeigen</label>
           <select id="perPage" name="perPage" defaultValue={getInitialValue(searchParams, "perPage") || "20"}>
             {PAGE_SIZE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </select>
@@ -358,8 +358,8 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
       </div>
 
       <div className="filter-actions">
-        <button type="submit" className="btn btn-primary">Показать объекты</button>
-        <button type="button" onClick={clearFilters} className="btn">Очистить фильтры</button>
+        <button type="submit" className="btn btn-primary">Immobilien finden</button>
+        <button type="button" onClick={clearFilters} className="btn">Filter zurücksetzen</button>
       </div>
     </form>
   );

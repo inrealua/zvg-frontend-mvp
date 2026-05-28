@@ -140,30 +140,30 @@ function calculateMarketStats(properties: Array<{ marketValue: number | null }>)
 function pageCopy(mode: PageMode) {
   if (mode === "archive") {
     return {
-      kicker: "Archiv · abgeschlossene Termine",
-      title: "Архив объектов",
-      text: "Сюда автоматически попадают объекты, у которых дата аукциона уже прошла. Актуальная выдача остаётся чище и показывает только будущие или недатированные объекты.",
-      listTitle: "Архивные объекты",
-      listText: "Фильтры работают отдельно внутри архива."
+      kicker: "Archiv · vergangene Termine",
+      title: "Archiv der Immobilienauktionen",
+      text: "Abgeschlossene oder archivierte Versteigerungen bleiben separat auffindbar, ohne die aktuelle Suche zu überladen.",
+      listTitle: "Archivierte Immobilien",
+      listText: "Vergangene Auktionstermine und archivierte Objekte."
     };
   }
 
   if (mode === "map") {
     return {
-      kicker: "Karte · OpenStreetMap",
-      title: "Большая карта объектов",
-      text: "Здесь карта является основным режимом поиска. Фильтры находятся сбоку, можно искать по видимой области карты или нарисовать polygon.",
-      listTitle: "Объекты на карте",
-      listText: "Список ниже карты соответствует тем же фильтрам."
+      kicker: "Karte · Deutschlandweit suchen",
+      title: "Immobilien auf der Karte finden",
+      text: "Suchen Sie nach Regionen, Gerichten, Preisen und Objektarten. Die Karte unterstützt Gebietssuche und Polygon-Auswahl.",
+      listTitle: "Objekte auf der Karte",
+      listText: "Die Liste entspricht denselben Filtern wie die Kartenansicht."
     };
   }
 
   return {
-    kicker: "MVP · Datenbank zuerst · Import direkt in MySQL",
-    title: "Объекты судебных торгов Германии в одной базе",
-    text: "Данные берутся напрямую из базы. Фильтры, радиус, карта и polygon search работают через URL.",
-    listTitle: "Список объектов",
-    listText: "Актуальные объекты: прошедшие даты автоматически убраны в архив."
+    kicker: "Geprüfte Immobilienauktionen · zvg-de.com",
+    title: "Immobilienauktionen in Deutschland.",
+    text: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien aus Zwangsversteigerungen mit klaren Filtern, Karte und strukturierten Objektinformationen.",
+    listTitle: "Aktuelle Immobilienauktionen",
+    listText: "Aktuelle Objekte: vergangene Termine werden automatisch im Archiv geführt."
   };
 }
 
@@ -285,12 +285,12 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
 
   const summary = (
     <div className="summary-strip">
-      <div><span>Страница</span><b>{pagination.page} / {pagination.totalPages}</b></div>
-      <div><span>Всего найдено</span><b>{totalCount}</b></div>
-      <div><span>Активные</span><b>{activeCount}</b></div>
-      <div><span>Отменённые</span><b>{cancelledCount}</b></div>
-      <div><span>Архив всего</span><b>{archiveCount}</b></div>
-      <div><span>Цена до</span><b>{formatEuro(marketStats.max)}</b></div>
+      <div><span>Seite</span><b>{pagination.page} / {pagination.totalPages}</b></div>
+      <div><span>Gefunden</span><b>{totalCount}</b></div>
+      <div><span>Aktiv</span><b>{activeCount}</b></div>
+      <div><span>Aufgehoben</span><b>{cancelledCount}</b></div>
+      <div><span>Archiv</span><b>{archiveCount}</b></div>
+      <div><span>Max. Wert</span><b>{formatEuro(marketStats.max)}</b></div>
     </div>
   );
 
@@ -333,11 +333,16 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
               <p className="hero-kicker">{copy.kicker}</p>
               <h1>{copy.title}</h1>
               <p>{copy.text}</p>
+              <div className="hero-trust-row">
+                <span>Geprüfte Quellen</span>
+                <span>Täglich aktualisiert</span>
+                <span>Deutschlandweit</span>
+              </div>
             </div>
             <div className="hero-stats">
-              <div><span>{formatNumber(allCount)}</span><b>объектов в базе</b></div>
-              <div><span>{formatNumber(totalCount)}</span><b>на карте</b></div>
-              <div><span>{formatEuro(marketStats.avg)}</span><b>средний Verkehrswert</b></div>
+              <div><span>{formatNumber(allCount)}</span><b>Immobilien in der Datenbank</b></div>
+              <div><span>{formatNumber(totalCount)}</span><b>auf der Karte</b></div>
+              <div><span>{formatEuro(marketStats.avg)}</span><b>Ø Verkehrswert</b></div>
             </div>
           </div>
         </section>
@@ -370,9 +375,9 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
             <p>{copy.text}</p>
           </div>
           <div className="hero-stats">
-            <div><span>{formatNumber(allCount)}</span><b>объектов в базе</b></div>
-            <div><span>{formatNumber(totalCount)}</span><b>найдено фильтром</b></div>
-            <div><span>{formatEuro(marketStats.avg)}</span><b>средний Verkehrswert</b></div>
+            <div><span>{formatNumber(allCount)}</span><b>Aktuelle Immobilien</b></div>
+            <div><span>16</span><b>Bundesländer</b></div>
+            <div><span>100%</span><b>kostenlos suchen</b></div>
           </div>
         </div>
       </section>
