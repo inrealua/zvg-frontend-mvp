@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { FilterBar } from "@/components/FilterBar";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyMap } from "@/components/PropertyMap";
+import { QuickSearchBar } from "@/components/QuickSearchBar";
 import { Pagination } from "@/components/Pagination";
 import { SaveSearchButton } from "@/components/SaveSearchButton";
 import { prisma } from "@/lib/prisma";
@@ -151,7 +152,7 @@ function pageCopy(mode: PageMode) {
   if (mode === "map") {
     return {
       kicker: "Karte · Deutschlandweit suchen",
-      title: "Immobilien auf der Karte finden",
+      title: "Gerichtliche Versteigerungen auf der Karte finden",
       text: "Suchen Sie nach Regionen, Gerichten, Preisen und Objektarten. Die Karte unterstützt Gebietssuche und Polygon-Auswahl.",
       listTitle: "Objekte auf der Karte",
       listText: "Die Liste entspricht denselben Filtern wie die Kartenansicht."
@@ -159,11 +160,11 @@ function pageCopy(mode: PageMode) {
   }
 
   return {
-    kicker: "Geprüfte Immobilienauktionen · zvg-de.com",
+    kicker: "zvg-de.com · gerichtliche Versteigerungen",
     title: "Alle gerichtlichen Versteigerungen an einem Ort.",
-    text: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien, Grundstücke und weitere ZVG-Objekte aus gerichtlichen Versteigerungen mit klaren Filtern, Karte und strukturierten Informationen.",
-    listTitle: "Aktuelle gerichtliche Versteigerungen",
-    listText: "Aktuelle Objekte: vergangene Termine werden automatisch im Archiv geführt."
+    text: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien, Grundstücke und weitere Objekte aus gerichtlichen Versteigerungen mit Karte, Filtern und strukturierten Informationen.",
+    listTitle: "Top 12 aktuelle Objekte",
+    listText: "Kurze Auswahl für die Startseite. Die vollständige Recherche finden Sie in der erweiterten Kartensuche."
   };
 }
 
@@ -229,9 +230,13 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
 
   const totalCount = propertiesWithPolygon.length;
   const pagination = getPaginationRange(totalCount, paginationState);
-  const properties = propertiesWithPolygon
+  const paginatedProperties = propertiesWithPolygon
     .slice(pagination.startIndex, pagination.endIndex)
     .map((item) => item.property);
+  const topHomeProperties = propertiesWithPolygon
+    .slice(0, 12)
+    .map((item) => item.property);
+  const properties = mode === "objects" ? topHomeProperties : paginatedProperties;
   const allFilteredProperties = propertiesWithPolygon.map((item) => item.property);
   const marketStats = calculateMarketStats(allFilteredProperties);
 
@@ -301,7 +306,7 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
           <strong>{copy.listTitle}</strong>
           <span>{copy.listText}</span>
         </div>
-        <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />
+        {mode === "objects" ? <a className="text-link" href="/map">Zur erweiterten Suche</a> : <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />}
       </div>
 
       {properties.length === 0 ? (
@@ -311,14 +316,16 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
           <div className="card-list">
             {properties.map((property) => <PropertyCard key={property.id} property={property} isFavorite={favoriteIds.has(property.id)} />)}
           </div>
-          <Pagination
-            params={params}
-            page={pagination.page}
-            totalPages={pagination.totalPages}
-            totalItems={totalCount}
-            fromItem={pagination.fromItem}
-            toItem={pagination.toItem}
-          />
+          {mode !== "objects" ? (
+            <Pagination
+              params={params}
+              page={pagination.page}
+              totalPages={pagination.totalPages}
+              totalItems={totalCount}
+              fromItem={pagination.fromItem}
+              toItem={pagination.toItem}
+            />
+          ) : null}
         </>
       )}
     </div>
@@ -382,13 +389,26 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
         </div>
       </section>
 
-      <section className="container page-section">
-        {filterBlock}
+      <section className="container page-section home-search-section">
+        <QuickSearchBar states={states} />
         {activeFilterBlock}
         {notices}
-        {summary}
-        <PropertyMap properties={mapProperties} variant="wide" />
-        {list}
+
+        <div className="home-map-block">
+          <div className="section-heading-row">
+            <div>
+              <strong>Versteigerungen auf der Karte</strong>
+              <span>Ein schneller Überblick. Die große Karte mit allen Filtern finden Sie im Bereich Karte.</span>
+            </div>
+            <a className="btn btn-soft" href="/map">Große Karte öffnen</a>
+          </div>
+          <PropertyMap properties={mapProperties} variant="wide" />
+        </div>
+
+        <div className="home-top-objects">
+          {summary}
+          {list}
+        </div>
       </section>
     </main>
   );

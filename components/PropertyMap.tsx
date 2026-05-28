@@ -38,17 +38,20 @@ function markerClass(property: MapProperty): string {
 function popupHtml(property: MapProperty): string {
   const image = property.imageUrl
     ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(property.title)}" />`
-    : `<div class="osm-popup-placeholder">Нет фото</div>`;
+    : `<div class="osm-popup-placeholder">Kein Foto</div>`;
 
   return `
-    <div class="osm-popup-card">
+    <div class="osm-popup-card osm-popup-card-redesigned">
       ${image}
       <div class="osm-popup-body">
-        <b>${escapeHtml(property.city)}</b>
-        <span>${escapeHtml(translateGroup(property.propertyTypeGroup))}</span>
-        <span>${escapeHtml(formatEuro(property.marketValue))}</span>
-        <small>${escapeHtml(formatDate(property.auctionDate))}</small>
-        <a href="/properties/${encodeURIComponent(property.id)}">Подробнее</a>
+        <div class="osm-popup-type">${escapeHtml(translateGroup(property.propertyTypeGroup))}</div>
+        <b>${escapeHtml(property.title)}</b>
+        <span>${escapeHtml(property.address || property.city)}</span>
+        <div class="osm-popup-facts">
+          <small>Termin<br><strong>${escapeHtml(formatDate(property.auctionDate))}</strong></small>
+          <small>Verkehrswert<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
+        </div>
+        <a href="/properties/${encodeURIComponent(property.id)}">Details ansehen</a>
       </div>
     </div>
   `;
