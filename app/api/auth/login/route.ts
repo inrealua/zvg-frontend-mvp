@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
-import { createUserSessionToken } from "@/lib/user-auth";
+import { createUserSessionToken, verifyPassword } from "@/lib/user-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -31,8 +31,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const bcrypt = await import("bcryptjs");
-  const validPassword = await bcrypt.compare(password, user.passwordHash);
+  const validPassword = await verifyPassword(password, user.passwordHash);
 
   if (!validPassword) {
     return NextResponse.redirect(
