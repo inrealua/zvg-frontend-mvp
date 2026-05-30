@@ -5243,3 +5243,35 @@ body {
     grid-template-columns: 1fr !important;
   }
 }
+.google-auth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 18px;
+  border: 1px solid #d7e1dc;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #183b2f;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(24, 59, 47, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.google-auth-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(24, 59, 47, 0.1);
+  border-color: #b8ccc2;
+}
+
+.google-auth-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
