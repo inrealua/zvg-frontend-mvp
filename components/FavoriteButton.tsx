@@ -3,7 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function FavoriteButton({ propertyId, initialIsFavorite = false, compact = false }: { propertyId: string; initialIsFavorite?: boolean; compact?: boolean }) {
+export function FavoriteButton({
+  propertyId,
+  initialIsFavorite = false,
+  compact = false,
+}: {
+  propertyId: string;
+  initialIsFavorite?: boolean;
+  compact?: boolean;
+}) {
   const router = useRouter();
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,8 +26,8 @@ export function FavoriteButton({ propertyId, initialIsFavorite = false, compact 
         credentials: "include",
         cache: "no-store",
         headers: {
-          "Cache-Control": "no-store"
-        }
+          "Cache-Control": "no-store",
+        },
       });
 
       if (response.status === 401) {
@@ -44,9 +52,10 @@ export function FavoriteButton({ propertyId, initialIsFavorite = false, compact 
       onClick={toggleFavorite}
       disabled={isLoading}
       aria-pressed={isFavorite}
+      aria-label={isFavorite ? "Aus Merkliste entfernen" : "Zur Merkliste hinzufügen"}
     >
       <span>{isFavorite ? "♥" : "♡"}</span>
-      {compact ? null : <b>{isFavorite ? "В избранном" : "В избранное"}</b>}
+      {compact ? null : <b>{isFavorite ? "Gemerkt" : "Merken"}</b>}
     </button>
   );
 }

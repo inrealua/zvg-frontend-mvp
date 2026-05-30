@@ -9,7 +9,7 @@ export const revalidate = 0;
 export async function GET(request: NextRequest) {
   const user = await getCurrentUserFromRequest(request);
 
-  const response = NextResponse.json(
+  return NextResponse.json(
     {
       user: user
         ? {
@@ -25,10 +25,8 @@ export async function GET(request: NextRequest) {
         "Cache-Control": "no-store, no-cache, must-revalidate",
         Pragma: "no-cache",
         Expires: "0",
-        "Vary": "Cookie",
+        Vary: "Cookie",
       },
     }
   );
-
-  return response;
 }

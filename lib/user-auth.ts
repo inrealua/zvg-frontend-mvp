@@ -1,10 +1,12 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import { unstable_noStore as noStore } from "next/cache";
-import type { NextRequest } from "next/server";
+import type { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export const USER_SESSION_COOKIE = "zvg_user_session";
+export const USER_SESSION_COOKIE = process.env.NODE_ENV === "production" ? "__Host-zvg_session" : "zvg_dev_session";
+export const OLD_USER_SESSION_COOKIE = "zvg_user_session";
+
 const SESSION_DAYS = 30;
 const PBKDF2_ITERATIONS = 120_000;
 const PBKDF2_KEY_LENGTH = 32;
@@ -16,23 +18,6 @@ export type CurrentUser = {
   role: string;
 };
 
-function getSessionSecret(): string {
-  const secret = process.env.USER_SESSION_SECRET;
-  if (!secret) {
-    // Не используем другой fallback в production, чтобы cookie не подписывались разными секретами.
-    return "dev-user-session-secret-change-me";
-  }
-  return secret;
-}
-
-function base64UrlJson(value: unknown): string {
-  return Buffer.from(JSON.stringify(value), "utf8").toString("base64url");
-}
-
-function sign(data: string): string {
-  return crypto.createHmac("sha256", getSessionSecret()).update(data).digest("base64url");
-}
-
 function timingSafeEqual(a: string, b: string): boolean {
   const aBuffer = Buffer.from(a);
   const bBuffer = Buffer.from(b);
@@ -43,15 +28,22 @@ function timingSafeEqual(a: string, b: string): boolean {
 function getCookieValueFromHeader(cookieHeader: string | null, name: string): string | undefined {
   if (!cookieHeader) return undefined;
 
-  const parts = cookieHeader.split(";");
-  for (const part of parts) {
+  for (const part of cookieHeader.split(";")) {
     const [rawKey, ...rawValueParts] = part.trim().split("=");
     if (rawKey === name) {
-      return rawValueParts.join("=");
+      return decodeURIComponent(rawValueParts.join("="));
     }
   }
 
   return undefined;
+}
+
+function createRandomToken(): string {
+  return crypto.randomBytes(32).toString("base64url");
+}
+
+function sessionExpiresAt(): Date {
+  return new Date(Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000);
 }
 
 export function normalizeEmail(email: string): string {
@@ -78,80 +70,106 @@ export function verifyPassword(password: string, storedHash: string): boolean {
   return timingSafeEqual(actualHash, expectedHash);
 }
 
-export function createUserSessionToken(userId: string): string {
-  const payload = {
-    userId,
-    exp: Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000
-  };
-  const data = base64UrlJson(payload);
-  return `${data}.${sign(data)}`;
-}
-
-function verifyUserSessionToken(token: string): { userId: string } | null {
-  const [data, signature] = token.split(".");
-  if (!data || !signature) return null;
-  if (!timingSafeEqual(sign(data), signature)) return null;
-
-  try {
-    const payload = JSON.parse(Buffer.from(data, "base64url").toString("utf8")) as { userId?: string; exp?: number };
-    if (!payload.userId || !payload.exp) return null;
-    if (payload.exp < Date.now()) return null;
-    return { userId: payload.userId };
-  } catch {
-    return null;
-  }
-}
-
 export function userSessionCookieOptions() {
   return {
     httpOnly: true,
     sameSite: "lax" as const,
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: SESSION_DAYS * 24 * 60 * 60
+    maxAge: SESSION_DAYS * 24 * 60 * 60,
   };
 }
 
-async function getUserByToken(token: string | undefined): Promise<CurrentUser | null> {
-  if (!token) return null;
+export function expiredUserSessionCookieOptions() {
+  return {
+    httpOnly: true,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  };
+}
 
-  const session = verifyUserSessionToken(token);
-  if (!session) return null;
+export function setUserSessionCookie(response: NextResponse, token: string) {
+  response.cookies.set(USER_SESSION_COOKIE, token, userSessionCookieOptions());
+  // Clear the old signed-cookie auth from previous stages so it cannot confuse the UI/API.
+  response.cookies.set(OLD_USER_SESSION_COOKIE, "", expiredUserSessionCookieOptions());
+}
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.userId },
-    select: { id: true, email: true, name: true, role: true }
+export function clearUserSessionCookies(response: NextResponse) {
+  response.cookies.set(USER_SESSION_COOKIE, "", expiredUserSessionCookieOptions());
+  response.cookies.set(OLD_USER_SESSION_COOKIE, "", expiredUserSessionCookieOptions());
+}
+
+export async function createUserSessionToken(userId: string): Promise<string> {
+  const token = createRandomToken();
+
+  await prisma.session.create({
+    data: {
+      sessionToken: token,
+      userId,
+      expires: sessionExpiresAt(),
+    },
   });
 
-  return user;
+  return token;
+}
+
+async function getUserBySessionToken(token: string | undefined | null): Promise<CurrentUser | null> {
+  if (!token) return null;
+
+  const session = await prisma.session.findUnique({
+    where: { sessionToken: token },
+    select: {
+      expires: true,
+      user: {
+        select: { id: true, email: true, name: true, role: true },
+      },
+    },
+  });
+
+  if (!session) return null;
+
+  if (session.expires.getTime() < Date.now()) {
+    await prisma.session.deleteMany({ where: { sessionToken: token } }).catch(() => null);
+    return null;
+  }
+
+  return session.user;
+}
+
+async function getTokenFromCookieStore(): Promise<string | undefined> {
+  const cookieStore = await cookies();
+  return cookieStore.get(USER_SESSION_COOKIE)?.value;
 }
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   noStore();
-  const cookieStore = await cookies();
-  return getUserByToken(cookieStore.get(USER_SESSION_COOKIE)?.value);
+  return getUserBySessionToken(await getTokenFromCookieStore());
 }
 
 export async function getCurrentUserFromRequest(request: NextRequest): Promise<CurrentUser | null> {
   noStore();
 
-  // 1) Стандартный способ NextRequest.
   const tokenFromRequest = request.cookies.get(USER_SESSION_COOKIE)?.value;
   if (tokenFromRequest) {
-    const user = await getUserByToken(tokenFromRequest);
+    const user = await getUserBySessionToken(tokenFromRequest);
     if (user) return user;
   }
 
-  // 2) Надёжный fallback для Vercel/production: вручную читаем raw Cookie header.
   const tokenFromHeader = getCookieValueFromHeader(request.headers.get("cookie"), USER_SESSION_COOKIE);
   if (tokenFromHeader) {
-    const user = await getUserByToken(tokenFromHeader);
+    const user = await getUserBySessionToken(tokenFromHeader);
     if (user) return user;
   }
 
-  // 3) Fallback для server components / actions.
-  const cookieStore = await cookies();
-  return getUserByToken(cookieStore.get(USER_SESSION_COOKIE)?.value);
+  return getUserBySessionToken(await getTokenFromCookieStore());
+}
+
+export async function deleteCurrentSessionFromRequest(request: NextRequest) {
+  const token = request.cookies.get(USER_SESSION_COOKIE)?.value || getCookieValueFromHeader(request.headers.get("cookie"), USER_SESSION_COOKIE);
+  if (!token) return;
+  await prisma.session.deleteMany({ where: { sessionToken: token } }).catch(() => null);
 }
 
 export function getSafeNextUrl(rawNext: string | null, fallback = "/cabinet"): string {

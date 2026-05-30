@@ -1,32 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  USER_SESSION_COOKIE,
+  clearUserSessionCookies,
+  setUserSessionCookie,
+} from "@/lib/user-auth";
 
-export const USER_SESSION_COOKIE = "zvg_user_session";
-
-const isProduction = process.env.NODE_ENV === "production";
-
-export function setUserSessionCookie(response: NextResponse, value: string) {
-  response.cookies.set({
-    name: USER_SESSION_COOKIE,
-    value,
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-  });
-}
-
-export function clearUserSessionCookie(response: NextResponse) {
-  response.cookies.set({
-    name: USER_SESSION_COOKIE,
-    value: "",
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
-}
+export { USER_SESSION_COOKIE, setUserSessionCookie, clearUserSessionCookies };
 
 export function readUserSessionCookie(request: NextRequest) {
   const fromCookies = request.cookies.get(USER_SESSION_COOKIE)?.value;

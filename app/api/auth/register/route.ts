@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { prisma } from "@/lib/prisma";
-import { createUserSessionToken, getSafeNextUrl, hashPassword, normalizeEmail, userSessionCookieOptions, USER_SESSION_COOKIE } from "@/lib/user-auth";
+import {
+  createUserSessionToken,
+  getSafeNextUrl,
+  hashPassword,
+  normalizeEmail,
+  setUserSessionCookie,
+} from "@/lib/user-auth";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
@@ -10,10 +18,13 @@ export async function POST(request: NextRequest) {
   const email = normalizeEmail(String(formData.get("email") ?? ""));
   const name = String(formData.get("name") ?? "").trim() || null;
   const password = String(formData.get("password") ?? "");
-  const nextUrl = getSafeNextUrl(String(formData.get("next") ?? ""));
+  const nextUrl = getSafeNextUrl(String(formData.get("next") ?? "/cabinet"));
 
   if (!email || !password || password.length < 8) {
-    return NextResponse.redirect(new URL(`/register?error=invalid&next=${encodeURIComponent(nextUrl)}`, request.url));
+    return NextResponse.redirect(
+      new URL(`/register?error=invalid&next=${encodeURIComponent(nextUrl)}`, request.url),
+      { status: 303 }
+    );
   }
 
   try {
@@ -21,14 +32,24 @@ export async function POST(request: NextRequest) {
       data: {
         email,
         name,
-        passwordHash: hashPassword(password)
-      }
+        passwordHash: hashPassword(password),
+      },
+      select: { id: true },
     });
 
-    const response = NextResponse.redirect(new URL(nextUrl, request.url));
-    response.cookies.set(USER_SESSION_COOKIE, createUserSessionToken(user.id), userSessionCookieOptions());
+    const token = await createUserSessionToken(user.id);
+    const response = NextResponse.redirect(new URL(nextUrl, request.url), { status: 303 });
+
+    setUserSessionCookie(response, token);
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+
     return response;
   } catch {
-    return NextResponse.redirect(new URL(`/register?error=exists&next=${encodeURIComponent(nextUrl)}`, request.url));
+    return NextResponse.redirect(
+      new URL(`/register?error=exists&next=${encodeURIComponent(nextUrl)}`, request.url),
+      { status: 303 }
+    );
   }
 }

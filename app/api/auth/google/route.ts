@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getSafeNextUrl } from "@/lib/user-auth";
+
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+export const revalidate = 0;
 
 function getRequestBaseUrl(request: NextRequest) {
   return `${request.nextUrl.protocol}//${request.nextUrl.host}`.replace(/\/$/, "");
-}
-
-function getSafeNext(rawNext: string | null) {
-  if (!rawNext) return "/cabinet";
-  if (!rawNext.startsWith("/")) return "/cabinet";
-  if (rawNext.startsWith("//")) return "/cabinet";
-  return rawNext;
 }
 
 export async function GET(request: NextRequest) {
@@ -26,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   const baseUrl = getRequestBaseUrl(request);
   const callbackUrl = `${baseUrl}/api/auth/google/callback`;
-  const next = getSafeNext(request.nextUrl.searchParams.get("next"));
+  const next = getSafeNextUrl(request.nextUrl.searchParams.get("next"), "/cabinet");
 
   const statePayload = Buffer.from(
     JSON.stringify({ next, createdAt: Date.now() }),

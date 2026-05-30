@@ -18,9 +18,9 @@ export function SaveSearchButton({ filtersUrl, summary }: { filtersUrl: string; 
         cache: "no-store",
         headers: {
           "Content-Type": "application/json",
-          "Cache-Control": "no-store"
+          "Cache-Control": "no-store",
         },
-        body: JSON.stringify({ filtersUrl, summary })
+        body: JSON.stringify({ filtersUrl, summary }),
       });
 
       if (response.status === 401) {
@@ -43,17 +43,22 @@ export function SaveSearchButton({ filtersUrl, summary }: { filtersUrl: string; 
 
   const label =
     state === "saving"
-      ? "Сохраняю..."
+      ? "Speichere..."
       : state === "saved"
-        ? "Поиск сохранён"
+        ? "Suche gespeichert"
         : state === "exists"
-          ? "Уже сохранён"
+          ? "Bereits gespeichert"
           : state === "error"
-            ? "Ошибка"
-            : "Сохранить поиск";
+            ? "Fehler"
+            : "Suche speichern";
 
   return (
-    <button type="button" className="btn btn-primary save-search-button" onClick={saveSearch} disabled={state === "saving" || state === "saved" || state === "exists"}>
+    <button
+      type="button"
+      className="btn btn-primary save-search-button"
+      onClick={saveSearch}
+      disabled={state === "saving" || state === "saved" || state === "exists"}
+    >
       {label}
     </button>
   );
