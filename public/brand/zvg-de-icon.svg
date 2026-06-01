@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="ZVG-DE icon">
-  <rect width="256" height="256" fill="transparent"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" role="img" aria-label="ZVG-DE icon">
+  <rect width="280" height="280" fill="transparent"/>
   
 <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M48 118 L128 48 L208 118" stroke="#2F4F3E" stroke-width="12"/>
-  <path d="M66 114 V202 H190 V114" stroke="#2F4F3E" stroke-width="12"/>
-  <path d="M105 80 H118 V93 H105z M137 80 H150 V93 H137z" fill="#A4B497" stroke="none"/>
-  <path d="M88 124 H168" stroke="#2F4F3E" stroke-width="10"/>
-  <path d="M104 136 V176 M128 136 V176 M152 136 V176" stroke="#A4B497" stroke-width="12"/>
-  <path d="M92 184 H164 M78 202 H178 M58 220 H198" stroke="#A4B497" stroke-width="10"/>
-  <path d="M141 143 L176 178" stroke="#2B2B2B" stroke-width="14"/>
-  <path d="M155 130 L190 165" stroke="#2B2B2B" stroke-width="14"/>
-  <path d="M134 152 L159 127 M168 186 L197 157" stroke="#2B2B2B" stroke-width="12"/>
-  <path d="M150 193 H186" stroke="#2B2B2B" stroke-width="10"/>
+  <path d="M58 126 L140 54 L222 126" stroke="#2F4F3E" stroke-width="13"/>
+  <path d="M76 122 V212 H204 V122" stroke="#2F4F3E" stroke-width="13"/>
+  <path d="M115 84 H130 V99 H115z M150 84 H165 V99 H150z" fill="#A4B497" stroke="none"/>
+  <path d="M96 134 H184" stroke="#2F4F3E" stroke-width="11"/>
+  <path d="M112 148 V188 M140 148 V188 M168 148 V188" stroke="#A4B497" stroke-width="13"/>
+  <path d="M100 198 H180 M84 216 H196 M64 234 H216" stroke="#A4B497" stroke-width="11"/>
+  <path d="M154 156 L190 192" stroke="#2B2B2B" stroke-width="15"/>
+  <path d="M168 142 L204 178" stroke="#2B2B2B" stroke-width="15"/>
+  <path d="M146 166 L173 139 M181 201 L211 171" stroke="#2B2B2B" stroke-width="13"/>
+  <path d="M162 208 H199" stroke="#2B2B2B" stroke-width="11"/>
 </g>
 
 </svg>

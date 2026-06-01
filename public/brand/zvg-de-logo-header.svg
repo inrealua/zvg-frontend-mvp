@@ -1,28 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 150" role="img" aria-label="ZVG-DE">
-  <rect width="610" height="150" fill="transparent"/>
-  <g transform="translate(0 6) scale(.52)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 320" role="img" aria-label="ZVG-DE">
+  <rect width="1180" height="320" fill="transparent"/>
+  <g transform="translate(18 34) scale(0.98)">
     
 <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M48 118 L128 48 L208 118" stroke="#2F4F3E" stroke-width="12"/>
-  <path d="M66 114 V202 H190 V114" stroke="#2F4F3E" stroke-width="12"/>
-  <path d="M105 80 H118 V93 H105z M137 80 H150 V93 H137z" fill="#A4B497" stroke="none"/>
-  <path d="M88 124 H168" stroke="#2F4F3E" stroke-width="10"/>
-  <path d="M104 136 V176 M128 136 V176 M152 136 V176" stroke="#A4B497" stroke-width="12"/>
-  <path d="M92 184 H164 M78 202 H178 M58 220 H198" stroke="#A4B497" stroke-width="10"/>
-  <path d="M141 143 L176 178" stroke="#2B2B2B" stroke-width="14"/>
-  <path d="M155 130 L190 165" stroke="#2B2B2B" stroke-width="14"/>
-  <path d="M134 152 L159 127 M168 186 L197 157" stroke="#2B2B2B" stroke-width="12"/>
-  <path d="M150 193 H186" stroke="#2B2B2B" stroke-width="10"/>
+  <path d="M58 126 L140 54 L222 126" stroke="#2F4F3E" stroke-width="13"/>
+  <path d="M76 122 V212 H204 V122" stroke="#2F4F3E" stroke-width="13"/>
+  <path d="M115 84 H130 V99 H115z M150 84 H165 V99 H150z" fill="#A4B497" stroke="none"/>
+  <path d="M96 134 H184" stroke="#2F4F3E" stroke-width="11"/>
+  <path d="M112 148 V188 M140 148 V188 M168 148 V188" stroke="#A4B497" stroke-width="13"/>
+  <path d="M100 198 H180 M84 216 H196 M64 234 H216" stroke="#A4B497" stroke-width="11"/>
+  <path d="M154 156 L190 192" stroke="#2B2B2B" stroke-width="15"/>
+  <path d="M168 142 L204 178" stroke="#2B2B2B" stroke-width="15"/>
+  <path d="M146 166 L173 139 M181 201 L211 171" stroke="#2B2B2B" stroke-width="13"/>
+  <path d="M162 208 H199" stroke="#2B2B2B" stroke-width="11"/>
 </g>
 
   </g>
-  <line x1="154" y1="20" x2="154" y2="126" stroke="#A4B497" stroke-width="2"/>
-  <text x="190" y="78" font-family="Georgia, 'Times New Roman', serif" font-size="68" font-weight="500" letter-spacing="3">
+  <line x1="304" y1="48" x2="304" y2="270" stroke="#A4B497" stroke-width="2.6"/>
+  <text x="370" y="154"
+        font-family="Georgia, 'Times New Roman', Times, serif"
+        font-size="132"
+        font-weight="500"
+        letter-spacing="9">
     <tspan fill="#2B2B2B">ZVG-</tspan><tspan fill="#A4B497">DE</tspan>
   </text>
-  <line x1="195" y1="110" x2="242" y2="110" stroke="#2F4F3E" stroke-width="2"/>
-  <text x="256" y="116" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" letter-spacing="3" fill="#2F4F3E">
+  <line x1="364" y1="220" x2="442" y2="220" stroke="#2F4F3E" stroke-width="2.8"/>
+  <text x="462" y="230"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="22"
+        font-weight="700"
+        letter-spacing="6"
+        fill="#2F4F3E">
     ALLE GERICHTLICHEN IMMOBILIENAUKTIONEN AN EINEM ORT
   </text>
-  <line x1="558" y1="110" x2="604" y2="110" stroke="#2F4F3E" stroke-width="2"/>
+  <line x1="1048" y1="220" x2="1126" y2="220" stroke="#2F4F3E" stroke-width="2.8"/>
 </svg>
