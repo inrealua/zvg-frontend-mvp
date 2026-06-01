@@ -1,36 +1,49 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ADMIN_SESSION_COOKIE = "zvg_admin_session";
+const ADMIN_COOKIE = "zvg_admin_session";
 
-function getAdminSessionToken() {
-  return process.env.ADMIN_SESSION_TOKEN || process.env.ADMIN_PASSWORD || "dev-admin-token-change-me";
+function hasUserSession(request: NextRequest) {
+  return (
+    request.cookies.has("__Host-zvg_session") ||
+    request.cookies.has("zvg_dev_session")
+  );
+}
+
+function hasAdminSession(request: NextRequest) {
+  return request.cookies.has(ADMIN_COOKIE);
 }
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (!pathname.startsWith("/admin")) {
-    return NextResponse.next();
+  // Admin protection
+  if (
+    pathname.startsWith("/admin") &&
+    pathname !== "/admin/login" &&
+    pathname !== "/admin/logout"
+  ) {
+    if (!hasAdminSession(request)) {
+      const loginUrl = new URL("/admin/login", request.url);
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
-  if (pathname.startsWith("/admin/login")) {
-    return NextResponse.next();
+  // User protected pages
+  if (pathname.startsWith("/cabinet")) {
+    if (!hasUserSession(request)) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
-  const expectedToken = getAdminSessionToken();
-  const currentToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-
-  if (currentToken && currentToken === expectedToken) {
-    return NextResponse.next();
-  }
-
-  const loginUrl = request.nextUrl.clone();
-  loginUrl.pathname = "/admin/login";
-  loginUrl.searchParams.set("next", pathname);
-
-  return NextResponse.redirect(loginUrl);
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*"]
+  matcher: [
+    "/cabinet/:path*",
+    "/admin/:path*",
+  ],
 };
