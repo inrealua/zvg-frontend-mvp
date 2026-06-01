@@ -1,17 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" role="img" aria-label="ZVG-DE icon">
-  <rect width="280" height="280" fill="transparent"/>
-  
-<g fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M58 126 L140 54 L222 126" stroke="#2F4F3E" stroke-width="13"/>
-  <path d="M76 122 V212 H204 V122" stroke="#2F4F3E" stroke-width="13"/>
-  <path d="M115 84 H130 V99 H115z M150 84 H165 V99 H150z" fill="#A4B497" stroke="none"/>
-  <path d="M96 134 H184" stroke="#2F4F3E" stroke-width="11"/>
-  <path d="M112 148 V188 M140 148 V188 M168 148 V188" stroke="#A4B497" stroke-width="13"/>
-  <path d="M100 198 H180 M84 216 H196 M64 234 H216" stroke="#A4B497" stroke-width="11"/>
-  <path d="M154 156 L190 192" stroke="#2B2B2B" stroke-width="15"/>
-  <path d="M168 142 L204 178" stroke="#2B2B2B" stroke-width="15"/>
-  <path d="M146 166 L173 139 M181 201 L211 171" stroke="#2B2B2B" stroke-width="13"/>
-  <path d="M162 208 H199" stroke="#2B2B2B" stroke-width="11"/>
-</g>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#ffffff"/>
+  <path d="M48 116 128 50l80 66" fill="none" stroke="#2F4F3E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M66 112v92h124v-92" fill="none" stroke="#2F4F3E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M96 132h64M108 145v40M132 145v40M156 145v40M88 196h88M70 214h116" fill="none" stroke="#A4B497" stroke-width="10" stroke-linecap="round"/>
+  <path d="M140 146l36 36M156 130l36 36M132 158l28-28M170 192l28-28" fill="none" stroke="#2B2B2B" stroke-width="12" stroke-linecap="round"/>
 </svg>

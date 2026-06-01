@@ -8,10 +8,10 @@ type SiteLogoProps = {
 export function SiteLogo({ className = "", variant = "header" }: SiteLogoProps) {
   const src =
     variant === "icon"
-      ? "/brand/zvg-de-icon.svg"
+      ? "/brand/zvg-de-icon-512.png"
       : variant === "compact"
-        ? "/brand/zvg-de-logo-compact.svg"
-        : "/brand/zvg-de-logo-header.svg";
+        ? "/brand/zvg-de-logo-compact.png"
+        : "/brand/zvg-de-logo-header.png";
 
   return (
     <Link href="/" className={`site-logo-zvgde ${className}`.trim()} aria-label="ZVG-DE Startseite">
