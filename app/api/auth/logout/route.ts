@@ -5,77 +5,48 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const revalidate = 0;
 
-const SESSION_COOKIE_NAMES = [
-  "__Host-zvg_session",
-  "zvg_dev_session",
-  "zvg_user_session",
-];
+const PROD_COOKIE = "__Host-zvg_session";
+const DEV_COOKIE = "zvg_dev_session";
+const LEGACY_COOKIE = "zvg_user_session";
 
-async function deleteSessionsFromDatabase(request: NextRequest) {
-  const tokens = SESSION_COOKIE_NAMES
-    .map((name) => request.cookies.get(name)?.value)
-    .filter((value): value is string => Boolean(value));
+function getSessionToken(request: NextRequest) {
+  return (
+    request.cookies.get(PROD_COOKIE)?.value ||
+    request.cookies.get(DEV_COOKIE)?.value ||
+    request.cookies.get(LEGACY_COOKIE)?.value ||
+    null
+  );
+}
 
-  if (tokens.length === 0) return;
+function expireCookie(response: NextResponse, name: string, secure: boolean) {
+  response.cookies.set({
+    name,
+    value: "",
+    httpOnly: true,
+    secure,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+}
 
-  try {
+async function clearSession(request: NextRequest) {
+  const sessionToken = getSessionToken(request);
+
+  if (sessionToken) {
     await prisma.session.deleteMany({
-      where: {
-        sessionToken: {
-          in: tokens,
-        },
-      },
+      where: { sessionToken },
     });
-  } catch (error) {
-    console.error("Logout session cleanup failed", error);
   }
-}
-
-function expireCookies(response: NextResponse) {
-  const expires = new Date(0);
-
-  response.cookies.set({
-    name: "__Host-zvg_session",
-    value: "",
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    path: "/",
-    expires,
-    maxAge: 0,
-  });
-
-  response.cookies.set({
-    name: "zvg_dev_session",
-    value: "",
-    httpOnly: true,
-    secure: false,
-    sameSite: "lax",
-    path: "/",
-    expires,
-    maxAge: 0,
-  });
-
-  response.cookies.set({
-    name: "zvg_user_session",
-    value: "",
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    path: "/",
-    expires,
-    maxAge: 0,
-  });
-}
-
-async function logout(request: NextRequest) {
-  await deleteSessionsFromDatabase(request);
 
   const response = NextResponse.redirect(new URL("/", request.url), {
     status: 303,
   });
 
-  expireCookies(response);
+  expireCookie(response, PROD_COOKIE, true);
+  expireCookie(response, DEV_COOKIE, false);
+  expireCookie(response, LEGACY_COOKIE, true);
+
   response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
   response.headers.set("Pragma", "no-cache");
   response.headers.set("Expires", "0");
@@ -83,10 +54,10 @@ async function logout(request: NextRequest) {
   return response;
 }
 
-export async function GET(request: NextRequest) {
-  return logout(request);
+export async function POST(request: NextRequest) {
+  return clearSession(request);
 }
 
-export async function POST(request: NextRequest) {
-  return logout(request);
+export async function GET(request: NextRequest) {
+  return clearSession(request);
 }
