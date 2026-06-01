@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 220" role="img" aria-label="ZVG-DE">
+  <rect width="920" height="220" fill="transparent"/>
+  <g transform="translate(16 16) scale(.73)">
+    <path d="M50 116 L128 50 L206 116" fill="none" stroke="#2F4F3E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M65 113 V202 H191 V113" fill="none" stroke="#2F4F3E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M105 78 H119 V92 H105z M137 78 H151 V92 H137z" fill="#A4B497"/>
+    <path d="M88 122 H168" fill="none" stroke="#2F4F3E" stroke-width="10" stroke-linecap="round"/>
+    <path d="M104 134 V176 M128 134 V176 M152 134 V176" fill="none" stroke="#A4B497" stroke-width="12" stroke-linecap="round"/>
+    <path d="M92 184 H164 M78 202 H178 M60 218 H196" fill="none" stroke="#A4B497" stroke-width="10" stroke-linecap="round"/>
+    <path d="M141 142 L176 177" fill="none" stroke="#1F2933" stroke-width="14" stroke-linecap="round"/>
+    <path d="M154 129 L189 164" fill="none" stroke="#1F2933" stroke-width="14" stroke-linecap="round"/>
+    <path d="M134 151 L158 127 M168 185 L196 157" fill="none" stroke="#1F2933" stroke-width="12" stroke-linecap="round"/>
+    <path d="M150 192 H185" fill="none" stroke="#1F2933" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <line x1="220" y1="28" x2="220" y2="190" stroke="#A4B497" stroke-width="3"/>
+  <text x="260" y="112" font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="500" letter-spacing="8">
+    <tspan fill="#1F2933">ZVG-</tspan><tspan fill="#A4B497">DE</tspan>
+  </text>
+  <line x1="270" y1="152" x2="340" y2="152" stroke="#2F4F3E" stroke-width="3"/>
+  <text x="360" y="161" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="4" fill="#2F4F3E">
+    ALLE GERICHTLICHEN IMMOBILIENAUKTIONEN AN EINEM ORT
+  </text>
+  <line x1="820" y1="152" x2="890" y2="152" stroke="#2F4F3E" stroke-width="3"/>
+</svg>

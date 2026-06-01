@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="ZVG-DE icon">
+  <rect width="256" height="256" rx="40" fill="#F7F7F5"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M50 116 L128 50 L206 116" stroke="#2F4F3E" stroke-width="12"/>
+    <path d="M65 113 V202 H191 V113" stroke="#2F4F3E" stroke-width="12"/>
+    <path d="M105 78 H119 V92 H105z M137 78 H151 V92 H137z" fill="#A4B497" stroke="none"/>
+    <path d="M88 122 H168" stroke="#2F4F3E" stroke-width="10"/>
+    <path d="M104 134 V176 M128 134 V176 M152 134 V176" stroke="#A4B497" stroke-width="12"/>
+    <path d="M92 184 H164 M78 202 H178 M60 218 H196" stroke="#A4B497" stroke-width="10"/>
+    <path d="M141 142 L176 177" stroke="#1F2933" stroke-width="14"/>
+    <path d="M154 129 L189 164" stroke="#1F2933" stroke-width="14"/>
+    <path d="M134 151 L158 127 M168 185 L196 157" stroke="#1F2933" stroke-width="12"/>
+    <path d="M150 192 H185" stroke="#1F2933" stroke-width="10"/>
+  </g>
+</svg>

@@ -64,11 +64,11 @@ export default async function CabinetPage() {
     });
 
   return (
-    <main className="cabinet-page">
+    <main className="cabinet-page cabinet-page-v39">
       <div className="container page-section">
-        <section className="panel cabinet-hero cabinet-hero-compact">
+        <section className="panel cabinet-hero cabinet-hero-v39">
           <div>
-            <p className="eyebrow">Mein Konto</p>
+            <p className="eyebrow">MEIN KONTO</p>
             <h1>{user.name || user.email}</h1>
             <p className="meta">
               Favoriten, persönliche Notizen, gespeicherte Suchaufträge und Auktionstermine.
@@ -81,11 +81,13 @@ export default async function CabinetPage() {
           </div>
         </section>
 
-        <section id="favorites" className="panel cabinet-section">
+        <section id="favorites" className="panel cabinet-section cabinet-favorites-v39">
           <div className="section-head">
             <div>
-              <h2>Favoriten</h2>
-              <p className="meta">Sortiert nach dem nächsten Auktionstermin. Ihre Notizen sind sofort sichtbar und nur für Sie gespeichert.</p>
+              <h2>Meine Favoriten</h2>
+              <p className="meta">
+                Ihre gespeicherten Immobilien im Überblick. Persönliche Notizen sind direkt sichtbar.
+              </p>
             </div>
             <Link className="btn btn-soft" href="/">Immobilien finden</Link>
           </div>
@@ -93,39 +95,40 @@ export default async function CabinetPage() {
           {sortedFavorites.length === 0 ? (
             <div className="empty-state compact">Sie haben noch keine Favoriten gespeichert.</div>
           ) : (
-            <div className="favorite-compact-list">
+            <div className="favorite-grid-v39">
               {sortedFavorites.map((favorite) => {
                 const property = favorite.property;
                 const image = property.images[0];
 
                 return (
-                  <article className="favorite-compact-card" key={favorite.id}>
-                    <Link className="favorite-compact-thumb" href={`/properties/${property.id}`}>
+                  <article className="favorite-card-v39" key={favorite.id}>
+                    <Link className="favorite-thumb-v39" href={`/properties/${property.id}`}>
                       {image ? <img src={image.url} alt={image.alt ?? property.title} /> : <span>Kein Foto</span>}
                     </Link>
 
-                    <div className="favorite-compact-main">
-                      <div className="favorite-compact-topline">
-                        <p className="eyebrow">{property.city} · {translateStatus(property.status)}</p>
+                    <div className="favorite-content-v39">
+                      <div className="favorite-top-v39">
+                        <p className="eyebrow">{property.propertyType} · {property.city}</p>
+                        <span className="favorite-star-v39" aria-hidden="true">★</span>
                       </div>
 
                       <h3><Link href={`/properties/${property.id}`}>{property.title}</Link></h3>
-                      <p className="favorite-compact-address">{shortAddress(property.address)}</p>
+                      <p className="favorite-address-v39">{shortAddress(property.address)}</p>
 
-                      <div className="tag-row favorite-compact-tags">
+                      <div className="favorite-tags-v39">
                         <span>{formatEuro(property.marketValue)}</span>
                         <span>{formatDateTime(property.auctionDate, property.auctionTime)}</span>
                         <span>{property.court}</span>
                       </div>
 
                       <FavoriteNoteForm propertyId={property.id} initialNote={favorite.note ?? ""} />
-                    </div>
 
-                    <div className="favorite-compact-actions">
-                      <Link className="btn btn-primary favorite-action-primary" href={`/properties/${property.id}`}>
-                        Details
-                      </Link>
-                      <DeleteFavoriteButton propertyId={property.id} />
+                      <div className="favorite-actions-v39">
+                        <Link className="btn btn-soft favorite-details-v39" href={`/properties/${property.id}`}>
+                          Details
+                        </Link>
+                        <DeleteFavoriteButton propertyId={property.id} />
+                      </div>
                     </div>
                   </article>
                 );

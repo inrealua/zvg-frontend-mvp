@@ -37,12 +37,8 @@ export function FavoriteNoteForm({ propertyId, initialNote }: FavoriteNoteFormPr
   }
 
   return (
-    <div className="favorite-note-inline">
-      <div className="favorite-note-inline-head">
-        <label htmlFor={`favorite-note-${propertyId}`}>Meine Notiz</label>
-        <span>{note.length}/2000</span>
-      </div>
-
+    <div className="favorite-note-v39">
+      <label htmlFor={`favorite-note-${propertyId}`}>Meine Notiz</label>
       <textarea
         id={`favorite-note-${propertyId}`}
         value={note}
@@ -51,10 +47,9 @@ export function FavoriteNoteForm({ propertyId, initialNote }: FavoriteNoteFormPr
         placeholder="Ihre persönliche Notiz zu diesem Objekt..."
         rows={2}
       />
-
-      <div className="favorite-note-inline-actions">
-        <button type="button" className="btn btn-soft compact-btn" onClick={saveNote} disabled={isPending}>
-          {isPending ? "Speichern..." : "Notiz speichern"}
+      <div className="favorite-note-actions-v39">
+        <button type="button" className="btn btn-soft compact-btn-v39" onClick={saveNote} disabled={isPending}>
+          {isPending ? "Speichern..." : "Speichern"}
         </button>
         {message ? <span className="save-message">{message}</span> : null}
       </div>

@@ -15,12 +15,7 @@ type FavoriteButtonProps = {
 };
 
 export function FavoriteButton(props: FavoriteButtonProps) {
-  const {
-    propertyId,
-    className,
-    label,
-    showLabel,
-  } = props;
+  const { propertyId, className, label, showLabel } = props;
 
   const initial =
     typeof props.initialIsFavorite === "boolean"
@@ -58,8 +53,6 @@ export function FavoriteButton(props: FavoriteButtonProps) {
           return;
         }
 
-        // Не делаем полный router.refresh() сразу: так сердечко реагирует мгновенно.
-        // Лёгкий refresh откладываем, чтобы обновились счётчики/кабинет, но UI не зависал.
         window.setTimeout(() => router.refresh(), 450);
       } catch {
         setActive(!nextActive);
