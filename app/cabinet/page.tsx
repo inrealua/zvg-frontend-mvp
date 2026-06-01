@@ -66,12 +66,12 @@ export default async function CabinetPage() {
   return (
     <main className="cabinet-page">
       <div className="container page-section">
-        <section className="panel cabinet-hero">
+        <section className="panel cabinet-hero cabinet-hero-compact">
           <div>
             <p className="eyebrow">Mein Konto</p>
             <h1>{user.name || user.email}</h1>
             <p className="meta">
-              Verwalten Sie Favoriten, persönliche Notizen, gespeicherte Suchaufträge und Ihre Auktionstermine.
+              Favoriten, persönliche Notizen, gespeicherte Suchaufträge und Auktionstermine.
             </p>
           </div>
           <div className="cabinet-stats">
@@ -85,7 +85,7 @@ export default async function CabinetPage() {
           <div className="section-head">
             <div>
               <h2>Favoriten</h2>
-              <p className="meta">Sortiert nach dem nächsten Auktionstermin. Ihre Notizen sind nur für Sie sichtbar.</p>
+              <p className="meta">Sortiert nach dem nächsten Auktionstermin. Ihre Notizen sind sofort sichtbar und nur für Sie gespeichert.</p>
             </div>
             <Link className="btn btn-soft" href="/">Immobilien finden</Link>
           </div>
@@ -93,22 +93,26 @@ export default async function CabinetPage() {
           {sortedFavorites.length === 0 ? (
             <div className="empty-state compact">Sie haben noch keine Favoriten gespeichert.</div>
           ) : (
-            <div className="cabinet-list">
+            <div className="favorite-compact-list">
               {sortedFavorites.map((favorite) => {
                 const property = favorite.property;
                 const image = property.images[0];
 
                 return (
-                  <article className="cabinet-item cabinet-item-with-note" key={favorite.id}>
-                    <Link className="cabinet-thumb" href={`/properties/${property.id}`}>
+                  <article className="favorite-compact-card" key={favorite.id}>
+                    <Link className="favorite-compact-thumb" href={`/properties/${property.id}`}>
                       {image ? <img src={image.url} alt={image.alt ?? property.title} /> : <span>Kein Foto</span>}
                     </Link>
 
-                    <div className="cabinet-item-main">
-                      <p className="eyebrow">{property.city} · {translateStatus(property.status)}</p>
+                    <div className="favorite-compact-main">
+                      <div className="favorite-compact-topline">
+                        <p className="eyebrow">{property.city} · {translateStatus(property.status)}</p>
+                      </div>
+
                       <h3><Link href={`/properties/${property.id}`}>{property.title}</Link></h3>
-                      <p>{shortAddress(property.address)}</p>
-                      <div className="tag-row">
+                      <p className="favorite-compact-address">{shortAddress(property.address)}</p>
+
+                      <div className="tag-row favorite-compact-tags">
                         <span>{formatEuro(property.marketValue)}</span>
                         <span>{formatDateTime(property.auctionDate, property.auctionTime)}</span>
                         <span>{property.court}</span>
@@ -117,8 +121,10 @@ export default async function CabinetPage() {
                       <FavoriteNoteForm propertyId={property.id} initialNote={favorite.note ?? ""} />
                     </div>
 
-                    <div className="cabinet-actions">
-                      <Link className="btn btn-primary" href={`/properties/${property.id}`}>Details öffnen</Link>
+                    <div className="favorite-compact-actions">
+                      <Link className="btn btn-primary favorite-action-primary" href={`/properties/${property.id}`}>
+                        Details
+                      </Link>
                       <DeleteFavoriteButton propertyId={property.id} />
                     </div>
                   </article>

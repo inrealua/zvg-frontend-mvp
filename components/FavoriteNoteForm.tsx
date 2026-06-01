@@ -27,28 +27,33 @@ export function FavoriteNoteForm({ propertyId, initialNote }: FavoriteNoteFormPr
       });
 
       if (!response.ok) {
-        setMessage("Notiz konnte nicht gespeichert werden.");
+        setMessage("Nicht gespeichert");
         return;
       }
 
       setMessage("Gespeichert");
-      window.setTimeout(() => setMessage(""), 1800);
+      window.setTimeout(() => setMessage(""), 1600);
     });
   }
 
   return (
-    <div className="favorite-note">
-      <label htmlFor={`favorite-note-${propertyId}`}>Meine Notiz</label>
+    <div className="favorite-note-inline">
+      <div className="favorite-note-inline-head">
+        <label htmlFor={`favorite-note-${propertyId}`}>Meine Notiz</label>
+        <span>{note.length}/2000</span>
+      </div>
+
       <textarea
         id={`favorite-note-${propertyId}`}
         value={note}
         maxLength={2000}
         onChange={(event) => setNote(event.target.value)}
-        placeholder="z. B. Gutachten prüfen, maximaler Kaufpreis, Termin mit Handwerker..."
-        rows={3}
+        placeholder="Ihre persönliche Notiz zu diesem Objekt..."
+        rows={2}
       />
-      <div className="favorite-note-actions">
-        <button type="button" className="btn btn-soft" onClick={saveNote} disabled={isPending}>
+
+      <div className="favorite-note-inline-actions">
+        <button type="button" className="btn btn-soft compact-btn" onClick={saveNote} disabled={isPending}>
           {isPending ? "Speichern..." : "Notiz speichern"}
         </button>
         {message ? <span className="save-message">{message}</span> : null}

@@ -1,61 +1,87 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
-export function FavoriteButton({
-  propertyId,
-  initialIsFavorite = false,
-  compact = false,
-}: {
+type FavoriteButtonProps = {
   propertyId: string;
   initialIsFavorite?: boolean;
-  compact?: boolean;
-}) {
+  isFavorite?: boolean;
+  favorite?: boolean;
+  className?: string;
+  label?: string;
+  showLabel?: boolean;
+  [key: string]: unknown;
+};
+
+export function FavoriteButton(props: FavoriteButtonProps) {
+  const {
+    propertyId,
+    className,
+    label,
+    showLabel,
+  } = props;
+
+  const initial =
+    typeof props.initialIsFavorite === "boolean"
+      ? props.initialIsFavorite
+      : typeof props.isFavorite === "boolean"
+        ? props.isFavorite
+        : typeof props.favorite === "boolean"
+          ? props.favorite
+          : false;
+
+  const [active, setActive] = useState(initial);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
-  const [isLoading, setIsLoading] = useState(false);
 
-  async function toggleFavorite() {
-    if (isLoading) return;
-    setIsLoading(true);
+  function toggleFavorite() {
+    const nextActive = !active;
+    setActive(nextActive);
 
-    try {
-      const response = await fetch(`/api/favorites/${propertyId}`, {
-        method: isFavorite ? "DELETE" : "POST",
-        credentials: "include",
-        cache: "no-store",
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      });
+    startTransition(async () => {
+      try {
+        const response = await fetch(`/api/favorites/${propertyId}`, {
+          method: nextActive ? "POST" : "DELETE",
+          credentials: "include",
+          cache: "no-store",
+        });
 
-      if (response.status === 401) {
-        const next = encodeURIComponent(window.location.pathname + window.location.search);
-        window.location.href = `/login?next=${next}`;
-        return;
+        if (response.status === 401) {
+          setActive(!nextActive);
+          window.location.href = `/login?next=${encodeURIComponent(window.location.pathname)}`;
+          return;
+        }
+
+        if (!response.ok) {
+          setActive(!nextActive);
+          return;
+        }
+
+        // Не делаем полный router.refresh() сразу: так сердечко реагирует мгновенно.
+        // Лёгкий refresh откладываем, чтобы обновились счётчики/кабинет, но UI не зависал.
+        window.setTimeout(() => router.refresh(), 450);
+      } catch {
+        setActive(!nextActive);
       }
-
-      if (response.ok) {
-        setIsFavorite(!isFavorite);
-        router.refresh();
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    });
   }
 
   return (
     <button
       type="button"
-      className={compact ? "favorite-pill compact" : "favorite-pill"}
+      className={[
+        className || "favorite-button",
+        active ? "is-active" : "",
+        isPending ? "is-pending" : "",
+      ].join(" ")}
+      aria-pressed={active}
+      aria-label={active ? "Aus Favoriten entfernen" : "Zu Favoriten hinzufügen"}
       onClick={toggleFavorite}
-      disabled={isLoading}
-      aria-pressed={isFavorite}
-      aria-label={isFavorite ? "Aus Merkliste entfernen" : "Zur Merkliste hinzufügen"}
+      disabled={isPending}
     >
-      <span>{isFavorite ? "♥" : "♡"}</span>
-      {compact ? null : <b>{isFavorite ? "Gemerkt" : "Merken"}</b>}
+      <span aria-hidden="true">{active ? "♥" : "♡"}</span>
+      {showLabel ? <span>{label || (active ? "Favorit" : "Merken")}</span> : null}
     </button>
   );
 }
