@@ -1,0 +1,40 @@
+
+/* Stage 41 — remove logo overlay fallback and use real SiteLogo */
+
+header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+.site-header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+.main-header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+nav a[href="/"]:first-of-type:not(.site-logo-zvgde) {
+  background-image: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+}
+
+header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+.site-header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+.main-header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+nav a[href="/"]:first-of-type:not(.site-logo-zvgde) > * {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.design-header .site-logo-zvgde img {
+  width: 300px;
+  max-width: 32vw;
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  .design-header .site-logo-zvgde img {
+    width: 220px;
+    max-width: 48vw;
+  }
+}
+
+@media (max-width: 560px) {
+  .design-header .site-logo-zvgde img {
+    width: 170px;
+    max-width: 62vw;
+  }
+}
