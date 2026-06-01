@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -9,16 +10,33 @@ const PROD_COOKIE = "__Host-zvg_session";
 const DEV_COOKIE = "zvg_dev_session";
 const LEGACY_COOKIE = "zvg_user_session";
 
-function getSessionToken(request: NextRequest) {
-  return (
-    request.cookies.get(PROD_COOKIE)?.value ||
-    request.cookies.get(DEV_COOKIE)?.value ||
-    request.cookies.get(LEGACY_COOKIE)?.value ||
-    null
-  );
+function getSessionTokens(request: NextRequest) {
+  const tokens = [
+    request.cookies.get(PROD_COOKIE)?.value,
+    request.cookies.get(DEV_COOKIE)?.value,
+    request.cookies.get(LEGACY_COOKIE)?.value,
+  ].filter((value): value is string => Boolean(value));
+
+  return Array.from(new Set(tokens));
 }
 
-function expireCookie(response: NextResponse, name: string, secure: boolean) {
+async function deleteSessions(tokens: string[]) {
+  if (tokens.length === 0) return;
+
+  try {
+    await prisma.session.deleteMany({
+      where: {
+        sessionToken: {
+          in: tokens,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Logout session delete error:", error);
+  }
+}
+
+function clearCookie(response: NextResponse, name: string, secure: boolean) {
   response.cookies.set({
     name,
     value: "",
@@ -27,37 +45,35 @@ function expireCookie(response: NextResponse, name: string, secure: boolean) {
     sameSite: "lax",
     path: "/",
     maxAge: 0,
+    expires: new Date(0),
   });
 }
 
-async function clearSession(request: NextRequest) {
-  const sessionToken = getSessionToken(request);
+async function logout(request: NextRequest) {
+  const tokens = getSessionTokens(request);
+  await deleteSessions(tokens);
 
-  if (sessionToken) {
-    await prisma.session.deleteMany({
-      where: { sessionToken },
-    });
-  }
+  const redirectUrl = new URL("/", request.url);
+  redirectUrl.searchParams.set("logout", String(Date.now()));
 
-  const response = NextResponse.redirect(new URL("/", request.url), {
-    status: 303,
-  });
+  const response = NextResponse.redirect(redirectUrl, { status: 303 });
 
-  expireCookie(response, PROD_COOKIE, true);
-  expireCookie(response, DEV_COOKIE, false);
-  expireCookie(response, LEGACY_COOKIE, true);
+  clearCookie(response, PROD_COOKIE, true);
+  clearCookie(response, DEV_COOKIE, false);
+  clearCookie(response, LEGACY_COOKIE, request.nextUrl.protocol === "https:");
 
-  response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+  response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
   response.headers.set("Pragma", "no-cache");
   response.headers.set("Expires", "0");
+  response.headers.set("Surrogate-Control", "no-store");
 
   return response;
 }
 
-export async function POST(request: NextRequest) {
-  return clearSession(request);
+export async function GET(request: NextRequest) {
+  return logout(request);
 }
 
-export async function GET(request: NextRequest) {
-  return clearSession(request);
+export async function POST(request: NextRequest) {
+  return logout(request);
 }
