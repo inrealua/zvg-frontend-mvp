@@ -2,17 +2,21 @@ import Link from "next/link";
 
 type SiteLogoProps = {
   className?: string;
-  variant?: "horizontal" | "compact";
+  variant?: "header" | "compact" | "stacked" | "icon";
 };
 
-export function SiteLogo({ className = "", variant = "compact" }: SiteLogoProps) {
+export function SiteLogo({ className = "", variant = "header" }: SiteLogoProps) {
   const src =
-    variant === "horizontal"
-      ? "/brand/zvg-de-logo-horizontal.svg"
-      : "/brand/zvg-de-logo-compact.svg";
+    variant === "icon"
+      ? "/brand/zvg-de-icon.svg"
+      : variant === "stacked"
+        ? "/brand/zvg-de-logo-stacked.svg"
+        : variant === "compact"
+          ? "/brand/zvg-de-logo-compact.svg"
+          : "/brand/zvg-de-logo-header.svg";
 
   return (
-    <Link href="/" className={`site-logo-new ${className}`.trim()} aria-label="ZVG-DE Startseite">
+    <Link href="/" className={`site-logo-zvgde ${className}`.trim()} aria-label="ZVG-DE Startseite">
       <img src={src} alt="ZVG-DE" />
     </Link>
   );

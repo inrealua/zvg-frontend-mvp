@@ -6068,3 +6068,83 @@ body {
     width: 210px;
   }
 }
+
+/* Stage 40 — force selected ZVG-DE logo in header */
+
+.site-logo-zvgde {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+
+.site-logo-zvgde img {
+  display: block;
+  width: 300px;
+  max-width: 34vw;
+  height: auto;
+}
+
+/*
+  Fallback override.
+  If Header still uses the old logo markup, this hides the old logo contents
+  and paints the selected ZVG-DE logo as a background on the first home link.
+*/
+header a[href="/"]:first-of-type,
+.site-header a[href="/"]:first-of-type,
+.main-header a[href="/"]:first-of-type,
+nav a[href="/"]:first-of-type {
+  position: relative;
+}
+
+header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+.site-header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+.main-header a[href="/"]:first-of-type:not(.site-logo-zvgde) {
+  width: 300px !important;
+  min-width: 300px !important;
+  height: 72px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  background-image: url("/brand/zvg-de-logo-header.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: left center !important;
+  background-size: contain !important;
+  text-decoration: none !important;
+}
+
+header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+.site-header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+.main-header a[href="/"]:first-of-type:not(.site-logo-zvgde) > * {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+@media (max-width: 900px) {
+  .site-logo-zvgde img {
+    width: 220px;
+    max-width: 48vw;
+  }
+
+  header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+  .site-header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+  .main-header a[href="/"]:first-of-type:not(.site-logo-zvgde) {
+    width: 220px !important;
+    min-width: 220px !important;
+    height: 58px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-logo-zvgde img {
+    width: 170px;
+    max-width: 60vw;
+  }
+
+  header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+  .site-header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+  .main-header a[href="/"]:first-of-type:not(.site-logo-zvgde) {
+    width: 170px !important;
+    min-width: 170px !important;
+    height: 50px !important;
+  }
+}
