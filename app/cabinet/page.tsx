@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AuctionCalendar } from "@/components/AuctionCalendar";
 import { DeleteFavoriteButton } from "@/components/DeleteFavoriteButton";
 import { DeleteSavedSearchButton } from "@/components/DeleteSavedSearchButton";
+import { FavoriteNoteForm } from "@/components/FavoriteNoteForm";
+import { SavedSearchNameForm } from "@/components/SavedSearchNameForm";
 import { prisma } from "@/lib/prisma";
 import { formatDateTime, formatEuro, shortAddress, translateStatus } from "@/lib/format";
 import { getCurrentUser } from "@/lib/user-auth";
@@ -41,32 +44,54 @@ export default async function CabinetPage() {
     return dateA - dateB;
   });
 
+  const calendarEvents = sortedFavorites
+    .filter((favorite) => favorite.property.auctionDate)
+    .map((favorite) => {
+      const property = favorite.property;
+      const image = property.images[0];
+
+      return {
+        id: property.id,
+        title: property.title,
+        city: property.city,
+        address: property.address,
+        auctionDate: property.auctionDate?.toISOString() ?? "",
+        auctionTime: property.auctionTime,
+        marketValue: property.marketValue,
+        imageUrl: image?.url ?? null,
+        status: property.status,
+      };
+    });
+
   return (
     <main className="cabinet-page">
       <div className="container page-section">
         <section className="panel cabinet-hero">
           <div>
-            <p className="eyebrow">Личный кабинет</p>
+            <p className="eyebrow">Mein Konto</p>
             <h1>{user.name || user.email}</h1>
-            <p className="meta">Здесь сохраняются избранные объекты и поисковые фильтры.</p>
+            <p className="meta">
+              Verwalten Sie Favoriten, persönliche Notizen, gespeicherte Suchaufträge und Ihre Auktionstermine.
+            </p>
           </div>
           <div className="cabinet-stats">
-            <a href="#favorites"><span>{favoriteCount}</span><b>Избранное</b></a>
-            <a href="#searches"><span>{savedSearchCount}</span><b>Сохранённые поиски</b></a>
+            <a href="#favorites"><span>{favoriteCount}</span><b>Favoriten</b></a>
+            <a href="#searches"><span>{savedSearchCount}</span><b>Gespeicherte Suchen</b></a>
+            <a href="#calendar"><span>{calendarEvents.length}</span><b>Kalendertermine</b></a>
           </div>
         </section>
 
         <section id="favorites" className="panel cabinet-section">
           <div className="section-head">
             <div>
-              <h2>Избранные объекты</h2>
-              <p className="meta">Сортировка по ближайшей дате торгов.</p>
+              <h2>Favoriten</h2>
+              <p className="meta">Sortiert nach dem nächsten Auktionstermin. Ihre Notizen sind nur für Sie sichtbar.</p>
             </div>
-            <Link className="btn btn-soft" href="/">Найти объекты</Link>
+            <Link className="btn btn-soft" href="/">Immobilien finden</Link>
           </div>
 
           {sortedFavorites.length === 0 ? (
-            <div className="empty-state compact">Пока нет избранных объектов.</div>
+            <div className="empty-state compact">Sie haben noch keine Favoriten gespeichert.</div>
           ) : (
             <div className="cabinet-list">
               {sortedFavorites.map((favorite) => {
@@ -74,10 +99,11 @@ export default async function CabinetPage() {
                 const image = property.images[0];
 
                 return (
-                  <article className="cabinet-item" key={favorite.id}>
+                  <article className="cabinet-item cabinet-item-with-note" key={favorite.id}>
                     <Link className="cabinet-thumb" href={`/properties/${property.id}`}>
-                      {image ? <img src={image.url} alt={image.alt ?? property.title} /> : <span>Нет фото</span>}
+                      {image ? <img src={image.url} alt={image.alt ?? property.title} /> : <span>Kein Foto</span>}
                     </Link>
+
                     <div className="cabinet-item-main">
                       <p className="eyebrow">{property.city} · {translateStatus(property.status)}</p>
                       <h3><Link href={`/properties/${property.id}`}>{property.title}</Link></h3>
@@ -87,9 +113,12 @@ export default async function CabinetPage() {
                         <span>{formatDateTime(property.auctionDate, property.auctionTime)}</span>
                         <span>{property.court}</span>
                       </div>
+
+                      <FavoriteNoteForm propertyId={property.id} initialNote={favorite.note ?? ""} />
                     </div>
+
                     <div className="cabinet-actions">
-                      <Link className="btn btn-primary" href={`/properties/${property.id}`}>Открыть</Link>
+                      <Link className="btn btn-primary" href={`/properties/${property.id}`}>Details öffnen</Link>
                       <DeleteFavoriteButton propertyId={property.id} />
                     </div>
                   </article>
@@ -102,30 +131,49 @@ export default async function CabinetPage() {
         <section id="searches" className="panel cabinet-section">
           <div className="section-head">
             <div>
-              <h2>Сохранённые поиски</h2>
-              <p className="meta">Фильтры сохраняются понятным текстом, а не техническими ID.</p>
+              <h2>Gespeicherte Suchen</h2>
+              <p className="meta">
+                Benennen Sie Ihre Suchaufträge. Später nutzen wir diese Namen für E-Mail-Benachrichtigungen.
+              </p>
             </div>
           </div>
 
           {savedSearches.length === 0 ? (
-            <div className="empty-state compact">Пока нет сохранённых поисков.</div>
+            <div className="empty-state compact">Sie haben noch keine Suchen gespeichert.</div>
           ) : (
             <div className="saved-search-list">
               {savedSearches.map((savedSearch) => (
-                <article className="saved-search-item" key={savedSearch.id}>
+                <article className="saved-search-item saved-search-item-editable" key={savedSearch.id}>
                   <div>
-                    <h3>{savedSearch.name || "Сохранённый поиск"}</h3>
+                    <SavedSearchNameForm
+                      searchId={savedSearch.id}
+                      initialName={savedSearch.name || ""}
+                      fallbackName={savedSearch.humanReadableSummary}
+                    />
                     <p>{savedSearch.humanReadableSummary}</p>
-                    <span className="meta">{savedSearch.createdAt.toLocaleDateString("ru-RU")}</span>
+                    <span className="meta">{savedSearch.createdAt.toLocaleDateString("de-DE")}</span>
                   </div>
                   <div className="cabinet-actions">
-                    <Link className="btn btn-primary" href={savedSearch.filtersUrl}>Открыть поиск</Link>
+                    <Link className="btn btn-primary" href={savedSearch.filtersUrl}>Suche öffnen</Link>
                     <DeleteSavedSearchButton searchId={savedSearch.id} />
                   </div>
                 </article>
               ))}
             </div>
           )}
+        </section>
+
+        <section id="calendar" className="panel cabinet-section">
+          <div className="section-head">
+            <div>
+              <h2>Auktionskalender</h2>
+              <p className="meta">
+                Ihre favorisierten Objekte nach Auktionstermin. Bei mehreren Auktionen an einem Tag erscheint eine Tagesliste.
+              </p>
+            </div>
+          </div>
+
+          <AuctionCalendar events={calendarEvents} />
         </section>
       </div>
     </main>

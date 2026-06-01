@@ -44,6 +44,27 @@ export async function POST(request: NextRequest, context: FavoriteRouteContext) 
   return noStoreJson({ success: true });
 }
 
+export async function PATCH(request: NextRequest, context: FavoriteRouteContext) {
+  const user = await getCurrentUserFromRequest(request);
+  if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });
+
+  const { propertyId } = await context.params;
+  const body = (await request.json().catch(() => null)) as { note?: string } | null;
+  const note = typeof body?.note === "string" ? body.note.trim().slice(0, 2000) : "";
+
+  await prisma.favorite.updateMany({
+    where: {
+      userId: user.id,
+      propertyId,
+    },
+    data: {
+      note: note || null,
+    },
+  });
+
+  return noStoreJson({ success: true, note });
+}
+
 export async function DELETE(request: NextRequest, context: FavoriteRouteContext) {
   const user = await getCurrentUserFromRequest(request);
   if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });

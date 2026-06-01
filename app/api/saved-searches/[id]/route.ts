@@ -23,6 +23,35 @@ function noStoreJson(data: unknown, init?: ResponseInit) {
   });
 }
 
+export async function PATCH(request: NextRequest, context: SavedSearchRouteContext) {
+  const user = await getCurrentUserFromRequest(request);
+  if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });
+
+  const { id } = await context.params;
+  const body = (await request.json().catch(() => null)) as { name?: string } | null;
+  const name = typeof body?.name === "string" ? body.name.trim().slice(0, 120) : "";
+
+  if (!name) {
+    return noStoreJson({ error: "Name is required" }, { status: 400 });
+  }
+
+  const result = await prisma.savedSearch.updateMany({
+    where: {
+      id,
+      userId: user.id,
+    },
+    data: {
+      name,
+    },
+  });
+
+  if (result.count === 0) {
+    return noStoreJson({ error: "Saved search not found" }, { status: 404 });
+  }
+
+  return noStoreJson({ success: true, name });
+}
+
 export async function DELETE(request: NextRequest, context: SavedSearchRouteContext) {
   const user = await getCurrentUserFromRequest(request);
   if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });

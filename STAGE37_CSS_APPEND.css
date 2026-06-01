@@ -1,0 +1,266 @@
+
+/* Stage 37 — Cabinet user tools */
+
+.cabinet-item-with-note {
+  align-items: stretch;
+}
+
+.favorite-note {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(28, 67, 54, 0.12);
+  border-radius: 18px;
+  background: rgba(245, 249, 246, 0.86);
+}
+
+.favorite-note label,
+.saved-search-name-form label {
+  display: block;
+  margin-bottom: 7px;
+  color: #27483c;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.favorite-note textarea {
+  width: 100%;
+  min-height: 86px;
+  resize: vertical;
+  border: 1px solid rgba(28, 67, 54, 0.18);
+  border-radius: 14px;
+  padding: 12px 13px;
+  background: #fff;
+  color: #17362d;
+  font: inherit;
+  line-height: 1.45;
+}
+
+.favorite-note textarea:focus,
+.saved-search-name-row input:focus {
+  outline: 2px solid rgba(74, 121, 95, 0.22);
+  border-color: rgba(74, 121, 95, 0.55);
+}
+
+.favorite-note-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.save-message {
+  color: #4f7b63;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.saved-search-item-editable {
+  align-items: stretch;
+}
+
+.saved-search-name-form {
+  margin-bottom: 10px;
+}
+
+.saved-search-name-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.saved-search-name-row input {
+  width: min(420px, 100%);
+  border: 1px solid rgba(28, 67, 54, 0.18);
+  border-radius: 14px;
+  padding: 11px 13px;
+  background: #fff;
+  color: #17362d;
+  font: inherit;
+  font-weight: 800;
+}
+
+.auction-calendar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  gap: 22px;
+}
+
+.auction-calendar-toolbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.auction-calendar-toolbar h3 {
+  margin: 0;
+  color: #183b2f;
+  text-transform: capitalize;
+}
+
+.auction-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.auction-calendar-weekday {
+  padding: 0 4px 6px;
+  color: #72847b;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.auction-calendar-day {
+  min-height: 88px;
+  border: 1px solid rgba(28, 67, 54, 0.10);
+  border-radius: 18px;
+  background: #fff;
+  color: #183b2f;
+  text-align: left;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.auction-calendar-day:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(25, 58, 47, 0.08);
+}
+
+.auction-calendar-day.muted {
+  opacity: 0.38;
+}
+
+.auction-calendar-day.has-events {
+  border-color: rgba(74, 121, 95, 0.42);
+  background: linear-gradient(180deg, #ffffff 0%, #f0f7f2 100%);
+}
+
+.auction-calendar-day.selected {
+  border-color: #4f7b63;
+  box-shadow: 0 0 0 3px rgba(79, 123, 99, 0.16);
+}
+
+.day-number {
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.day-event-single,
+.day-event-count {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(79, 123, 99, 0.12);
+  color: #2d5a47;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.auction-calendar-details {
+  border: 1px solid rgba(28, 67, 54, 0.10);
+  border-radius: 22px;
+  background: #fff;
+  padding: 16px;
+}
+
+.auction-calendar-details h3 {
+  margin: 0 0 14px;
+  color: #183b2f;
+  text-transform: capitalize;
+}
+
+.auction-calendar-event-list {
+  display: grid;
+  gap: 12px;
+}
+
+.auction-calendar-event {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  background: #f7faf8;
+}
+
+.calendar-event-thumb {
+  display: block;
+  width: 92px;
+  height: 76px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #e8efe9;
+  color: #6d7f75;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.calendar-event-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.calendar-event-thumb span {
+  display: grid;
+  height: 100%;
+  place-items: center;
+}
+
+.auction-calendar-event h4 {
+  margin: 2px 0 6px;
+  font-size: 16px;
+}
+
+.auction-calendar-event h4 a {
+  color: #183b2f;
+  text-decoration: none;
+}
+
+.auction-calendar-event p {
+  margin: 0 0 8px;
+  color: #60736a;
+  font-size: 13px;
+}
+
+@media (max-width: 980px) {
+  .auction-calendar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .auction-calendar-day {
+    min-height: 72px;
+    border-radius: 14px;
+    padding: 8px;
+  }
+
+  .day-event-single,
+  .day-event-count {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+
+  .auction-calendar-event {
+    grid-template-columns: 74px minmax(0, 1fr);
+  }
+
+  .calendar-event-thumb {
+    width: 74px;
+    height: 64px;
+  }
+
+  .saved-search-name-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
