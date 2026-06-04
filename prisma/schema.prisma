@@ -45,6 +45,13 @@ enum UserRole {
   ADMIN
 }
 
+enum Locale {
+  DE
+  RU
+  EN
+}
+
+
 model Property {
   id                       String            @id @default(cuid())
   aktenzeichen             String
@@ -88,6 +95,7 @@ model Property {
   images                   PropertyImage[]
   documents                PropertyDocument[]
   favorites                Favorite[]
+  translations             PropertyTranslation[]
 
   createdAt                DateTime          @default(now())
   updatedAt                DateTime          @updatedAt
@@ -186,6 +194,27 @@ model SavedSearch {
   @@unique([userId, filtersHash])
   @@index([userId])
 }
+
+model PropertyTranslation {
+  id                   String    @id @default(cuid())
+  propertyId           String
+  locale               Locale
+
+  title                String
+  propertyType         String?
+  description          String    @db.Text
+  locationDescription  String?   @db.Text
+
+  property             Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now()) @updatedAt
+
+  @@unique([propertyId, locale])
+  @@index([locale])
+  @@index([propertyId])
+}
+
 
 enum ImportStatus {
   SUCCESS

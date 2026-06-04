@@ -1,0 +1,31 @@
+// Stage 47B schema fragment.
+// If automatic patch script fails, add this manually to prisma/schema.prisma.
+
+enum Locale {
+  DE
+  RU
+  EN
+}
+
+// Add this relation inside model Property:
+translations             PropertyTranslation[]
+
+model PropertyTranslation {
+  id                   String    @id @default(cuid())
+  propertyId           String
+  locale               Locale
+
+  title                String
+  propertyType         String?
+  description          String    @db.Text
+  locationDescription  String?   @db.Text
+
+  property             Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now()) @updatedAt
+
+  @@unique([propertyId, locale])
+  @@index([locale])
+  @@index([propertyId])
+}
