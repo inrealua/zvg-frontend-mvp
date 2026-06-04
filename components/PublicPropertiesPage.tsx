@@ -1,3 +1,4 @@
+import { getPublicUi } from "@/lib/i18n/property-labels";
 import { translationInclude } from "@/lib/i18n/property-translations";
 import { getI18n } from "@/lib/i18n/server";
 import { Prisma, PropertyStatus } from "@prisma/client";
@@ -165,13 +166,14 @@ function pageCopy(mode: PageMode) {
     kicker: "zvg-de.com · gerichtliche Versteigerungen",
     title: "Alle gerichtlichen Versteigerungen an einem Ort.",
     text: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien, Grundstücke und weitere Objekte aus gerichtlichen Versteigerungen mit Karte, Filtern und strukturierten Informationen.",
-    listTitle: "Top 12 aktuelle Objekte",
-    listText: "Kurze Auswahl für die Startseite. Die vollständige Recherche finden Sie in der erweiterten Kartensuche."
+    listTitle: "{publicUi.topTitle}",
+    listText: "{publicUi.topSubtitle}"
   };
 }
 
 export async function PublicPropertiesPage({ params, mode }: { params: SearchParamRecord; mode: PageMode }) {
   const { locale } = await getI18n();
+  const publicUi = getPublicUi(locale);
   const baseWhere = buildPropertyWhere(params);
   const where = withArchiveMode(baseWhere, mode);
   const orderBy = buildPropertyOrderBy(params);
@@ -308,7 +310,7 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
           <strong>{copy.listTitle}</strong>
           <span>{copy.listText}</span>
         </div>
-        {mode === "objects" ? <a className="text-link" href="/map">Zur erweiterten Suche</a> : <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />}
+        {mode === "objects" ? <a className="text-link" href="/map">{publicUi.advancedSearch}</a> : <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />}
       </div>
 
       {properties.length === 0 ? (

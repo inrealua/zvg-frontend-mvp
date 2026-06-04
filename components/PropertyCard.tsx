@@ -6,17 +6,19 @@ import {
   formatEuro,
   shortAddress,
   statusClass,
-  translateGroup,
-  translateOccupancy,
-  translateStatus,
 } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/config";
 import { defaultLocale } from "@/lib/i18n/config";
 import {
-  getPropertyUi,
   pickPropertyTranslation,
   type PropertyTranslationLike,
 } from "@/lib/i18n/property-translations";
+import {
+  getPublicUi,
+  labelGroup,
+  labelOccupancy,
+  labelStatus,
+} from "@/lib/i18n/property-labels";
 
 type PropertyCardImage = {
   url: string;
@@ -59,14 +61,14 @@ export function PropertyCard({
 }) {
   const mainImage = property.images[0];
   const translated = pickPropertyTranslation(property, locale);
-  const ui = getPropertyUi(locale);
+  const ui = getPublicUi(locale);
 
   return (
     <article className="property-card">
       <Link
         className="card-image-wrap"
         href={`/properties/${property.id}`}
-        aria-label={`${ui.openObject}: ${translated.title}`}
+        aria-label={`${ui.details}: ${translated.title}`}
       >
         {mainImage ? (
           <img src={mainImage.url} alt={mainImage.alt ?? translated.title} />
@@ -74,7 +76,7 @@ export function PropertyCard({
           <div className="image-placeholder">{ui.noPhoto}</div>
         )}
         <span className={`status-badge image-badge ${statusClass(property.status)}`}>
-          {translateStatus(property.status)}
+          {labelStatus(property.status, locale)}
         </span>
       </Link>
 
@@ -82,7 +84,7 @@ export function PropertyCard({
         <div className="card-main-row">
           <div>
             <p className="eyebrow">
-              {translateGroup(property.propertyTypeGroup)} · {translated.propertyType || property.propertyType}
+              {labelGroup(property.propertyTypeGroup, locale)} · {translated.propertyType || property.propertyType}
             </p>
             <h2 className="card-title">
               <Link href={`/properties/${property.id}`}>{translated.title}</Link>
@@ -109,7 +111,7 @@ export function PropertyCard({
         <div className="tag-row">
           <span>{property.state}</span>
           <span>{property.postalCode} {property.city}</span>
-          <span>{translateOccupancy(property.occupancyStatus)}</span>
+          <span>{labelOccupancy(property.occupancyStatus, locale)}</span>
           {property.hasDenkmalschutz ? <span>Denkmalschutz</span> : null}
           {property.wertgrenzenWeggefallen ? <span>Wertgrenzen weggefallen</span> : null}
         </div>

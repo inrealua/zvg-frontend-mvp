@@ -1,0 +1,38 @@
+
+/* Stage 47D — language consistency and softer language switcher */
+
+.language-switcher {
+  margin-left: 2px;
+}
+
+.language-switcher select {
+  height: 36px !important;
+  min-width: 62px !important;
+  padding: 0 26px 0 11px !important;
+  border: 1px solid rgba(47, 79, 62, 0.22) !important;
+  border-radius: 999px !important;
+  background-color: rgba(255, 255, 255, 0.72) !important;
+  color: #2f4f3e !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  box-shadow: none !important;
+}
+
+.language-switcher select:hover {
+  background-color: #ffffff !important;
+  border-color: rgba(47, 79, 62, 0.34) !important;
+}
+
+.language-switcher select:focus {
+  outline: 2px solid rgba(47, 79, 62, 0.13) !important;
+  border-color: rgba(47, 79, 62, 0.38) !important;
+}
+
+.main-nav.design-nav {
+  gap: 22px;
+}
+
+.main-nav.design-nav a {
+  white-space: nowrap;
+}
