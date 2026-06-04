@@ -1,7 +1,7 @@
+import { getLocale } from "@/lib/i18n/server";
 import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { getLocale } from "@/lib/i18n/server";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";

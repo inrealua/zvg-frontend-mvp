@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatNumber } from "@/lib/format";
@@ -5,6 +7,8 @@ import { formatNumber } from "@/lib/format";
 export const dynamic = "force-dynamic";
 
 export default async function AdminExportPage() {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const [total, active, cancelled, withoutImages, withoutDocuments, withoutCoordinates] = await Promise.all([
     prisma.property.count(),
     prisma.property.count({ where: { status: "ACTIVE" } }),

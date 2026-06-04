@@ -8,7 +8,7 @@ export function SaveSearchButton({ filtersUrl, summary }: { filtersUrl: string; 
   const [state, setState] = useState<"idle" | "saving" | "saved" | "exists" | "error">("idle");
 
   async function saveSearch() {
-    if (state === "saving") return;
+if (state === "saving") return;
     setState("saving");
 
     try {

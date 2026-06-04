@@ -88,6 +88,7 @@ function formatDocumentType(type: string, locale: string): string {
 }
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
+
   const { id } = await params;
   const { locale, t } = await getI18n();
   const ui = getPropertyUi(locale);

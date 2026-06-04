@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatDate, formatEuro, formatNumber, translateGroup, translateStatus } from "@/lib/format";
@@ -50,6 +52,8 @@ function DashboardBars({ title, rows, total }: { title: string; rows: BarRow[]; 
 }
 
 export default async function AdminDashboardPage() {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const now = new Date();
   const next30Days = new Date(now);
   next30Days.setDate(next30Days.getDate() + 30);
@@ -164,7 +168,7 @@ export default async function AdminDashboardPage() {
           <div className="dashboard-kpi"><span>Активные</span><b>{formatNumber(active)}</b></div>
           <div className="dashboard-kpi"><span>Отменённые</span><b>{formatNumber(cancelled)}</b></div>
           <div className="dashboard-kpi"><span>Ближайшие 30 дней</span><b>{formatNumber(nextAuctions)}</b></div>
-          <div className="dashboard-kpi"><span>Denkmalschutz</span><b>{formatNumber(denkmalschutz)}</b></div>
+          <div className="dashboard-kpi"><span>{ui.search.heritage}</span><b>{formatNumber(denkmalschutz)}</b></div>
           <div className="dashboard-kpi"><span>Wertgrenzen weg</span><b>{formatNumber(wertgrenzenWeggefallen)}</b></div>
         </div>
 

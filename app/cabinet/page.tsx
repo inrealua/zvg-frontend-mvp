@@ -18,7 +18,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function CabinetPage() {
-  const user = await getCurrentUser();
+const user = await getCurrentUser();
   if (!user) redirect("/login?next=/cabinet");
 
   const { locale, t } = await getI18n();

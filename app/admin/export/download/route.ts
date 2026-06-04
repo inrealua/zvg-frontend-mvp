@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import { NextRequest } from "next/server";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -152,6 +154,8 @@ function rowToCsv(row: ExportRow): string {
 }
 
 export async function GET(request: NextRequest) {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const where = buildWhere(request.nextUrl.searchParams);
   const limit = Math.min(Math.max(getInt(request.nextUrl.searchParams.get("limit"), 5000), 1), 20000);
 

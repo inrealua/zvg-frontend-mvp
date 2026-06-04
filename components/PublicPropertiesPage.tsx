@@ -164,10 +164,10 @@ function pageCopy(mode: PageMode) {
 
   return {
     kicker: "zvg-de.com · gerichtliche Versteigerungen",
-    title: "Alle gerichtlichen Versteigerungen an einem Ort.",
-    text: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien, Grundstücke und weitere Objekte aus gerichtlichen Versteigerungen mit Karte, Filtern und strukturierten Informationen.",
-    listTitle: "{publicUi.topTitle}",
-    listText: "{publicUi.topSubtitle}"
+    title: "Top 12 aktuelle Objekte",
+    text: "Kurze Auswahl für die Startseite. Die vollständige Recherche finden Sie in der erweiterten Suche.",
+    listTitle: "Top 12 aktuelle Objekte",
+    listText: "Kurze Auswahl für die Startseite. Die vollständige Recherche finden Sie in der erweiterten Suche."
   };
 }
 

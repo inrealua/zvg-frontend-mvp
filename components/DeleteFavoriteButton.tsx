@@ -8,7 +8,7 @@ export function DeleteFavoriteButton({ propertyId }: { propertyId: string }) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function remove() {
-    if (isLoading) return;
+if (isLoading) return;
     setIsLoading(true);
 
     try {

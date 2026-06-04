@@ -50,6 +50,21 @@ export type PropertyCardData = {
   translations?: PropertyTranslationLike[];
 };
 
+const cardLabels = {
+  de: {
+    heritage: "Denkmalschutz",
+    valueLimitsGone: "Wertgrenzen weggefallen",
+  },
+  ru: {
+    heritage: "Памятник архитектуры",
+    valueLimitsGone: "Ценовые границы сняты",
+  },
+  en: {
+    heritage: "Listed monument",
+    valueLimitsGone: "Value limits removed",
+  },
+} as const;
+
 export function PropertyCard({
   property,
   isFavorite = false,
@@ -62,6 +77,7 @@ export function PropertyCard({
   const mainImage = property.images[0];
   const translated = pickPropertyTranslation(property, locale);
   const ui = getPublicUi(locale);
+  const cardUi = cardLabels[locale];
 
   return (
     <article className="property-card">
@@ -112,8 +128,8 @@ export function PropertyCard({
           <span>{property.state}</span>
           <span>{property.postalCode} {property.city}</span>
           <span>{labelOccupancy(property.occupancyStatus, locale)}</span>
-          {property.hasDenkmalschutz ? <span>Denkmalschutz</span> : null}
-          {property.wertgrenzenWeggefallen ? <span>Wertgrenzen weggefallen</span> : null}
+          {property.hasDenkmalschutz ? <span>{cardUi.heritage}</span> : null}
+          {property.wertgrenzenWeggefallen ? <span>{cardUi.valueLimitsGone}</span> : null}
         </div>
 
         <div className="card-footer">

@@ -194,7 +194,7 @@ export function PropertyMap({ properties, variant = "default" }: { properties: M
     let cancelled = false;
 
     async function initMap() {
-      if (!mapElementRef.current) return;
+if (!mapElementRef.current) return;
 
       try {
         setError(null);

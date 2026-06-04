@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuctionCalendar } from "@/components/AuctionCalendar";
@@ -12,6 +14,8 @@ import { getCurrentUser } from "@/lib/user-auth";
 export const dynamic = "force-dynamic";
 
 export default async function CabinetPage() {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/cabinet");
 

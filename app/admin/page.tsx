@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
@@ -19,6 +21,8 @@ async function deleteProperty(formData: FormData) {
 }
 
 export default async function AdminPage({ searchParams }: { searchParams: AdminSearchParams }) {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const params = await searchParams;
   const q = typeof params.q === "string" ? params.q.trim() : "";
   const status = typeof params.status === "string" ? params.status.trim() : "";
@@ -107,7 +111,7 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
                 <th>Объект</th>
                 <th>Суд / дело</th>
                 <th>Торги</th>
-                <th>Verkehrswert</th>
+                <th>{ui.search.marketValue}</th>
                 <th>Файлы</th>
                 <th>Статус</th>
                 <th>Действия</th>

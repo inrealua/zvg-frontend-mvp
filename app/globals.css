@@ -6369,3 +6369,22 @@ nav a[href="/"]:first-of-type:not(.site-logo-zvgde) > * {
 .main-nav.design-nav a {
   white-space: nowrap;
 }
+/* Stage 47E — softer language switcher */
+
+.language-switcher select {
+  height: 34px !important;
+  min-width: 58px !important;
+  padding: 0 24px 0 10px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(47, 79, 62, 0.18) !important;
+  background: rgba(255, 255, 255, 0.62) !important;
+  color: #2f4f3e !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+
+.language-switcher select:hover {
+  background: #fff !important;
+  border-color: rgba(47, 79, 62, 0.28) !important;
+}

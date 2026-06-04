@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -62,6 +64,8 @@ async function importAction(formData: FormData) {
 }
 
 export default async function AdminImportPage({ searchParams }: { searchParams: ImportSearchParams }) {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const params = await searchParams;
   const logId = typeof params.logId === "string" ? params.logId : "";
   const error = typeof params.error === "string" ? params.error : "";

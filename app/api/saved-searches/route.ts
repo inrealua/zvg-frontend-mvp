@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -64,6 +66,8 @@ function generateSearchName(filtersUrl: string, summary: string) {
 }
 
 export async function POST(request: NextRequest) {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const user = await getCurrentUserFromRequest(request);
   if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });
 

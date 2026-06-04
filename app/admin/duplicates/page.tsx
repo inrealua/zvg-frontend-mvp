@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -241,6 +243,8 @@ function DuplicateGroupCard({ group }: { group: DuplicateGroup }) {
 }
 
 export default async function AdminDuplicatesPage({ searchParams }: { searchParams: DuplicateSearchParams }) {
+  const { locale } = await getI18n();
+  const ui = getUiText(locale);
   const resolvedSearchParams = await searchParams;
   const allProperties = await prisma.property.findMany({
     select: {

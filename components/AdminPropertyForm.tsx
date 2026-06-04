@@ -1,3 +1,5 @@
+import { getI18n } from "@/lib/i18n/server";
+import { getUiText } from "@/lib/i18n/ui-texts";
 import {
   OCCUPANCY_OPTIONS,
   PROPERTY_GROUP_OPTIONS,
