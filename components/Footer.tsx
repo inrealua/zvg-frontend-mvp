@@ -1,27 +1,28 @@
 import Link from "next/link";
+import { SiteLogo } from "@/components/SiteLogo";
+import { getI18n } from "@/lib/i18n/server";
 
-export function Footer() {
+export async function Footer() {
   const year = new Date().getFullYear();
+  const { t } = await getI18n();
 
   return (
     <footer className="site-footer design-footer">
       <div className="container footer-inner design-footer-inner">
-        <div>
-          <Link href="/" className="footer-brand">ZVG DE</Link>
-          <p>
-            Immobilienauktionen in Deutschland: klare Suche, Karte, strukturierte Objektinformationen
-            und Verwaltungswerkzeuge für Zwangsversteigerungen.
-          </p>
+        <div className="footer-brand-block">
+          <SiteLogo variant="compact" className="footer-brand-logo" />
+          <p>{t.footer.tagline}</p>
         </div>
-        <nav className="footer-links" aria-label="Footer Navigation">
-          <Link href="/">Immobilien finden</Link>
-          <Link href="/map">Karte</Link>
-          <Link href="/archive">Archiv</Link>
-          <Link href="/ueber-uns">Über uns</Link>
-          <Link href="/impressum">Impressum</Link>
-          <Link href="/datenschutz">Datenschutz</Link>
+
+        <nav className="footer-links" aria-label={t.footer.navigation}>
+          <Link href="/">{t.footer.home}</Link>
+          <Link href="/map">{t.footer.advancedSearch}</Link>
+          <Link href="/archive">{t.footer.archive}</Link>
+          <Link href="/ueber-uns">{t.footer.about}</Link>
+          <Link href="/datenschutz">{t.footer.privacy}</Link>
         </nav>
-        <p className="footer-copy">© {year} zvg-de.com. Alle Angaben ohne Gewähr.</p>
+
+        <p className="footer-copy">© {year} ZVG-DE. {t.footer.copyright}</p>
       </div>
     </footer>
   );
