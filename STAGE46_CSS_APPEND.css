@@ -1,0 +1,48 @@
+
+/* Stage 46 — final logo assets from provided SVG */
+
+.site-logo-zvgde {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+
+.site-logo-zvgde img {
+  display: block;
+  width: 360px;
+  max-width: 36vw;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Disable previous fallback/overlay logo styles */
+header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+.site-header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+.main-header a[href="/"]:first-of-type:not(.site-logo-zvgde),
+nav a[href="/"]:first-of-type:not(.site-logo-zvgde) {
+  background-image: none !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+}
+
+header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+.site-header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+.main-header a[href="/"]:first-of-type:not(.site-logo-zvgde) > *,
+nav a[href="/"]:first-of-type:not(.site-logo-zvgde) > * {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+@media (max-width: 1100px) {
+  .site-logo-zvgde img { width: 300px; max-width: 42vw; }
+}
+
+@media (max-width: 760px) {
+  .site-logo-zvgde img { width: 220px; max-width: 58vw; }
+}
+
+@media (max-width: 520px) {
+  .site-logo-zvgde img { width: 170px; max-width: 65vw; }
+}

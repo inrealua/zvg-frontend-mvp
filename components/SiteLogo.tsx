@@ -11,7 +11,7 @@ export function SiteLogo({ className = "", variant = "header" }: SiteLogoProps) 
       ? "/brand/zvg-de-icon-512.png"
       : variant === "compact"
         ? "/brand/zvg-de-logo-compact.png"
-        : "/brand/zvg-de-logo-header.png";
+        : "/brand/zvg-de-logo.svg";
 
   return (
     <Link href="/" className={`site-logo-zvgde ${className}`.trim()} aria-label="ZVG-DE Startseite">
