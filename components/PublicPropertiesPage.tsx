@@ -1,3 +1,5 @@
+import { translationInclude } from "@/lib/i18n/property-translations";
+import { getI18n } from "@/lib/i18n/server";
 import { Prisma, PropertyStatus } from "@prisma/client";
 import { ActiveFilters } from "@/components/ActiveFilters";
 import { EmptyState } from "@/components/EmptyState";
@@ -169,6 +171,7 @@ function pageCopy(mode: PageMode) {
 }
 
 export async function PublicPropertiesPage({ params, mode }: { params: SearchParamRecord; mode: PageMode }) {
+  const { locale } = await getI18n();
   const baseWhere = buildPropertyWhere(params);
   const where = withArchiveMode(baseWhere, mode);
   const orderBy = buildPropertyOrderBy(params);
@@ -182,8 +185,7 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
   const [rawProperties, statesRaw, courtsRaw, citiesRaw, allCount, archiveCount] = await Promise.all([
     prisma.property.findMany({
       where,
-      include: {
-        images: {
+      include: { ...translationInclude(locale), images: {
           orderBy: [{ isMain: "desc" }, { sortOrder: "asc" }],
           take: 1
         }
@@ -314,7 +316,7 @@ export async function PublicPropertiesPage({ params, mode }: { params: SearchPar
       ) : (
         <>
           <div className={mode === "objects" ? "card-list home-property-grid" : "card-list"}>
-            {properties.map((property) => <PropertyCard key={property.id} property={property} isFavorite={favoriteIds.has(property.id)} />)}
+            {properties.map((property) => <PropertyCard key={property.id} property={property} locale={locale} isFavorite={favoriteIds.has(property.id)} />)}
           </div>
           {mode !== "objects" ? (
             <Pagination

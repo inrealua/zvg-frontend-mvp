@@ -1,6 +1,22 @@
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
-import { formatArea, formatDateTime, formatEuro, shortAddress, statusClass, translateGroup, translateOccupancy, translateStatus } from "@/lib/format";
+import {
+  formatArea,
+  formatDateTime,
+  formatEuro,
+  shortAddress,
+  statusClass,
+  translateGroup,
+  translateOccupancy,
+  translateStatus,
+} from "@/lib/format";
+import type { Locale } from "@/lib/i18n/config";
+import { defaultLocale } from "@/lib/i18n/config";
+import {
+  getPropertyUi,
+  pickPropertyTranslation,
+  type PropertyTranslationLike,
+} from "@/lib/i18n/property-translations";
 
 type PropertyCardImage = {
   url: string;
@@ -29,30 +45,51 @@ export type PropertyCardData = {
   wertgrenzenWeggefallen: boolean;
   hasDenkmalschutz: boolean;
   images: PropertyCardImage[];
+  translations?: PropertyTranslationLike[];
 };
 
-export function PropertyCard({ property, isFavorite = false }: { property: PropertyCardData; isFavorite?: boolean }) {
+export function PropertyCard({
+  property,
+  isFavorite = false,
+  locale = defaultLocale,
+}: {
+  property: PropertyCardData;
+  isFavorite?: boolean;
+  locale?: Locale;
+}) {
   const mainImage = property.images[0];
+  const translated = pickPropertyTranslation(property, locale);
+  const ui = getPropertyUi(locale);
 
   return (
     <article className="property-card">
-      <Link className="card-image-wrap" href={`/properties/${property.id}`} aria-label={`Objekt öffnen: ${property.title}`}>
+      <Link
+        className="card-image-wrap"
+        href={`/properties/${property.id}`}
+        aria-label={`${ui.openObject}: ${translated.title}`}
+      >
         {mainImage ? (
-          <img src={mainImage.url} alt={mainImage.alt ?? property.title} />
+          <img src={mainImage.url} alt={mainImage.alt ?? translated.title} />
         ) : (
-          <div className="image-placeholder">Kein Foto</div>
+          <div className="image-placeholder">{ui.noPhoto}</div>
         )}
-        <span className={`status-badge image-badge ${statusClass(property.status)}`}>{translateStatus(property.status)}</span>
+        <span className={`status-badge image-badge ${statusClass(property.status)}`}>
+          {translateStatus(property.status)}
+        </span>
       </Link>
 
       <div className="card-content">
         <div className="card-main-row">
           <div>
-            <p className="eyebrow">{translateGroup(property.propertyTypeGroup)} · {property.propertyType}</p>
-            <h2 className="card-title"><Link href={`/properties/${property.id}`}>{property.title}</Link></h2>
+            <p className="eyebrow">
+              {translateGroup(property.propertyTypeGroup)} · {translated.propertyType || property.propertyType}
+            </p>
+            <h2 className="card-title">
+              <Link href={`/properties/${property.id}`}>{translated.title}</Link>
+            </h2>
           </div>
           <div className="price-box">
-            <span>Verkehrswert</span>
+            <span>{ui.marketValue}</span>
             <b>{formatEuro(property.marketValue)}</b>
           </div>
         </div>
@@ -63,10 +100,10 @@ export function PropertyCard({ property, isFavorite = false }: { property: Prope
         </div>
 
         <div className="kpis">
-          <div className="kpi"><b>{formatDateTime(property.auctionDate, property.auctionTime)}</b><br />Termin</div>
-          <div className="kpi"><b>{formatArea(property.livingArea)}</b><br />Wohnfläche</div>
-          <div className="kpi"><b>{formatArea(property.plotArea)}</b><br />Grundstück</div>
-          <div className="kpi"><b>{property.auctionAttempt}</b><br />Termin-Nr.</div>
+          <div className="kpi"><b>{formatDateTime(property.auctionDate, property.auctionTime)}</b><br />{ui.auctionDate}</div>
+          <div className="kpi"><b>{formatArea(property.livingArea)}</b><br />{ui.livingArea}</div>
+          <div className="kpi"><b>{formatArea(property.plotArea)}</b><br />{ui.plotArea}</div>
+          <div className="kpi"><b>{property.auctionAttempt}</b><br />{ui.attempt}</div>
         </div>
 
         <div className="tag-row">
@@ -78,10 +115,10 @@ export function PropertyCard({ property, isFavorite = false }: { property: Prope
         </div>
 
         <div className="card-footer">
-          <span className="meta">Quelle: Testdaten / DB</span>
+          <span className="meta">{ui.source}: Testdaten / DB</span>
           <div className="card-actions">
             <FavoriteButton propertyId={property.id} initialIsFavorite={isFavorite} compact />
-            <Link className="btn btn-soft" href={`/properties/${property.id}`}>Details ansehen</Link>
+            <Link className="btn btn-soft" href={`/properties/${property.id}`}>{ui.details}</Link>
           </div>
         </div>
       </div>
