@@ -1,3 +1,4 @@
+import { FilterMiniApplyEnhancer } from "@/components/FilterMiniApplyEnhancer";
 import { BackToTopButton } from "@/components/BackToTopButton";
 import { LanguageRuntimeFix } from "@/components/LanguageRuntimeFix";
 import { getLocale } from "@/lib/i18n/server";
@@ -53,6 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Footer />
               <LanguageRuntimeFix />
               <BackToTopButton />
+              <FilterMiniApplyEnhancer />
       </body>
     </html>
   );

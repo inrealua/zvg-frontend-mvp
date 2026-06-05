@@ -1,26 +1,53 @@
 import { prisma } from "@/lib/prisma";
 
+function normalizePostalCode(input: string): string {
+  return input.trim().replace(/\D/g, "").slice(0, 5);
+}
+
 export async function resolvePostalCodeCenter(input: string) {
-  const query = input.trim();
-  if (!query) return null;
+  const raw = input.trim();
+  if (!raw) return null;
 
-  const exact = query.match(/^\d{5}$/);
-  const prefix = query.match(/^\d{2,4}$/);
+  const code = normalizePostalCode(raw);
 
-  const postalCode = await prisma.postalCode.findFirst({
-    where: exact
-      ? { code: query }
-      : prefix
-        ? { code: { startsWith: query } }
-        : { city: { contains: query } },
+  if (code.length >= 2) {
+    const exact = code.length === 5
+      ? await prisma.postalCode.findUnique({ where: { code } })
+      : null;
+
+    if (exact) {
+      return {
+        latitude: exact.latitude,
+        longitude: exact.longitude,
+        label: `${exact.code} ${exact.city}`,
+      };
+    }
+
+    const rows = await prisma.postalCode.findMany({
+      where: { code: { startsWith: code } },
+      take: 100,
+      orderBy: [{ code: "asc" }],
+    });
+
+    if (rows.length > 0) {
+      const latitude = rows.reduce((sum, row) => sum + row.latitude, 0) / rows.length;
+      const longitude = rows.reduce((sum, row) => sum + row.longitude, 0) / rows.length;
+      const first = rows[0];
+      return { latitude, longitude, label: `${code}* ${first.city}` };
+    }
+  }
+
+  const byCity = await prisma.postalCode.findMany({
+    where: { city: { contains: raw } },
+    take: 100,
     orderBy: [{ code: "asc" }],
   });
 
-  if (!postalCode) return null;
+  if (byCity.length > 0) {
+    const latitude = byCity.reduce((sum, row) => sum + row.latitude, 0) / byCity.length;
+    const longitude = byCity.reduce((sum, row) => sum + row.longitude, 0) / byCity.length;
+    return { latitude, longitude, label: byCity[0].city };
+  }
 
-  return {
-    latitude: postalCode.latitude,
-    longitude: postalCode.longitude,
-    label: `${postalCode.code} ${postalCode.city}`,
-  };
+  return null;
 }
