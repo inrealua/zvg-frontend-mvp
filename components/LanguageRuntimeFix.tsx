@@ -14,44 +14,105 @@ const translations: TranslationMap = {
     ru: "Кликните по карте, чтобы поставить точки. Минимум 3 точки.",
     en: "Click on the map to set points. At least 3 points.",
   },
-  "Polygon anwenden (3)": { de: "Polygon anwenden (3)", ru: "Применить полигон (3)", en: "Apply polygon (3)" },
+  "Кликните по карте, чтобы поставить точки. Минимум 3 точки.": {
+    de: "Klicken Sie auf die Karte, um Punkte zu setzen. Mindestens 3 Punkte.",
+    ru: "Кликните по карте, чтобы поставить точки. Минимум 3 точки.",
+    en: "Click on the map to set points. At least 3 points.",
+  },
   "Polygon anwenden": { de: "Polygon anwenden", ru: "Применить полигон", en: "Apply polygon" },
+  "Применить полигон": { de: "Polygon anwenden", ru: "Применить полигон", en: "Apply polygon" },
   "Punkte löschen": { de: "Punkte löschen", ru: "Удалить точки", en: "Clear points" },
+  "Удалить точки": { de: "Punkte löschen", ru: "Удалить точки", en: "Clear points" },
   "Abbrechen": { de: "Abbrechen", ru: "Отмена", en: "Cancel" },
+  "Отмена": { de: "Abbrechen", ru: "Отмена", en: "Cancel" },
 
-  // Property detail — characteristics
-  "Характеристики": { de: "Merkmale", ru: "Характеристики", en: "Characteristics" },
-  "Адрес": { de: "Adresse", ru: "Адрес", en: "Address" },
-  "Федеральная земля": { de: "Bundesland", ru: "Федеральная земля", en: "Federal state" },
-  "PLZ / Ort": { de: "PLZ / Ort", ru: "Индекс / город", en: "ZIP / City" },
-  "Жилая площадь": { de: "Wohnfläche", ru: "Жилая площадь", en: "Living area" },
-  "Nutzfläche": { de: "Nutzfläche", ru: "Полезная площадь", en: "Usable area" },
-  "Gesamtfläche": { de: "Gesamtfläche", ru: "Общая площадь", en: "Total area" },
-  "Участок": { de: "Grundstück", ru: "Участок", en: "Plot size" },
-  "Год постройки": { de: "Baujahr", ru: "Год постройки", en: "Year built" },
-  "Использование": { de: "Nutzung", ru: "Использование", en: "Use" },
-  "Памятник архитектуры": { de: "Denkmalschutz", ru: "Памятник архитектуры", en: "Listed monument" },
-
-  // Property detail — auction
-  "Торги": { de: "Versteigerung", ru: "Торги", en: "Auction" },
-  "Место торгов": { de: "Ort der Versteigerung", ru: "Место торгов", en: "Auction location" },
+  // FilterBar: RU/DE/EN hardcoded leftovers
+  "Termin ab": { de: "Termin ab", ru: "Торги от", en: "Auction from" },
+  "Termin bis": { de: "Termin bis", ru: "Торги до", en: "Auction to" },
+  "Denkmalschutz": { de: "Denkmalschutz", ru: "Памятник архитектуры", en: "Listed monument" },
+  "Wertgrenzen": { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" },
+  "Termin-Nr.": { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." },
+  "Sortierung": { de: "Sortierung", ru: "Сортировка", en: "Sorting" },
+  "Anzeigen": { de: "Anzeigen", ru: "Показывать", en: "Show" },
+  "Objekte finden": { de: "Objekte finden", ru: "Найти объекты", en: "Find properties" },
+  "Filter zurücksetzen": { de: "Filter zurücksetzen", ru: "Сбросить фильтр", en: "Reset filters" },
+  "Termin aufsteigend": { de: "Termin aufsteigend", ru: "Дата торгов по возрастанию", en: "Auction date ascending" },
+  "Termin absteigend": { de: "Termin absteigend", ru: "Дата торгов по убыванию", en: "Auction date descending" },
+  "Preis aufsteigend": { de: "Preis aufsteigend", ru: "Цена по возрастанию", en: "Price ascending" },
+  "Preis absteigend": { de: "Preis absteigend", ru: "Цена по убыванию", en: "Price descending" },
+  "Не важно": { de: "Egal", ru: "Не важно", en: "Any" },
+  "Любой термин": { de: "Jeder Termin", ru: "Любой термин", en: "Any auction" },
+  "20 на странице": { de: "20 pro Seite", ru: "20 на странице", en: "20 per page" },
+  "50 на странице": { de: "50 pro Seite", ru: "50 на странице", en: "50 per page" },
+  "100 на странице": { de: "100 pro Seite", ru: "100 на странице", en: "100 per page" },
+  "Все актуальные": { de: "Alle aktuellen", ru: "Все актуальные", en: "All current" },
+  "Alle aktuellen": { de: "Alle aktuellen", ru: "Все актуальные", en: "All current" },
+  "Все города": { de: "Alle Orte", ru: "Все города", en: "All cities" },
+  "Alle Orte": { de: "Alle Orte", ru: "Все города", en: "All cities" },
+  "z. B. 091": { de: "z. B. 091", ru: "например: 091", en: "e.g. 091" },
+  "например: 091": { de: "z. B. 091", ru: "например: 091", en: "e.g. 091" },
+  "Kein Radius": { de: "Kein Radius", ru: "Без радиуса", en: "No radius" },
+  "Без радиуса": { de: "Kein Radius", ru: "Без радиуса", en: "No radius" },
+  "Amtsgericht": { de: "Amtsgericht", ru: "Суд", en: "Court" },
+  "Alle Gerichte": { de: "Alle Gerichte", ru: "Все суды", en: "All courts" },
   "Суд": { de: "Amtsgericht", ru: "Суд", en: "Court" },
-  "Aktenzeichen": { de: "Aktenzeichen", ru: "Номер дела", en: "Case number" },
-  "№ термина": { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." },
-  "Ценовые границы": { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" },
+  "Поиск": { de: "Suche", ru: "Поиск", en: "Search" },
+  "Город": { de: "Ort", ru: "Город", en: "City" },
+  "Индекс": { de: "PLZ", ru: "Индекс", en: "ZIP" },
+  "Участок": { de: "Grundstück", ru: "Участок", en: "Plot size" },
+  "Радиус": { de: "Umkreis", ru: "Радиус", en: "Radius" },
+  "Федеральная земля": { de: "Bundesland", ru: "Федеральная земля", en: "Federal state" },
+  "Alle Bundesländer": { de: "Alle Bundesländer", ru: "Все земли", en: "All states" },
+  "Все земли": { de: "Alle Bundesländer", ru: "Все земли", en: "All states" },
 
-  // Favorite notes / cabinet cards
+  // Cabinet / saved searches / calendar
+  "Gespeicherte Suchen": { de: "Gespeicherte Suchen", ru: "Сохранённые поиски", en: "Saved searches" },
+  "Сохранённые поиски": { de: "Gespeicherte Suchen", ru: "Сохранённые поиски", en: "Saved searches" },
+  "Benennen Sie Ihre Suchaufträge für spätere E-Mail-Benachrichtigungen.": {
+    de: "Benennen Sie Ihre Suchaufträge für spätere E-Mail-Benachrichtigungen.",
+    ru: "Назовите ваши поиски для будущих уведомлений по e-mail.",
+    en: "Name your saved searches for future email notifications.",
+  },
+  "Suchname": { de: "Suchname", ru: "Название поиска", en: "Search name" },
+  "Speichern": { de: "Speichern", ru: "Сохранить", en: "Save" },
+  "Suche öffnen": { de: "Suche öffnen", ru: "Открыть поиск", en: "Open search" },
+  "Удалить": { de: "Löschen", ru: "Удалить", en: "Delete" },
+  "Löschen": { de: "Löschen", ru: "Удалить", en: "Delete" },
+  "Город: Berlin": { de: "Ort: Berlin", ru: "Город: Berlin", en: "City: Berlin" },
+  "Auktionskalender": { de: "Auktionskalender", ru: "Календарь аукционов", en: "Auction calendar" },
+  "Ihre favorisierten Objekte nach Auktionstermin.": {
+    de: "Ihre favorisierten Objekte nach Auktionstermin.",
+    ru: "Ваши избранные объекты по дате торгов.",
+    en: "Your favorite properties by auction date.",
+  },
+  "Zurück": { de: "Zurück", ru: "Назад", en: "Previous" },
+  "Weiter": { de: "Weiter", ru: "Вперёд", en: "Next" },
+  "Juni 2026": { de: "Juni 2026", ru: "Июнь 2026", en: "June 2026" },
+  "MO": { de: "MO", ru: "ПН", en: "MON" },
+  "DI": { de: "DI", ru: "ВТ", en: "TUE" },
+  "MI": { de: "MI", ru: "СР", en: "WED" },
+  "DO": { de: "DO", ru: "ЧТ", en: "THU" },
+  "FR": { de: "FR", ru: "ПТ", en: "FRI" },
+  "SA": { de: "SA", ru: "СБ", en: "SAT" },
+  "SO": { de: "SO", ru: "ВС", en: "SUN" },
+
+  // Favorite cards
   "Meine Notiz": { de: "Meine Notiz", ru: "Моя заметка", en: "My note" },
+  "Моя заметка": { de: "Meine Notiz", ru: "Моя заметка", en: "My note" },
   "Ihre persönliche Notiz zu diesem Objekt...": {
     de: "Ihre persönliche Notiz zu diesem Objekt...",
     ru: "Ваша личная заметка по этому объекту...",
     en: "Your personal note for this property...",
   },
-  "Speichern": { de: "Speichern", ru: "Сохранить", en: "Save" },
-  "Entfernen": { de: "Entfernen", ru: "Удалить", en: "Remove" },
+  "Ваша личная заметка по этому объекту...": {
+    de: "Ihre persönliche Notiz zu diesem Objekt...",
+    ru: "Ваша личная заметка по этому объекту...",
+    en: "Your personal note for this property...",
+  },
   "Подробнее": { de: "Details ansehen", ru: "Подробнее", en: "View details" },
+  "Entfernen": { de: "Entfernen", ru: "Удалить", en: "Remove" },
 
-  // Property map / legend leftovers
+  // Property map / legend
   "Karte der Objekte": { de: "Karte der Objekte", ru: "Карта объектов", en: "Property map" },
   "Suchen Sie in der sichtbaren Kartenfläche oder zeichnen Sie eine eigene Suchregion.": {
     de: "Suchen Sie in der sichtbaren Kartenfläche oder zeichnen Sie eine eigene Suchregion.",
@@ -66,30 +127,21 @@ const translations: TranslationMap = {
   "Gewerbe": { de: "Gewerbe", ru: "Коммерция", en: "Commercial" },
   "aufgehoben": { de: "aufgehoben", ru: "отменено", en: "cancelled" },
 
-  // Common page/card labels
-  "Оценочная стоимость": { de: "Verkehrswert", ru: "Оценочная стоимость", en: "Market value" },
-  "Verkehrswert": { de: "Verkehrswert", ru: "Оценочная стоимость", en: "Market value" },
-  "Market value": { de: "Verkehrswert", ru: "Оценочная стоимость", en: "Market value" },
-  "Источник: тестовые данные / DB": { de: "Quelle: Testdaten / DB", ru: "Источник: тестовые данные / DB", en: "Source: test data / DB" },
-  "Source: Testdaten / DB": { de: "Quelle: Testdaten / DB", ru: "Источник: тестовые данные / DB", en: "Source: test data / DB" },
-  "View details": { de: "Details ansehen", ru: "Подробнее", en: "View details" },
-
-  // Quick search leftovers
-  "Schnellsuche": { de: "Schnellsuche", ru: "Быстрый поиск", en: "Quick Search" },
-  "Starten Sie mit den wichtigsten Kriterien. Die vollständige Suche finden Sie auf der Kartenseite.": {
-    de: "Starten Sie mit den wichtigsten Kriterien. Die vollständige Suche finden Sie auf der Kartenseite.",
-    ru: "Начните с основных критериев. Полный поиск доступен на странице расширенного поиска.",
-    en: "Start with the most important criteria. Full search is available on the advanced search page.",
-  },
-  "Ort, PLZ, Adresse oder Gericht": { de: "Ort, PLZ, Adresse oder Gericht", ru: "Город, индекс, адрес или суд", en: "City, ZIP, address or court" },
-  "Bundesland": { de: "Bundesland", ru: "Федеральная земля", en: "Federal state" },
-  "Objektart": { de: "Objektart", ru: "Тип объекта", en: "Property type" },
-  "Verkehrswert bis": { de: "Verkehrswert bis", ru: "Оценочная стоимость до", en: "Market value up to" },
-  "Alle Bundesländer": { de: "Alle Bundesländer", ru: "Все земли", en: "All states" },
-  "Все типы": { de: "Alle Typen", ru: "Все типы", en: "All types" },
-  "Beliebig": { de: "Beliebig", ru: "Любая", en: "Any" },
-  "Schnell suchen": { de: "Schnell suchen", ru: "Быстрый поиск", en: "Quick search" },
-  "Erweiterte Suche": { de: "Erweiterte Suche", ru: "Расширенный поиск", en: "Advanced Search" },
+  // Property detail page
+  "Характеристики": { de: "Merkmale", ru: "Характеристики", en: "Characteristics" },
+  "Адрес": { de: "Adresse", ru: "Адрес", en: "Address" },
+  "PLZ / Ort": { de: "PLZ / Ort", ru: "Индекс / город", en: "ZIP / City" },
+  "Жилая площадь": { de: "Wohnfläche", ru: "Жилая площадь", en: "Living area" },
+  "Nutzfläche": { de: "Nutzfläche", ru: "Полезная площадь", en: "Usable area" },
+  "Gesamtfläche": { de: "Gesamtfläche", ru: "Общая площадь", en: "Total area" },
+  "Год постройки": { de: "Baujahr", ru: "Год постройки", en: "Year built" },
+  "Использование": { de: "Nutzung", ru: "Использование", en: "Use" },
+  "Памятник архитектуры": { de: "Denkmalschutz", ru: "Памятник архитектуры", en: "Listed monument" },
+  "Торги": { de: "Versteigerung", ru: "Торги", en: "Auction" },
+  "Место торгов": { de: "Ort der Versteigerung", ru: "Место торгов", en: "Auction location" },
+  "Aktenzeichen": { de: "Aktenzeichen", ru: "Номер дела", en: "Case number" },
+  "№ термина": { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." },
+  "Ценовые границы": { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" },
 };
 
 function getCookieLocale(): Locale {
@@ -97,8 +149,41 @@ function getCookieLocale(): Locale {
   return (match?.[1] as Locale) || "de";
 }
 
+function applyDynamicPatterns(text: string, locale: Locale): string | null {
+  const trimmed = text.trim();
+
+  const polygon = trimmed.match(/^Polygon anwenden\s*\((\d+)\)$/);
+  if (polygon) {
+    const count = polygon[1];
+    if (locale === "ru") return `Применить полигон (${count})`;
+    if (locale === "en") return `Apply polygon (${count})`;
+    return `Polygon anwenden (${count})`;
+  }
+
+  const city = trimmed.match(/^(Город|Ort|City):\s*(.+)$/);
+  if (city) {
+    const value = city[2];
+    if (locale === "ru") return `Город: ${value}`;
+    if (locale === "en") return `City: ${value}`;
+    return `Ort: ${value}`;
+  }
+
+  const perPage = trimmed.match(/^(\d+)\s+(на странице|pro Seite|per page)$/);
+  if (perPage) {
+    const value = perPage[1];
+    if (locale === "ru") return `${value} на странице`;
+    if (locale === "en") return `${value} per page`;
+    return `${value} pro Seite`;
+  }
+
+  return null;
+}
+
 function targetText(original: string, locale: Locale): string | null {
   const trimmed = original.trim();
+  const dynamic = applyDynamicPatterns(trimmed, locale);
+  if (dynamic) return dynamic;
+
   const hit = translations[trimmed];
   if (!hit) return null;
   return hit[locale] ?? null;
@@ -125,8 +210,8 @@ function translateDom(locale: Locale) {
       const tag = parent.tagName.toLowerCase();
       if (["script", "style", "noscript", "textarea", "input"].includes(tag)) return NodeFilter.FILTER_REJECT;
       const text = node.nodeValue?.trim();
-      if (!text || text.length > 220) return NodeFilter.FILTER_REJECT;
-      return translations[text] ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      if (!text || text.length > 240) return NodeFilter.FILTER_REJECT;
+      return targetText(text, locale) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
     },
   });
 
@@ -157,8 +242,6 @@ function translateDom(locale: Locale) {
 }
 
 function simplifyPropertyCardKickers() {
-  // Убираем дубль "Жилые дома · Жилой дом" / "Residential houses · Residential house".
-  // Оставляем только группу: "Жилые дома" / "Residential houses".
   document.querySelectorAll(".eyebrow").forEach((element) => {
     const text = element.textContent?.trim();
     if (!text || !text.includes("·")) return;
@@ -213,7 +296,7 @@ export function LanguageRuntimeFix() {
         locale = nextLocale;
         schedule();
       }
-    }, 500);
+    }, 400);
 
     return () => {
       observer.disconnect();
