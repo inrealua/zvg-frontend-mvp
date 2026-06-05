@@ -32,10 +32,8 @@ const labels = {
   de: {
     selected: "ausgewählt",
     notSet: "nicht gesetzt",
-    from: "von",
-    to: "bis",
     title: "Erweiterte Suche",
-    subtitle: "Alle Filter auf einer Seite. Wählen Sie die Kriterien und klicken Sie auf Ergebnisse anzeigen.",
+    subtitle: "Wählen Sie die Kriterien und klicken Sie auf Ergebnisse anzeigen.",
     reset: "Zurücksetzen",
     search: "Suche",
     searchPlaceholder: "Ort, PLZ, Adresse, Aktenzeichen, Gericht",
@@ -71,8 +69,6 @@ const labels = {
   ru: {
     selected: "выбрано",
     notSet: "не задано",
-    from: "от",
-    to: "до",
     title: "Расширенный поиск",
     subtitle: "Выберите нужные критерии и нажмите «Показать результаты».",
     reset: "Сбросить",
@@ -110,8 +106,6 @@ const labels = {
   en: {
     selected: "selected",
     notSet: "not set",
-    from: "from",
-    to: "to",
     title: "Advanced Search",
     subtitle: "Choose the filters and click Show results.",
     reset: "Reset",
@@ -237,8 +231,18 @@ function useClientLocale(): Locale {
 
   useEffect(() => {
     setLocale(readLocaleFromCookie());
-    const timer = window.setInterval(() => setLocale(readLocaleFromCookie()), 500);
-    return () => window.clearInterval(timer);
+
+    function update() {
+      setLocale(readLocaleFromCookie());
+    }
+
+    window.addEventListener("focus", update);
+    document.addEventListener("visibilitychange", update);
+
+    return () => {
+      window.removeEventListener("focus", update);
+      document.removeEventListener("visibilitychange", update);
+    };
   }, []);
 
   return locale;
@@ -367,7 +371,7 @@ function StateCheckboxGroup({
   );
 }
 
-function SliderTrack({
+function CleanSliderTrack({
   children,
   start,
   end,
@@ -380,7 +384,7 @@ function SliderTrack({
 }) {
   return (
     <div
-      className={single ? "slider-track-v50 single-slider-v50" : "slider-track-v50 dual-slider-v50"}
+      className={single ? "clean-slider-track-v52 clean-slider-single-v52" : "clean-slider-track-v52"}
       style={{
         ["--range-start" as string]: `${start}%`,
         ["--range-end" as string]: `${end}%`,
@@ -422,17 +426,16 @@ function DualRange({
   const minPercent = (safeMin / max) * 100;
   const maxPercent = (safeMax / max) * 100;
   const isDefault = safeMin === 0 && safeMax === max;
-
   const display = isDefault ? labels[locale].notSet : `${formatNumber(safeMin)}${suffix} — ${formatNumber(safeMax)}${suffix}`;
 
   return (
-    <div className="advanced-range-card range-card-v50">
-      <div className="range-title">
+    <div className="advanced-range-card clean-range-card-v52">
+      <div className="range-title clean-range-title-v52">
         <span>{label}</span>
         <b>{display}</b>
       </div>
 
-      <SliderTrack start={minPercent} end={maxPercent}>
+      <CleanSliderTrack start={minPercent} end={maxPercent}>
         <input
           type="range"
           min="0"
@@ -440,7 +443,7 @@ function DualRange({
           step={step}
           value={safeMin}
           onChange={(event) => setMinValue(Math.min(Number(event.target.value), safeMax))}
-          aria-label={`${label} ${labels[locale].from}`}
+          aria-label={label}
         />
         <input
           type="range"
@@ -449,9 +452,9 @@ function DualRange({
           step={step}
           value={safeMax}
           onChange={(event) => setMaxValue(Math.max(Number(event.target.value), safeMin))}
-          aria-label={`${label} ${labels[locale].to}`}
+          aria-label={label}
         />
-      </SliderTrack>
+      </CleanSliderTrack>
 
       <div className="range-scale">
         <span>0{suffix}</span>
@@ -471,16 +474,16 @@ function RadiusRange({ initialValue, locale }: { initialValue: string; locale: L
   const display = value > 0 ? `${value} km` : labels[locale].noRadius;
 
   return (
-    <div className="field span-4 radius-range-field-v50">
+    <div className="field span-4 radius-range-field-v52">
       <label htmlFor="radiusKmSlider">{labels[locale].radius}</label>
 
-      <div className="radius-range-card-v50">
-        <div className="range-title">
+      <div className="clean-range-card-v52">
+        <div className="range-title clean-range-title-v52">
           <span>{display}</span>
           <b>0–1000 km</b>
         </div>
 
-        <SliderTrack start={0} end={percent} single>
+        <CleanSliderTrack start={0} end={percent} single>
           <input
             id="radiusKmSlider"
             type="range"
@@ -491,7 +494,7 @@ function RadiusRange({ initialValue, locale }: { initialValue: string; locale: L
             onChange={(event) => setValue(Math.max(0, Math.min(Number(event.target.value), RADIUS_MAX)))}
             aria-label={labels[locale].radius}
           />
-        </SliderTrack>
+        </CleanSliderTrack>
 
         <div className="range-scale">
           <span>0 km</span>
@@ -537,15 +540,16 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
   return (
     <form
       key={searchParams.toString()}
-      className={compact ? "filters advanced-filters filters-compact filters-v50" : "filters advanced-filters filters-v50"}
+      className={compact ? "filters advanced-filters filters-compact filters-v52" : "filters advanced-filters filters-v52"}
       onSubmit={onSubmit}
     >
-      <div className="filter-topline clean-filter-head filter-topline-v50">
+      <div className="filter-topline clean-filter-head filter-topline-v52">
         <div>
           <h2>{t.title}</h2>
           <p>{t.subtitle}</p>
         </div>
-        <div className="filter-top-actions-v50">
+
+        <div className="filter-top-actions-v52">
           <button type="submit" className="btn btn-primary">{t.submit}</button>
           <button type="button" onClick={clearFilters} className="btn btn-ghost">{t.reset}</button>
         </div>
@@ -593,27 +597,10 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
 
         <StateCheckboxGroup states={states} selected={getInitialValues(searchParams, "state")} className="span-12" locale={locale} />
 
-        <MultiCheckboxGroup
-          title={t.propertyType}
-          name="typeGroup"
-          options={PROPERTY_GROUP_OPTIONS}
-          selected={getInitialValues(searchParams, "typeGroup")}
-          emptyLabel={t.allTypes}
-          className="span-12"
-          locale={locale}
-        />
+        <MultiCheckboxGroup title={t.propertyType} name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} emptyLabel={t.allTypes} className="span-12" locale={locale} />
+        <MultiCheckboxGroup title={t.usage} name="occupancy" options={OCCUPANCY_OPTIONS} selected={getInitialValues(searchParams, "occupancy")} emptyLabel={t.anyUsage} className="span-12" locale={locale} />
 
-        <MultiCheckboxGroup
-          title={t.usage}
-          name="occupancy"
-          options={OCCUPANCY_OPTIONS}
-          selected={getInitialValues(searchParams, "occupancy")}
-          emptyLabel={t.anyUsage}
-          className="span-12"
-          locale={locale}
-        />
-
-        <div className="range-row span-12 range-row-v50">
+        <div className="range-row span-12 range-row-v52">
           <DualRange label={t.marketValue} minName="minPrice" maxName="maxPrice" max={PRICE_MAX} step={5000} minDefault={getInitialValue(searchParams, "minPrice")} maxDefault={getInitialValue(searchParams, "maxPrice")} suffix=" €" locale={locale} />
           <DualRange label={t.livingArea} minName="minLivingArea" maxName="maxLivingArea" max={AREA_MAX} step={5} minDefault={getInitialValue(searchParams, "minLivingArea")} maxDefault={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" locale={locale} />
           <DualRange label={t.plotArea} minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" locale={locale} />
@@ -683,7 +670,7 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         </div>
       </div>
 
-      <div className="filter-actions filter-actions-v50">
+      <div className="filter-actions filter-actions-v52">
         <button type="submit" className="btn btn-primary">{t.submit}</button>
         <button type="button" onClick={clearFilters} className="btn">{t.resetFilters}</button>
       </div>

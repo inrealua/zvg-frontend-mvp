@@ -503,8 +503,6 @@ export function LanguageRuntimeFix() {
     };
 
     run();
-    const timer = window.setInterval(run, 150);
-
     const observer = new MutationObserver(schedule);
     observer.observe(document.body, {
       childList: true,
@@ -519,7 +517,6 @@ export function LanguageRuntimeFix() {
 
     return () => {
       observer.disconnect();
-      window.clearInterval(timer);
       document.removeEventListener("change", schedule, true);
       document.removeEventListener("click", schedule, true);
     };
