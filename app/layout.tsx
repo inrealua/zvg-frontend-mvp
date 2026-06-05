@@ -1,3 +1,4 @@
+import { LanguageRuntimeFix } from "@/components/LanguageRuntimeFix";
 import { getLocale } from "@/lib/i18n/server";
 import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Header />
         {children}
         <Footer />
+              <LanguageRuntimeFix />
       </body>
     </html>
   );
