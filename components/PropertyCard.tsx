@@ -100,7 +100,7 @@ export function PropertyCard({
         <div className="card-main-row">
           <div>
             <p className="eyebrow">
-              {labelGroup(property.propertyTypeGroup, locale)} · {translated.propertyType || property.propertyType}
+              {labelGroup(property.propertyTypeGroup, locale)}
             </p>
             <h2 className="card-title">
               <Link href={`/properties/${property.id}`}>{translated.title}</Link>
