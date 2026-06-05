@@ -18,7 +18,12 @@ function parseCsvLine(line) {
     const char = line[i];
 
     if (char === '"') {
-      quoted = !quoted;
+      if (quoted && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
       continue;
     }
 
@@ -54,10 +59,11 @@ for (const [key, value] of Object.entries(index)) {
   }
 }
 
-let count = 0;
+const rowsByCode = new Map();
 
 for (const line of lines) {
   const row = parseCsvLine(line);
+
   const code = row[index.code];
   const city = row[index.city];
   const state = row[index.state] || null;
@@ -65,18 +71,42 @@ for (const line of lines) {
   const longitude = Number(row[index.longitude]);
 
   if (!/^\d{5}$/.test(code) || !city || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
-    console.warn("Skipped invalid row:", line);
     continue;
   }
 
-  await prisma.postalCode.upsert({
-    where: { code },
-    update: { city, state, latitude, longitude },
-    create: { code, city, state, latitude, longitude },
-  });
-
-  count++;
+  // Оставляем одну запись на один PLZ. Для радиус-поиска этого достаточно.
+  if (!rowsByCode.has(code)) {
+    rowsByCode.set(code, {
+      code,
+      city,
+      state,
+      latitude,
+      longitude,
+    });
+  }
 }
 
-console.log(`Imported ${count} postal codes.`);
+const rows = Array.from(rowsByCode.values());
+
+console.log(`Prepared ${rows.length} unique postal codes.`);
+
+console.log("Clearing PostalCode table...");
+await prisma.postalCode.deleteMany();
+
+const batchSize = 1000;
+let imported = 0;
+
+for (let i = 0; i < rows.length; i += batchSize) {
+  const batch = rows.slice(i, i + batchSize);
+
+  await prisma.postalCode.createMany({
+    data: batch,
+    skipDuplicates: true,
+  });
+
+  imported += batch.length;
+  console.log(`Imported ${imported}/${rows.length}`);
+}
+
+console.log(`Done. Imported ${imported} postal codes.`);
 await prisma.$disconnect();

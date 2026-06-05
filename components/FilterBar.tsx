@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   AUCTION_ATTEMPT_OPTIONS,
   BOOLEAN_OPTIONS,
@@ -35,7 +35,7 @@ const labels = {
     from: "von",
     to: "bis",
     title: "Erweiterte Suche",
-    subtitle: "Alle Filter auf einer Seite. Der Filterbereich scrollt normal mit der Seite.",
+    subtitle: "Alle Filter auf einer Seite. Wählen Sie die Kriterien und klicken Sie auf Ergebnisse anzeigen.",
     reset: "Zurücksetzen",
     search: "Suche",
     searchPlaceholder: "Ort, PLZ, Adresse, Aktenzeichen, Gericht",
@@ -59,14 +59,14 @@ const labels = {
     plotArea: "Grundstück",
     dateFrom: "Termin ab",
     dateTo: "Termin bis",
+    datePlaceholder: "JJJJ-MM-TT",
     heritage: "Denkmalschutz",
     valueLimits: "Wertgrenzen",
     attempt: "Termin-Nr.",
     sorting: "Sortierung",
     perPage: "Anzeigen",
-    submit: "Objekte finden",
+    submit: "Ergebnisse anzeigen",
     resetFilters: "Filter zurücksetzen",
-    showResults: "Ergebnisse anzeigen",
   },
   ru: {
     selected: "выбрано",
@@ -74,7 +74,7 @@ const labels = {
     from: "от",
     to: "до",
     title: "Расширенный поиск",
-    subtitle: "Все фильтры на одной странице. Блок фильтров прокручивается вместе со страницей.",
+    subtitle: "Выберите нужные критерии и нажмите «Показать результаты».",
     reset: "Сбросить",
     search: "Поиск",
     searchPlaceholder: "Город, индекс, адрес, номер дела, суд",
@@ -98,14 +98,14 @@ const labels = {
     plotArea: "Участок",
     dateFrom: "Торги от",
     dateTo: "Торги до",
+    datePlaceholder: "ГГГГ-ММ-ДД",
     heritage: "Памятник архитектуры",
     valueLimits: "Ценовые границы",
     attempt: "№ термина",
     sorting: "Сортировка",
     perPage: "Показывать",
-    submit: "Найти объекты",
+    submit: "Показать результаты",
     resetFilters: "Сбросить фильтр",
-    showResults: "Показать результаты",
   },
   en: {
     selected: "selected",
@@ -113,7 +113,7 @@ const labels = {
     from: "from",
     to: "to",
     title: "Advanced Search",
-    subtitle: "All filters on one page. The filter area scrolls normally with the page.",
+    subtitle: "Choose the filters and click Show results.",
     reset: "Reset",
     search: "Search",
     searchPlaceholder: "City, ZIP, address, case number, court",
@@ -137,14 +137,14 @@ const labels = {
     plotArea: "Plot size",
     dateFrom: "Auction from",
     dateTo: "Auction to",
+    datePlaceholder: "YYYY-MM-DD",
     heritage: "Listed monument",
     valueLimits: "Value limits",
     attempt: "Auction no.",
     sorting: "Sorting",
     perPage: "Show",
-    submit: "Find properties",
+    submit: "Show results",
     resetFilters: "Reset filters",
-    showResults: "Show results",
   },
 } as const;
 
@@ -237,11 +237,8 @@ function useClientLocale(): Locale {
 
   useEffect(() => {
     setLocale(readLocaleFromCookie());
-
-    const onFocus = () => setLocale(readLocaleFromCookie());
-    window.addEventListener("focus", onFocus);
-
-    return () => window.removeEventListener("focus", onFocus);
+    const timer = window.setInterval(() => setLocale(readLocaleFromCookie()), 500);
+    return () => window.clearInterval(timer);
   }, []);
 
   return locale;
@@ -278,7 +275,6 @@ function MultiCheckboxGroup({
   emptyLabel,
   className = "",
   locale,
-  scheduleAutoApply,
 }: {
   title: string;
   name: string;
@@ -287,7 +283,6 @@ function MultiCheckboxGroup({
   emptyLabel: string;
   className?: string;
   locale: Locale;
-  scheduleAutoApply: () => void;
 }) {
   const realOptions = options.filter((option) => option.value).map((option) => localizeOption(option, locale));
   const [values, setValues] = useState<string[]>(selected);
@@ -302,7 +297,6 @@ function MultiCheckboxGroup({
 
   function toggle(value: string, checked: boolean) {
     setValues((current) => (checked ? [...current, value] : current.filter((item) => item !== value)));
-    scheduleAutoApply();
   }
 
   return (
@@ -335,20 +329,17 @@ function StateCheckboxGroup({
   selected,
   className = "",
   locale,
-  scheduleAutoApply,
 }: {
   states: string[];
   selected: string[];
   className?: string;
   locale: Locale;
-  scheduleAutoApply: () => void;
 }) {
   const [values, setValues] = useState<string[]>(selected);
   const selectedSet = useMemo(() => new Set(values), [values]);
 
   function toggle(value: string, checked: boolean) {
     setValues((current) => (checked ? [...current, value] : current.filter((item) => item !== value)));
-    scheduleAutoApply();
   }
 
   return (
@@ -376,6 +367,30 @@ function StateCheckboxGroup({
   );
 }
 
+function SliderTrack({
+  children,
+  start,
+  end,
+  single = false,
+}: {
+  children: React.ReactNode;
+  start: number;
+  end: number;
+  single?: boolean;
+}) {
+  return (
+    <div
+      className={single ? "slider-track-v50 single-slider-v50" : "slider-track-v50 dual-slider-v50"}
+      style={{
+        ["--range-start" as string]: `${start}%`,
+        ["--range-end" as string]: `${end}%`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 function DualRange({
   label,
   minName,
@@ -386,7 +401,6 @@ function DualRange({
   maxDefault,
   suffix = "",
   locale,
-  scheduleAutoApply,
 }: {
   label: string;
   minName: string;
@@ -397,7 +411,6 @@ function DualRange({
   maxDefault: string;
   suffix?: string;
   locale: Locale;
-  scheduleAutoApply: () => void;
 }) {
   const initialMin = Number(minDefault || "0");
   const initialMax = Number(maxDefault || String(max));
@@ -412,37 +425,21 @@ function DualRange({
 
   const display = isDefault ? labels[locale].notSet : `${formatNumber(safeMin)}${suffix} — ${formatNumber(safeMax)}${suffix}`;
 
-  function setMin(next: number) {
-    setMinValue(Math.min(next, safeMax));
-    scheduleAutoApply();
-  }
-
-  function setMax(next: number) {
-    setMaxValue(Math.max(next, safeMin));
-    scheduleAutoApply();
-  }
-
   return (
-    <div className="advanced-range-card range-card-v49">
+    <div className="advanced-range-card range-card-v50">
       <div className="range-title">
         <span>{label}</span>
         <b>{display}</b>
       </div>
 
-      <div
-        className="dual-range dual-range-v49"
-        style={{
-          ["--range-start" as string]: `${minPercent}%`,
-          ["--range-end" as string]: `${maxPercent}%`,
-        }}
-      >
+      <SliderTrack start={minPercent} end={maxPercent}>
         <input
           type="range"
           min="0"
           max={max}
           step={step}
           value={safeMin}
-          onChange={(event) => setMin(Number(event.target.value))}
+          onChange={(event) => setMinValue(Math.min(Number(event.target.value), safeMax))}
           aria-label={`${label} ${labels[locale].from}`}
         />
         <input
@@ -451,10 +448,10 @@ function DualRange({
           max={max}
           step={step}
           value={safeMax}
-          onChange={(event) => setMax(Number(event.target.value))}
+          onChange={(event) => setMaxValue(Math.max(Number(event.target.value), safeMin))}
           aria-label={`${label} ${labels[locale].to}`}
         />
-      </div>
+      </SliderTrack>
 
       <div className="range-scale">
         <span>0{suffix}</span>
@@ -467,36 +464,23 @@ function DualRange({
   );
 }
 
-function RadiusRange({
-  initialValue,
-  locale,
-  scheduleAutoApply,
-}: {
-  initialValue: string;
-  locale: Locale;
-  scheduleAutoApply: () => void;
-}) {
+function RadiusRange({ initialValue, locale }: { initialValue: string; locale: Locale }) {
   const initialNumber = Number(initialValue || "0");
   const [value, setValue] = useState(Number.isFinite(initialNumber) ? Math.max(0, Math.min(initialNumber, RADIUS_MAX)) : 0);
   const percent = (value / RADIUS_MAX) * 100;
   const display = value > 0 ? `${value} km` : labels[locale].noRadius;
 
-  function setNext(next: number) {
-    setValue(Math.max(0, Math.min(next, RADIUS_MAX)));
-    scheduleAutoApply();
-  }
-
   return (
-    <div className="field span-3 radius-range-field-v49">
-      <label htmlFor="radiusKm">{labels[locale].radius}</label>
+    <div className="field span-4 radius-range-field-v50">
+      <label htmlFor="radiusKmSlider">{labels[locale].radius}</label>
 
-      <div className="radius-range-card-v49">
+      <div className="radius-range-card-v50">
         <div className="range-title">
           <span>{display}</span>
           <b>0–1000 km</b>
         </div>
 
-        <div className="single-range-v49" style={{ ["--range-end" as string]: `${percent}%` }}>
+        <SliderTrack start={0} end={percent} single>
           <input
             id="radiusKmSlider"
             type="range"
@@ -504,10 +488,10 @@ function RadiusRange({
             max={RADIUS_MAX}
             step="10"
             value={value}
-            onChange={(event) => setNext(Number(event.target.value))}
+            onChange={(event) => setValue(Math.max(0, Math.min(Number(event.target.value), RADIUS_MAX)))}
             aria-label={labels[locale].radius}
           />
-        </div>
+        </SliderTrack>
 
         <div className="range-scale">
           <span>0 km</span>
@@ -526,8 +510,6 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const autoApplyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function buildNextParams(form: HTMLFormElement): URLSearchParams {
     const formData = new FormData(form);
@@ -542,50 +524,31 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
     return next;
   }
 
-  function goToResults(form: HTMLFormElement) {
-    const query = buildNextParams(form).toString();
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const query = buildNextParams(event.currentTarget).toString();
     router.push(query ? `${pathname}?${query}` : pathname);
   }
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    goToResults(event.currentTarget);
-  }
-
-  function scheduleAutoApply() {
-    if (!formRef.current) return;
-
-    if (autoApplyTimer.current) clearTimeout(autoApplyTimer.current);
-
-    autoApplyTimer.current = setTimeout(() => {
-      if (formRef.current) goToResults(formRef.current);
-    }, 700);
-  }
-
   function clearFilters() {
-    if (autoApplyTimer.current) clearTimeout(autoApplyTimer.current);
     router.push(pathname);
   }
 
-  // key={searchParams.toString()} is important:
-  // when active filter chips remove a URL param, uncontrolled inputs must remount and clear themselves.
   return (
     <form
       key={searchParams.toString()}
-      ref={formRef}
-      className={compact ? "filters advanced-filters filters-compact filters-v49" : "filters advanced-filters filters-v49"}
+      className={compact ? "filters advanced-filters filters-compact filters-v50" : "filters advanced-filters filters-v50"}
       onSubmit={onSubmit}
-      onChange={(event) => {
-        const target = event.target as HTMLElement;
-        if (target.tagName === "SELECT" || target.tagName === "INPUT") scheduleAutoApply();
-      }}
     >
-      <div className="filter-topline clean-filter-head">
+      <div className="filter-topline clean-filter-head filter-topline-v50">
         <div>
           <h2>{t.title}</h2>
           <p>{t.subtitle}</p>
         </div>
-        <button type="button" onClick={clearFilters} className="btn btn-ghost">{t.reset}</button>
+        <div className="filter-top-actions-v50">
+          <button type="submit" className="btn btn-primary">{t.submit}</button>
+          <button type="button" onClick={clearFilters} className="btn btn-ghost">{t.reset}</button>
+        </div>
       </div>
 
       <div className="advanced-filter-grid">
@@ -607,7 +570,7 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
           <input id="postalCode" name="postalCode" placeholder={t.postalPlaceholder} defaultValue={getInitialValue(searchParams, "postalCode")} />
         </div>
 
-        <RadiusRange initialValue={getInitialValue(searchParams, "radiusKm")} locale={locale} scheduleAutoApply={scheduleAutoApply} />
+        <RadiusRange initialValue={getInitialValue(searchParams, "radiusKm")} locale={locale} />
 
         <div className="field span-5">
           <label htmlFor="court">{t.court}</label>
@@ -628,13 +591,7 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
           </select>
         </div>
 
-        <StateCheckboxGroup
-          states={states}
-          selected={getInitialValues(searchParams, "state")}
-          className="span-12"
-          locale={locale}
-          scheduleAutoApply={scheduleAutoApply}
-        />
+        <StateCheckboxGroup states={states} selected={getInitialValues(searchParams, "state")} className="span-12" locale={locale} />
 
         <MultiCheckboxGroup
           title={t.propertyType}
@@ -644,7 +601,6 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
           emptyLabel={t.allTypes}
           className="span-12"
           locale={locale}
-          scheduleAutoApply={scheduleAutoApply}
         />
 
         <MultiCheckboxGroup
@@ -655,23 +611,22 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
           emptyLabel={t.anyUsage}
           className="span-12"
           locale={locale}
-          scheduleAutoApply={scheduleAutoApply}
         />
 
-        <div className="range-row span-12 range-row-v49">
-          <DualRange label={t.marketValue} minName="minPrice" maxName="maxPrice" max={PRICE_MAX} step={5000} minDefault={getInitialValue(searchParams, "minPrice")} maxDefault={getInitialValue(searchParams, "maxPrice")} suffix=" €" locale={locale} scheduleAutoApply={scheduleAutoApply} />
-          <DualRange label={t.livingArea} minName="minLivingArea" maxName="maxLivingArea" max={AREA_MAX} step={5} minDefault={getInitialValue(searchParams, "minLivingArea")} maxDefault={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" locale={locale} scheduleAutoApply={scheduleAutoApply} />
-          <DualRange label={t.plotArea} minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "minPlotArea")} suffix=" m²" locale={locale} scheduleAutoApply={scheduleAutoApply} />
+        <div className="range-row span-12 range-row-v50">
+          <DualRange label={t.marketValue} minName="minPrice" maxName="maxPrice" max={PRICE_MAX} step={5000} minDefault={getInitialValue(searchParams, "minPrice")} maxDefault={getInitialValue(searchParams, "maxPrice")} suffix=" €" locale={locale} />
+          <DualRange label={t.livingArea} minName="minLivingArea" maxName="maxLivingArea" max={AREA_MAX} step={5} minDefault={getInitialValue(searchParams, "minLivingArea")} maxDefault={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" locale={locale} />
+          <DualRange label={t.plotArea} minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" locale={locale} />
         </div>
 
         <div className="field span-3">
           <label htmlFor="dateFrom">{t.dateFrom}</label>
-          <input id="dateFrom" name="dateFrom" type="date" defaultValue={getInitialValue(searchParams, "dateFrom")} />
+          <input id="dateFrom" name="dateFrom" type="text" inputMode="numeric" placeholder={t.datePlaceholder} defaultValue={getInitialValue(searchParams, "dateFrom")} />
         </div>
 
         <div className="field span-3">
           <label htmlFor="dateTo">{t.dateTo}</label>
-          <input id="dateTo" name="dateTo" type="date" defaultValue={getInitialValue(searchParams, "dateTo")} />
+          <input id="dateTo" name="dateTo" type="text" inputMode="numeric" placeholder={t.datePlaceholder} defaultValue={getInitialValue(searchParams, "dateTo")} />
         </div>
 
         <div className="field span-3">
@@ -728,9 +683,8 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         </div>
       </div>
 
-      <div className="filter-actions filter-actions-v49">
+      <div className="filter-actions filter-actions-v50">
         <button type="submit" className="btn btn-primary">{t.submit}</button>
-        <button type="submit" className="btn btn-soft">{t.showResults}</button>
         <button type="button" onClick={clearFilters} className="btn">{t.resetFilters}</button>
       </div>
     </form>

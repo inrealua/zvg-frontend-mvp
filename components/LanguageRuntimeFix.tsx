@@ -358,6 +358,15 @@ const pairs: Array<[string, T]> = [
     en: "The visible map area filter is active. Move or zoom the map and apply it again."
   }],
 
+
+  // Stage 50 active filter chip translations
+  ["Активные фильтры:", { de: "Aktive Filter:", ru: "Активные фильтры:", en: "Active filters:" }],
+  ["Aktive Filter:", { de: "Aktive Filter:", ru: "Активные фильтры:", en: "Active filters:" }],
+  ["Active filters:", { de: "Aktive Filter:", ru: "Активные фильтры:", en: "Active filters:" }],
+  ["Очистить всё", { de: "Alles löschen", ru: "Очистить всё", en: "Clear all" }],
+  ["Alles löschen", { de: "Alles löschen", ru: "Очистить всё", en: "Clear all" }],
+  ["Clear all", { de: "Alles löschen", ru: "Очистить всё", en: "Clear all" }],
+
 ];
 
 const translations: Record<string, T> = Object.fromEntries(pairs);
