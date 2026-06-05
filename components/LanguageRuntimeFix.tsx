@@ -3,12 +3,10 @@
 import { useEffect } from "react";
 
 type Locale = "de" | "ru" | "en";
-
 type T = { de: string; ru: string; en: string };
-type TranslationMap = Record<string, T>;
 
-const entries: Array<[string, T]> = [
-  // Quick search titles/subtitles/labels/buttons
+const pairs: Array<[string, T]> = [
+  // ===== Quick search =====
   ["Schnellsuche", { de: "Schnellsuche", ru: "Быстрый поиск", en: "Quick Search" }],
   ["Быстрый поиск", { de: "Schnellsuche", ru: "Быстрый поиск", en: "Quick Search" }],
   ["Quick Search", { de: "Schnellsuche", ru: "Быстрый поиск", en: "Quick Search" }],
@@ -33,6 +31,10 @@ const entries: Array<[string, T]> = [
   ["Город, индекс, адрес или суд", { de: "Ort, PLZ, Adresse oder Gericht", ru: "Город, индекс, адрес или суд", en: "City, ZIP, address or court" }],
   ["City, ZIP, address or court", { de: "Ort, PLZ, Adresse oder Gericht", ru: "Город, индекс, адрес или суд", en: "City, ZIP, address or court" }],
 
+  ["z. B. Chemnitz, 09111, Amtsgericht Dresden", { de: "z. B. Chemnitz, 09111, Amtsgericht Dresden", ru: "например: Chemnitz, 09111, Amtsgericht Dresden", en: "e.g. Chemnitz, 09111, Amtsgericht Dresden" }],
+  ["например: Chemnitz, 09111, Amtsgericht Dresden", { de: "z. B. Chemnitz, 09111, Amtsgericht Dresden", ru: "например: Chemnitz, 09111, Amtsgericht Dresden", en: "e.g. Chemnitz, 09111, Amtsgericht Dresden" }],
+  ["e.g. Chemnitz, 09111, Amtsgericht Dresden", { de: "z. B. Chemnitz, 09111, Amtsgericht Dresden", ru: "например: Chemnitz, 09111, Amtsgericht Dresden", en: "e.g. Chemnitz, 09111, Amtsgericht Dresden" }],
+
   ["Bundesland", { de: "Bundesland", ru: "Федеральная земля", en: "Federal state" }],
   ["Федеральная земля", { de: "Bundesland", ru: "Федеральная земля", en: "Federal state" }],
   ["Federal state", { de: "Bundesland", ru: "Федеральная земля", en: "Federal state" }],
@@ -52,7 +54,7 @@ const entries: Array<[string, T]> = [
   ["Расширенный поиск", { de: "Erweiterte Suche", ru: "Расширенный поиск", en: "Advanced Search" }],
   ["Advanced Search", { de: "Erweiterte Suche", ru: "Расширенный поиск", en: "Advanced Search" }],
 
-  // Select common values
+  // ===== Select values =====
   ["Alle Bundesländer", { de: "Alle Bundesländer", ru: "Все земли", en: "All states" }],
   ["Все земли", { de: "Alle Bundesländer", ru: "Все земли", en: "All states" }],
   ["All states", { de: "Alle Bundesländer", ru: "Все земли", en: "All states" }],
@@ -65,109 +67,132 @@ const entries: Array<[string, T]> = [
   ["Любая", { de: "Beliebig", ru: "Любая", en: "Any" }],
   ["Any", { de: "Beliebig", ru: "Любая", en: "Any" }],
 
-  ["Egal", { de: "Egal", ru: "Не важно", en: "Any" }],
-  ["Не важно", { de: "Egal", ru: "Не важно", en: "Any" }],
+  ["Wohnhäuser", { de: "Wohnhäuser", ru: "Жилые дома", en: "Residential houses" }],
+  ["Жилые дома", { de: "Wohnhäuser", ru: "Жилые дома", en: "Residential houses" }],
+  ["Residential houses", { de: "Wohnhäuser", ru: "Жилые дома", en: "Residential houses" }],
 
-  ["Ja", { de: "Ja", ru: "Да", en: "Yes" }],
-  ["Да", { de: "Ja", ru: "Да", en: "Yes" }],
-  ["Yes", { de: "Ja", ru: "Да", en: "Yes" }],
+  ["Wohnhaus", { de: "Wohnhaus", ru: "Жилой дом", en: "Residential house" }],
+  ["Жилой дом", { de: "Wohnhaus", ru: "Жилой дом", en: "Residential house" }],
+  ["Residential house", { de: "Wohnhaus", ru: "Жилой дом", en: "Residential house" }],
 
-  ["Nein", { de: "Nein", ru: "Нет", en: "No" }],
-  ["Нет", { de: "Nein", ru: "Нет", en: "No" }],
-  ["No", { de: "Nein", ru: "Нет", en: "No" }],
+  ["Wohnungen", { de: "Wohnungen", ru: "Квартиры", en: "Apartments" }],
+  ["Квартиры", { de: "Wohnungen", ru: "Квартиры", en: "Apartments" }],
+  ["Apartments", { de: "Wohnungen", ru: "Квартиры", en: "Apartments" }],
 
-  ["Weggefallen", { de: "Weggefallen", ru: "Сняты", en: "Removed" }],
-  ["Сняты", { de: "Weggefallen", ru: "Сняты", en: "Removed" }],
-  ["Removed", { de: "Weggefallen", ru: "Сняты", en: "Removed" }],
+  ["Gewerbe", { de: "Gewerbe", ru: "Коммерция", en: "Commercial" }],
+  ["Коммерция", { de: "Gewerbe", ru: "Коммерция", en: "Commercial" }],
+  ["Commercial", { de: "Gewerbe", ru: "Коммерция", en: "Commercial" }],
 
-  ["Nicht weggefallen / unbekannt", { de: "Nicht weggefallen / unbekannt", ru: "Не сняты / неизвестно", en: "Not removed / unknown" }],
-  ["nicht weggefallen / unbekannt", { de: "Nicht weggefallen / unbekannt", ru: "Не сняты / неизвестно", en: "Not removed / unknown" }],
-  ["Не сняты / неизвестно", { de: "Nicht weggefallen / unbekannt", ru: "Не сняты / неизвестно", en: "Not removed / unknown" }],
-  ["Not removed / unknown", { de: "Nicht weggefallen / unbekannt", ru: "Не сняты / неизвестно", en: "Not removed / unknown" }],
+  ["Grundstücke", { de: "Grundstücke", ru: "Участки", en: "Land plots" }],
+  ["Участки", { de: "Grundstücke", ru: "Участки", en: "Land plots" }],
+  ["Land plots", { de: "Grundstücke", ru: "Участки", en: "Land plots" }],
 
-  ["Nicht weggefallen", { de: "Nicht weggefallen", ru: "Не сняты", en: "Not removed" }],
-  ["Не сняты", { de: "Nicht weggefallen", ru: "Не сняты", en: "Not removed" }],
-  ["Not removed", { de: "Nicht weggefallen", ru: "Не сняты", en: "Not removed" }],
+  ["Land / Wald", { de: "Land / Wald", ru: "Земля / лес", en: "Land / forest" }],
+  ["Земля / лес", { de: "Land / Wald", ru: "Земля / лес", en: "Land / forest" }],
+  ["Land / forest", { de: "Land / Wald", ru: "Земля / лес", en: "Land / forest" }],
 
-  ["Jeder Termin", { de: "Jeder Termin", ru: "Любой термин", en: "Any auction" }],
-  ["Любой термин", { de: "Jeder Termin", ru: "Любой термин", en: "Any auction" }],
-  ["Any auction", { de: "Jeder Termin", ru: "Любой термин", en: "Any auction" }],
+  ["Garagen / Parken", { de: "Garagen / Parken", ru: "Гаражи / парковки", en: "Garages / parking" }],
+  ["Гаражи / парковки", { de: "Garagen / Parken", ru: "Гаражи / парковки", en: "Garages / parking" }],
+  ["Garages / parking", { de: "Garagen / Parken", ru: "Гаражи / парковки", en: "Garages / parking" }],
 
-  ["1-й термин", { de: "1. Termin", ru: "1-й термин", en: "1st auction" }],
-  ["1. Termin", { de: "1. Termin", ru: "1-й термин", en: "1st auction" }],
-  ["1st auction", { de: "1. Termin", ru: "1-й термин", en: "1st auction" }],
+  ["Sonstige", { de: "Sonstige", ru: "Прочее", en: "Other" }],
+  ["Прочее", { de: "Sonstige", ru: "Прочее", en: "Other" }],
+  ["Other", { de: "Sonstige", ru: "Прочее", en: "Other" }],
 
-  ["2-й термин", { de: "2. Termin", ru: "2-й термин", en: "2nd auction" }],
-  ["2. Termin", { de: "2. Termin", ru: "2-й термин", en: "2nd auction" }],
-  ["2nd auction", { de: "2. Termin", ru: "2-й термин", en: "2nd auction" }],
+  // ===== Map block =====
+  ["Versteigerungen auf der Karte", { de: "Versteigerungen auf der Karte", ru: "Аукционы на карте", en: "Auctions on the map" }],
+  ["Аукционы на карте", { de: "Versteigerungen auf der Karte", ru: "Аукционы на карте", en: "Auctions on the map" }],
+  ["Auctions on the map", { de: "Versteigerungen auf der Karte", ru: "Аукционы на карте", en: "Auctions on the map" }],
 
-  ["3-й и больше", { de: "3. und weitere", ru: "3-й и больше", en: "3rd and later" }],
-  ["3. und weitere", { de: "3. und weitere", ru: "3-й и больше", en: "3rd and later" }],
-  ["3rd and later", { de: "3. und weitere", ru: "3-й и больше", en: "3rd and later" }],
+  ["Ein schneller Überblick. Die große Karte mit allen Filtern finden Sie im Bereich Karte.", {
+    de: "Ein schneller Überblick. Die große Karte mit allen Filtern finden Sie im Bereich Karte.",
+    ru: "Краткий обзор. Большая карта со всеми фильтрами находится в разделе Карта.",
+    en: "A quick overview. The large map with all filters is available in the Map section.",
+  }],
+  ["Краткий обзор. Большая карта со всеми фильтрами находится в разделе Карта.", {
+    de: "Ein schneller Überblick. Die große Karte mit allen Filtern finden Sie im Bereich Karte.",
+    ru: "Краткий обзор. Большая карта со всеми фильтрами находится в разделе Карта.",
+    en: "A quick overview. The large map with all filters is available in the Map section.",
+  }],
 
-  ["Termin aufsteigend", { de: "Termin aufsteigend", ru: "Дата торгов по возрастанию", en: "Auction date ascending" }],
-  ["Дата торгов по возрастанию", { de: "Termin aufsteigend", ru: "Дата торгов по возрастанию", en: "Auction date ascending" }],
-  ["Auction date ascending", { de: "Termin aufsteigend", ru: "Дата торгов по возрастанию", en: "Auction date ascending" }],
+  ["Große Karte öffnen", { de: "Große Karte öffnen", ru: "Открыть большую карту", en: "Open large map" }],
+  ["Открыть большую карту", { de: "Große Karte öffnen", ru: "Открыть большую карту", en: "Open large map" }],
+  ["Open large map", { de: "Große Karte öffnen", ru: "Открыть большую карту", en: "Open large map" }],
 
-  ["Termin absteigend", { de: "Termin absteigend", ru: "Дата торгов по убыванию", en: "Auction date descending" }],
-  ["Дата торгов по убыванию", { de: "Termin absteigend", ru: "Дата торгов по убыванию", en: "Auction date descending" }],
-  ["Auction date descending", { de: "Termin absteigend", ru: "Дата торгов по убыванию", en: "Auction date descending" }],
+  ["Karte der Objekte", { de: "Karte der Objekte", ru: "Карта объектов", en: "Property map" }],
+  ["Карта объектов", { de: "Karte der Objekte", ru: "Карта объектов", en: "Property map" }],
+  ["Property map", { de: "Karte der Objekte", ru: "Карта объектов", en: "Property map" }],
 
-  ["Preis aufsteigend", { de: "Preis aufsteigend", ru: "Цена по возрастанию", en: "Price ascending" }],
-  ["Цена по возрастанию", { de: "Preis aufsteigend", ru: "Цена по возрастанию", en: "Price ascending" }],
-  ["Price ascending", { de: "Preis aufsteigend", ru: "Цена по возрастанию", en: "Price ascending" }],
+  ["Suchen Sie in der sichtbaren Kartenfläche oder zeichnen Sie eine eigene Suchregion.", {
+    de: "Suchen Sie in der sichtbaren Kartenfläche oder zeichnen Sie eine eigene Suchregion.",
+    ru: "Ищите в видимой области карты или нарисуйте собственную область поиска.",
+    en: "Search within the visible map area or draw your own search region.",
+  }],
+  ["Ищите в видимой области карты или нарисуйте собственную область поиска.", {
+    de: "Suchen Sie in der sichtbaren Kartenfläche oder zeichnen Sie eine eigene Suchregion.",
+    ru: "Ищите в видимой области карты или нарисуйте собственную область поиска.",
+    en: "Search within the visible map area or draw your own search region.",
+  }],
 
-  ["Preis absteigend", { de: "Preis absteigend", ru: "Цена по убыванию", en: "Price descending" }],
-  ["Цена по убыванию", { de: "Preis absteigend", ru: "Цена по убыванию", en: "Price descending" }],
-  ["Price descending", { de: "Preis absteigend", ru: "Цена по убыванию", en: "Price descending" }],
+  ["In diesem Kartenausschnitt suchen", { de: "In diesem Kartenausschnitt suchen", ru: "Искать в этой области карты", en: "Search this map area" }],
+  ["Искать в этой области карты", { de: "In diesem Kartenausschnitt suchen", ru: "Искать в этой области карты", en: "Search this map area" }],
+  ["Search this map area", { de: "In diesem Kartenausschnitt suchen", ru: "Искать в этой области карты", en: "Search this map area" }],
 
-  ["20 pro Seite", { de: "20 pro Seite", ru: "20 на странице", en: "20 per page" }],
-  ["20 на странице", { de: "20 pro Seite", ru: "20 на странице", en: "20 per page" }],
-  ["20 per page", { de: "20 pro Seite", ru: "20 на странице", en: "20 per page" }],
+  ["Region zeichnen", { de: "Region zeichnen", ru: "Нарисовать область", en: "Draw region" }],
+  ["Нарисовать область", { de: "Region zeichnen", ru: "Нарисовать область", en: "Draw region" }],
+  ["Draw region", { de: "Region zeichnen", ru: "Нарисовать область", en: "Draw region" }],
 
-  // Filter labels / buttons
-  ["Termin ab", { de: "Termin ab", ru: "Торги от", en: "Auction from" }],
-  ["Торги от", { de: "Termin ab", ru: "Торги от", en: "Auction from" }],
-  ["Auction from", { de: "Termin ab", ru: "Торги от", en: "Auction from" }],
+  // ===== Extended search labels =====
+  ["Alle Filter auf einer Seite. Der Filterbereich scrollt normal mit der Seite.", {
+    de: "Alle Filter auf einer Seite. Der Filterbereich scrollt normal mit der Seite.",
+    ru: "Все фильтры на одной странице. Блок фильтров прокручивается вместе со страницей.",
+    en: "All filters on one page. The filter area scrolls normally with the page.",
+  }],
+  ["Все фильтры на одной странице. Блок фильтров прокручивается вместе со страницей.", {
+    de: "Alle Filter auf einer Seite. Der Filterbereich scrollt normal mit der Seite.",
+    ru: "Все фильтры на одной странице. Блок фильтров прокручивается вместе со страницей.",
+    en: "All filters on one page. The filter area scrolls normally with the page.",
+  }],
+  ["Zurücksetzen", { de: "Zurücksetzen", ru: "Сбросить", en: "Reset" }],
+  ["Сбросить", { de: "Zurücksetzen", ru: "Сбросить", en: "Reset" }],
+  ["Reset", { de: "Zurücksetzen", ru: "Сбросить", en: "Reset" }],
 
-  ["Termin bis", { de: "Termin bis", ru: "Торги до", en: "Auction to" }],
-  ["Торги до", { de: "Termin bis", ru: "Торги до", en: "Auction to" }],
-  ["Auction to", { de: "Termin bis", ru: "Торги до", en: "Auction to" }],
+  ["Suche", { de: "Suche", ru: "Поиск", en: "Search" }],
+  ["Поиск", { de: "Suche", ru: "Поиск", en: "Search" }],
+  ["Search", { de: "Suche", ru: "Поиск", en: "Search" }],
 
-  ["Denkmalschutz", { de: "Denkmalschutz", ru: "Памятник архитектуры", en: "Listed monument" }],
-  ["Памятник архитектуры", { de: "Denkmalschutz", ru: "Памятник архитектуры", en: "Listed monument" }],
-  ["Listed monument", { de: "Denkmalschutz", ru: "Памятник архитектуры", en: "Listed monument" }],
+  ["Ort", { de: "Ort", ru: "Город", en: "City" }],
+  ["Город", { de: "Ort", ru: "Город", en: "City" }],
+  ["City", { de: "Ort", ru: "Город", en: "City" }],
 
-  ["Wertgrenzen", { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" }],
-  ["Ценовые границы", { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" }],
-  ["Value limits", { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" }],
+  ["PLZ", { de: "PLZ", ru: "Индекс", en: "ZIP" }],
+  ["Индекс", { de: "PLZ", ru: "Индекс", en: "ZIP" }],
+  ["ZIP", { de: "PLZ", ru: "Индекс", en: "ZIP" }],
 
-  ["Termin-Nr.", { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." }],
-  ["№ термина", { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." }],
-  ["Auction no.", { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." }],
+  ["Umkreis", { de: "Umkreis", ru: "Радиус", en: "Radius" }],
+  ["Радиус", { de: "Umkreis", ru: "Радиус", en: "Radius" }],
+  ["Radius", { de: "Umkreis", ru: "Радиус", en: "Radius" }],
 
-  ["Sortierung", { de: "Sortierung", ru: "Сортировка", en: "Sorting" }],
-  ["Сортировка", { de: "Sortierung", ru: "Сортировка", en: "Sorting" }],
-  ["Sorting", { de: "Sortierung", ru: "Сортировка", en: "Sorting" }],
+  ["Amtsgericht", { de: "Amtsgericht", ru: "Суд", en: "Court" }],
+  ["Суд", { de: "Amtsgericht", ru: "Суд", en: "Court" }],
+  ["Court", { de: "Amtsgericht", ru: "Суд", en: "Court" }],
 
-  ["Anzeigen", { de: "Anzeigen", ru: "Показывать", en: "Show" }],
-  ["Показывать", { de: "Anzeigen", ru: "Показывать", en: "Show" }],
-  ["Show", { de: "Anzeigen", ru: "Показывать", en: "Show" }],
+  ["Status", { de: "Status", ru: "Статус", en: "Status" }],
+  ["Статус", { de: "Status", ru: "Статус", en: "Status" }],
 
-  ["Objekte finden", { de: "Objekte finden", ru: "Найти объекты", en: "Find properties" }],
-  ["Найти объекты", { de: "Objekte finden", ru: "Найти объекты", en: "Find properties" }],
-  ["Find properties", { de: "Objekte finden", ru: "Найти объекты", en: "Find properties" }],
+  ["Alle Orte", { de: "Alle Orte", ru: "Все города", en: "All cities" }],
+  ["Все города", { de: "Alle Orte", ru: "Все города", en: "All cities" }],
+  ["All cities", { de: "Alle Orte", ru: "Все города", en: "All cities" }],
 
-  ["Filter zurücksetzen", { de: "Filter zurücksetzen", ru: "Сбросить фильтр", en: "Reset filters" }],
-  ["Сбросить фильтр", { de: "Filter zurücksetzen", ru: "Сбросить фильтр", en: "Reset filters" }],
-  ["Reset filters", { de: "Filter zurücksetzen", ru: "Сбросить фильтр", en: "Reset filters" }],
+  ["Kein Radius", { de: "Kein Radius", ru: "Без радиуса", en: "No radius" }],
+  ["Без радиуса", { de: "Kein Radius", ru: "Без радиуса", en: "No radius" }],
+  ["No radius", { de: "Kein Radius", ru: "Без радиуса", en: "No radius" }],
 
-  // Placeholders
-  ["z. B. Chemnitz, 09111, Amtsgericht Dresden", { de: "z. B. Chemnitz, 09111, Amtsgericht Dresden", ru: "например: Chemnitz, 09111, Amtsgericht Dresden", en: "e.g. Chemnitz, 09111, Amtsgericht Dresden" }],
-  ["например: Chemnitz, 09111, Amtsgericht Dresden", { de: "z. B. Chemnitz, 09111, Amtsgericht Dresden", ru: "например: Chemnitz, 09111, Amtsgericht Dresden", en: "e.g. Chemnitz, 09111, Amtsgericht Dresden" }],
-  ["e.g. Chemnitz, 09111, Amtsgericht Dresden", { de: "z. B. Chemnitz, 09111, Amtsgericht Dresden", ru: "например: Chemnitz, 09111, Amtsgericht Dresden", en: "e.g. Chemnitz, 09111, Amtsgericht Dresden" }],
+  ["Alle Gerichte", { de: "Alle Gerichte", ru: "Все суды", en: "All courts" }],
+  ["Все суды", { de: "Alle Gerichte", ru: "Все суды", en: "All courts" }],
+  ["All courts", { de: "Alle Gerichte", ru: "Все суды", en: "All courts" }],
 
-  // Property detail / buttons
+  // ===== Property detail page =====
   ["Startseite", { de: "Startseite", ru: "Главная", en: "Home" }],
   ["Главная", { de: "Startseite", ru: "Главная", en: "Home" }],
   ["Home", { de: "Startseite", ru: "Главная", en: "Home" }],
@@ -176,13 +201,20 @@ const entries: Array<[string, T]> = [
   ["ЖИЛЫЕ ДОМА", { de: "WOHNHÄUSER", ru: "ЖИЛЫЕ ДОМА", en: "RESIDENTIAL HOUSES" }],
   ["RESIDENTIAL HOUSES", { de: "WOHNHÄUSER", ru: "ЖИЛЫЕ ДОМА", en: "RESIDENTIAL HOUSES" }],
 
+  ["Активен", { de: "Aktiv", ru: "Активен", en: "Active" }],
+  ["Aktiv", { de: "Aktiv", ru: "Активен", en: "Active" }],
+  ["Active", { de: "Aktiv", ru: "Активен", en: "Active" }],
+
   ["Verkehrswert", { de: "Verkehrswert", ru: "Оценочная стоимость", en: "Market value" }],
   ["Оценочная стоимость", { de: "Verkehrswert", ru: "Оценочная стоимость", en: "Market value" }],
   ["Market value", { de: "Verkehrswert", ru: "Оценочная стоимость", en: "Market value" }],
 
   ["Скопировать ссылку", { de: "Link kopieren", ru: "Скопировать ссылку", en: "Copy link" }],
+  ["Ссылка скопирована", { de: "Link kopiert", ru: "Ссылка скопирована", en: "Link copied" }],
   ["Link kopieren", { de: "Link kopieren", ru: "Скопировать ссылку", en: "Copy link" }],
+  ["Link kopiert", { de: "Link kopiert", ru: "Ссылка скопирована", en: "Link copied" }],
   ["Copy link", { de: "Link kopieren", ru: "Скопировать ссылку", en: "Copy link" }],
+  ["Link copied", { de: "Link kopiert", ru: "Ссылка скопирована", en: "Link copied" }],
 
   ["Поделиться", { de: "Teilen", ru: "Поделиться", en: "Share" }],
   ["Teilen", { de: "Teilen", ru: "Поделиться", en: "Share" }],
@@ -245,54 +277,24 @@ const entries: Array<[string, T]> = [
   ["Номер дела", { de: "Aktenzeichen", ru: "Номер дела", en: "Case number" }],
   ["Case number", { de: "Aktenzeichen", ru: "Номер дела", en: "Case number" }],
 
-  // Map/list leftovers
-  ["Karte der Objekte", { de: "Karte der Objekte", ru: "Карта объектов", en: "Property map" }],
-  ["Карта объектов", { de: "Karte der Objekte", ru: "Карта объектов", en: "Property map" }],
-  ["Property map", { de: "Karte der Objekte", ru: "Карта объектов", en: "Property map" }],
+  ["Termin-Nr.", { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." }],
+  ["№ термина", { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." }],
+  ["Auction no.", { de: "Termin-Nr.", ru: "№ термина", en: "Auction no." }],
+
+  ["Wertgrenzen", { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" }],
+  ["Ценовые границы", { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" }],
+  ["Value limits", { de: "Wertgrenzen", ru: "Ценовые границы", en: "Value limits" }],
 ];
 
-const translations: TranslationMap = Object.fromEntries(entries);
+const translations: Record<string, T> = Object.fromEntries(pairs);
 
 function getCookieLocale(): Locale {
   const match = document.cookie.match(/(?:^|;\s*)zvg_locale=(de|ru|en)(?:;|$)/);
   return (match?.[1] as Locale) || "de";
 }
 
-function applyDynamicPatterns(text: string, locale: Locale): string | null {
-  const trimmed = text.trim();
-
-  const polygon = trimmed.match(/^(?:Polygon anwenden|Применить полигон|Apply polygon)\s*\((\d+)\)$/);
-  if (polygon) {
-    const count = polygon[1];
-    if (locale === "ru") return `Применить полигон (${count})`;
-    if (locale === "en") return `Apply polygon (${count})`;
-    return `Polygon anwenden (${count})`;
-  }
-
-  const city = trimmed.match(/^(Город|Ort|City):\s*(.+)$/);
-  if (city) {
-    const value = city[2];
-    if (locale === "ru") return `Город: ${value}`;
-    if (locale === "en") return `City: ${value}`;
-    return `Ort: ${value}`;
-  }
-
-  const pageSize = trimmed.match(/^(\d+)\s+(на странице|pro Seite|per page)$/);
-  if (pageSize) {
-    const value = pageSize[1];
-    if (locale === "ru") return `${value} на странице`;
-    if (locale === "en") return `${value} per page`;
-    return `${value} pro Seite`;
-  }
-
-  return null;
-}
-
-function targetText(original: string, locale: Locale): string | null {
-  const trimmed = original.trim();
-  const dynamic = applyDynamicPatterns(trimmed, locale);
-  if (dynamic) return dynamic;
-
+function translateValue(value: string, locale: Locale): string | null {
+  const trimmed = value.trim();
   const hit = translations[trimmed];
   if (!hit) return null;
   return hit[locale] ?? null;
@@ -300,7 +302,7 @@ function targetText(original: string, locale: Locale): string | null {
 
 function replaceTextNode(node: Text, locale: Locale) {
   const original = node.nodeValue ?? "";
-  const replacement = targetText(original, locale);
+  const replacement = translateValue(original, locale);
   if (!replacement || replacement === original.trim()) return;
 
   const leading = original.match(/^\s*/)?.[0] ?? "";
@@ -308,7 +310,46 @@ function replaceTextNode(node: Text, locale: Locale) {
   node.nodeValue = `${leading}${replacement}${trailing}`;
 }
 
-function translateDom(locale: Locale) {
+function translateSelects(locale: Locale) {
+  document.querySelectorAll("select").forEach((select) => {
+    select.querySelectorAll("option").forEach((option) => {
+      const replacement = translateValue(option.textContent ?? "", locale);
+      if (replacement) {
+        option.textContent = replacement;
+        option.label = replacement;
+      }
+    });
+
+    // Force Chrome to repaint current visible select text.
+    const current = select.options[select.selectedIndex];
+    if (current) {
+      const replacement = translateValue(current.textContent ?? "", locale);
+      if (replacement) {
+        current.textContent = replacement;
+        current.label = replacement;
+      }
+    }
+  });
+}
+
+function translateAttributes(locale: Locale) {
+  document.querySelectorAll("input[placeholder], textarea[placeholder], [aria-label], [title]").forEach((element) => {
+    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+      const replacement = translateValue(element.placeholder, locale);
+      if (replacement) element.placeholder = replacement;
+    }
+
+    const aria = element.getAttribute("aria-label");
+    const ariaReplacement = aria ? translateValue(aria, locale) : null;
+    if (ariaReplacement) element.setAttribute("aria-label", ariaReplacement);
+
+    const title = element.getAttribute("title");
+    const titleReplacement = title ? translateValue(title, locale) : null;
+    if (titleReplacement) element.setAttribute("title", titleReplacement);
+  });
+}
+
+function translateTextNodes(locale: Locale) {
   const root = document.body;
   if (!root) return;
 
@@ -317,59 +358,48 @@ function translateDom(locale: Locale) {
       const parent = node.parentElement;
       if (!parent) return NodeFilter.FILTER_REJECT;
       const tag = parent.tagName.toLowerCase();
-      if (["script", "style", "noscript", "textarea", "input"].includes(tag)) return NodeFilter.FILTER_REJECT;
+      if (["script", "style", "noscript", "textarea", "input", "option"].includes(tag)) return NodeFilter.FILTER_REJECT;
       const text = node.nodeValue?.trim();
-      if (!text || text.length > 280) return NodeFilter.FILTER_REJECT;
-      return targetText(text, locale) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      if (!text || text.length > 300) return NodeFilter.FILTER_REJECT;
+      return translateValue(text, locale) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
     },
   });
 
   const nodes: Text[] = [];
   while (walker.nextNode()) nodes.push(walker.currentNode as Text);
   nodes.forEach((node) => replaceTextNode(node, locale));
+}
 
-  document.querySelectorAll("option, input[placeholder], textarea[placeholder], [aria-label], [title]").forEach((element) => {
-    if (element instanceof HTMLOptionElement) {
-      const replacement = targetText(element.textContent ?? "", locale);
-      if (replacement) element.textContent = replacement;
-      return;
+function translateDuplicateKicker(locale: Locale) {
+  document.querySelectorAll(".eyebrow").forEach((element) => {
+    let text = element.textContent?.trim();
+    if (!text) return;
+
+    if (text.includes("·")) {
+      const [left, right] = text.split("·").map((part) => part.trim());
+      const leftNorm = left.toLowerCase();
+      const rightNorm = right.toLowerCase();
+
+      const isDuplicate =
+        leftNorm.includes(rightNorm) ||
+        rightNorm.includes(leftNorm.replace(/s$/, "")) ||
+        (leftNorm.includes("жилые дома") && rightNorm.includes("жилой дом")) ||
+        (leftNorm.includes("wohnhäuser") && rightNorm.includes("wohnhaus")) ||
+        (leftNorm.includes("residential houses") && rightNorm.includes("residential house"));
+
+      if (isDuplicate) text = left;
     }
 
-    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
-      const replacement = targetText(element.placeholder, locale);
-      if (replacement) element.placeholder = replacement;
-    }
-
-    const aria = element.getAttribute("aria-label");
-    const ariaReplacement = aria ? targetText(aria, locale) : null;
-    if (ariaReplacement) element.setAttribute("aria-label", ariaReplacement);
-
-    const title = element.getAttribute("title");
-    const titleReplacement = title ? targetText(title, locale) : null;
-    if (titleReplacement) element.setAttribute("title", titleReplacement);
+    const replacement = translateValue(text, locale);
+    element.textContent = replacement ?? text;
   });
 }
 
-function simplifyPropertyCardKickers() {
-  document.querySelectorAll(".eyebrow").forEach((element) => {
-    const text = element.textContent?.trim();
-    if (!text || !text.includes("·")) return;
-
-    const [left, right] = text.split("·").map((part) => part.trim());
-    if (!left || !right) return;
-
-    const leftNorm = left.toLowerCase();
-    const rightNorm = right.toLowerCase();
-
-    const isDuplicate =
-      leftNorm.includes(rightNorm) ||
-      rightNorm.includes(leftNorm.replace(/s$/, "")) ||
-      (leftNorm.includes("жилые дома") && rightNorm.includes("жилой дом")) ||
-      (leftNorm.includes("wohnhäuser") && rightNorm.includes("wohnhaus")) ||
-      (leftNorm.includes("residential houses") && rightNorm.includes("residential house"));
-
-    if (isDuplicate) element.textContent = left;
-  });
+function runTranslations(locale: Locale) {
+  translateTextNodes(locale);
+  translateSelects(locale);
+  translateAttributes(locale);
+  translateDuplicateKicker(locale);
 }
 
 export function LanguageRuntimeFix() {
@@ -380,8 +410,7 @@ export function LanguageRuntimeFix() {
     const run = () => {
       queued = false;
       locale = getCookieLocale();
-      translateDom(locale);
-      simplifyPropertyCardKickers();
+      runTranslations(locale);
     };
 
     const schedule = () => {
@@ -391,25 +420,25 @@ export function LanguageRuntimeFix() {
     };
 
     run();
+    const timer = window.setInterval(run, 250);
 
     const observer = new MutationObserver(schedule);
     observer.observe(document.body, {
       childList: true,
       subtree: true,
       characterData: true,
+      attributes: true,
+      attributeFilter: ["placeholder", "aria-label", "title"],
     });
 
-    const interval = window.setInterval(() => {
-      const nextLocale = getCookieLocale();
-      if (nextLocale !== locale) {
-        locale = nextLocale;
-        schedule();
-      }
-    }, 400);
+    document.addEventListener("change", schedule, true);
+    document.addEventListener("click", schedule, true);
 
     return () => {
       observer.disconnect();
-      window.clearInterval(interval);
+      window.clearInterval(timer);
+      document.removeEventListener("change", schedule, true);
+      document.removeEventListener("click", schedule, true);
     };
   }, []);
 
