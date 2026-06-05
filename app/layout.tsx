@@ -1,3 +1,4 @@
+import { BackToTopButton } from "@/components/BackToTopButton";
 import { LanguageRuntimeFix } from "@/components/LanguageRuntimeFix";
 import { getLocale } from "@/lib/i18n/server";
 import type { Metadata, Viewport } from "next";
@@ -51,6 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {children}
         <Footer />
               <LanguageRuntimeFix />
+              <BackToTopButton />
       </body>
     </html>
   );

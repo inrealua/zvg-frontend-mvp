@@ -9,6 +9,7 @@ import { QuickSearchBar } from "@/components/QuickSearchBar";
 import { SaveSearchButton } from "@/components/SaveSearchButton";
 import { formatEuro, formatNumber } from "@/lib/format";
 import { distanceKm, findKnownLocation, type GeoPoint } from "@/lib/geo";
+import { resolvePostalCodeCenter } from "@/lib/postal-codes";
 import { getI18n } from "@/lib/i18n/server";
 import { getPublicUi } from "@/lib/i18n/property-labels";
 import { getSiteText } from "@/lib/i18n/site-text";
@@ -144,6 +145,11 @@ async function resolveRadiusFilter(params: SearchParamRecord): Promise<RadiusFil
   const radiusKm = asNumber(params.radiusKm);
 
   if (!location || !radiusKm || radiusKm <= 0) return null;
+
+  const postalCodeCenter = await resolvePostalCodeCenter(location);
+  if (postalCodeCenter) {
+    return { center: postalCodeCenter, radiusKm };
+  }
 
   const knownLocation = findKnownLocation(location);
   if (knownLocation) {
@@ -350,6 +356,17 @@ export async function PublicPropertiesPage({
   const filterBlock = <FilterBar states={states} courts={courts} cities={cities} compact={mode === "map"} />;
   const activeFilterBlock = <ActiveFilters chips={activeChips} />;
 
+  const resetHref = pagePathForMode(mode);
+
+  const activeFiltersMapToolbar = (
+    <div className="map-active-filter-toolbar-v49">
+      <div className="map-active-filter-toolbar-inner-v49">
+        {activeFilterBlock}
+      </div>
+      <a className="btn btn-soft" href={resetHref}>Filter zurücksetzen</a>
+    </div>
+  );
+
   const notices = (
     <>
       {radiusFilter ? (
@@ -453,6 +470,7 @@ export async function PublicPropertiesPage({
             </aside>
             <div className="map-page-main">
               {summary}
+              {activeFiltersMapToolbar}
               <PropertyMap properties={mapProperties} variant="large" />
               {list}
             </div>
@@ -492,6 +510,7 @@ export async function PublicPropertiesPage({
             </div>
             <a className="btn btn-soft" href="/map">{siteText.map.openLargeMap}</a>
           </div>
+          {activeFiltersMapToolbar}
           <PropertyMap properties={mapProperties} variant="wide" />
         </div>
 

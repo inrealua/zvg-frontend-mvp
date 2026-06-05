@@ -241,3 +241,17 @@ model ImportLog {
   @@index([createdAt])
   @@index([status])
 }
+
+
+model PostalCode {
+  code      String   @id @db.VarChar(5)
+  city      String
+  state     String?
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([city])
+  @@index([state])
+}
