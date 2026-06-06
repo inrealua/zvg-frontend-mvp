@@ -510,12 +510,11 @@ export async function PublicPropertiesPage({
 
         {activeFilterBlock}
         {notices}
+        {summary}
 
-        <div className="search-map-section-v54">
+        <div className="search-map-section-v60">
           <PropertyMap properties={mapProperties} variant="wide" />
         </div>
-
-        {summary}
 
         <div className="search-results-grid-section-v54">
           {list}
