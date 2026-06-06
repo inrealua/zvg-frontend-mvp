@@ -8910,3 +8910,124 @@ nav a[href*="/map"] {
   .search-filter-v60 .span-6 { grid-column: span 1 !important; }
   .multi-filter-panel-v60 { position: static; margin-top: 8px; }
 }
+
+
+/* Stage 61 alignment and map translation cleanup */
+
+.search-filter-grid-v60,
+.search-filter-grid-v59,
+.search-filter-grid-v58 {
+  align-items: stretch !important;
+}
+
+.search-filter-v60 .field,
+.search-filter-v60 .multi-filter-v60,
+.search-filter-v60 .range-filter-v60,
+.search-filter-v60 .filter-action-button-v60,
+.search-filter-v59 .field,
+.search-filter-v59 .multi-filter-v59,
+.search-filter-v59 .range-filter-v59,
+.search-filter-v59 .filter-action-button-v59,
+.search-filter-v58 .field,
+.search-filter-v58 .multi-filter-v58,
+.search-filter-v58 .range-filter-v58,
+.search-filter-v58 .filter-action-button-v58 {
+  align-self: stretch !important;
+  min-height: 58px !important;
+  margin: 0 !important;
+}
+
+.search-filter-v60 .field,
+.search-filter-v59 .field,
+.search-filter-v58 .field {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+}
+
+.search-filter-v60 label,
+.search-filter-v59 label,
+.search-filter-v58 label {
+  line-height: 1.15 !important;
+}
+
+.search-filter-v60 input,
+.search-filter-v60 select,
+.search-filter-v59 input,
+.search-filter-v59 select,
+.search-filter-v58 input,
+.search-filter-v58 select {
+  height: 48px !important;
+  min-height: 48px !important;
+  box-sizing: border-box !important;
+}
+
+.multi-filter-v60 summary,
+.multi-filter-v59 summary,
+.multi-filter-v58 summary {
+  height: 58px !important;
+  min-height: 58px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.range-filter-v60,
+.range-filter-v59,
+.range-filter-v58 {
+  height: 58px !important;
+  min-height: 58px !important;
+  box-sizing: border-box !important;
+  padding-top: 8px !important;
+  padding-bottom: 6px !important;
+}
+
+.range-title-v60,
+.range-title-v59,
+.range-title-v58 {
+  margin-bottom: 4px !important;
+}
+
+.range-track-v60,
+.range-track-v59,
+.range-track-v58 {
+  height: 20px !important;
+}
+
+.range-track-v60::before,
+.range-track-v60::after,
+.range-track-v59::before,
+.range-track-v59::after,
+.range-track-v58::before,
+.range-track-v58::after {
+  top: 8px !important;
+}
+
+.range-track-v60 input,
+.range-track-v59 input,
+.range-track-v58 input {
+  height: 20px !important;
+}
+
+.range-track-v60 input::-webkit-slider-thumb,
+.range-track-v59 input::-webkit-slider-thumb,
+.range-track-v58 input::-webkit-slider-thumb {
+  margin-top: -1px !important;
+}
+
+.range-scale {
+  margin-top: 0 !important;
+  line-height: 1 !important;
+}
+
+.filter-action-button-v60,
+.filter-action-button-v59,
+.filter-action-button-v58 {
+  height: 58px !important;
+  min-height: 58px !important;
+  align-self: stretch !important;
+}
+
+/* Date inputs should show native calendar and align with other cells */
+input[type="date"] {
+  color-scheme: light;
+}

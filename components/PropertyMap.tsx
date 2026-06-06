@@ -1,5 +1,63 @@
 "use client";
 
+type Stage61Locale = "de" | "ru" | "en";
+
+function stage61ReadLocale(): Stage61Locale {
+  if (typeof document === "undefined") return "de";
+  const match = document.cookie.match(/(?:^|;\s*)zvg_locale=(de|ru|en)(?:;|$)/);
+  return (match?.[1] as Stage61Locale) || "de";
+}
+
+const stage61MapLocaleText = {
+  de: {
+    houses: "Häuser",
+    apartments: "Wohnungen",
+    land: "Grundstücke",
+    commercial: "Gewerbe",
+    cancelled: "aufgehoben",
+    drawTitle: "Bereich zeichnen",
+    drawHelp: "Klicken Sie auf die Karte, um Punkte zu setzen. Mindestens 3 Punkte.",
+    applyPolygon: "Polygon anwenden",
+    clearPoints: "Punkte löschen",
+    cancel: "Abbrechen",
+    searchVisible: "In diesem Kartenausschnitt suchen",
+    drawRegion: "Region zeichnen",
+  },
+  ru: {
+    houses: "Дома",
+    apartments: "Квартиры",
+    land: "Участки",
+    commercial: "Коммерция",
+    cancelled: "отменено",
+    drawTitle: "Нарисовать область",
+    drawHelp: "Кликните по карте, чтобы поставить точки. Минимум 3 точки.",
+    applyPolygon: "Применить полигон",
+    clearPoints: "Удалить точки",
+    cancel: "Отмена",
+    searchVisible: "Искать в этой области карты",
+    drawRegion: "Нарисовать область",
+  },
+  en: {
+    houses: "Houses",
+    apartments: "Apartments",
+    land: "Land plots",
+    commercial: "Commercial",
+    cancelled: "cancelled",
+    drawTitle: "Draw area",
+    drawHelp: "Click on the map to place points. At least 3 points.",
+    applyPolygon: "Apply polygon",
+    clearPoints: "Clear points",
+    cancel: "Cancel",
+    searchVisible: "Search this map area",
+    drawRegion: "Draw region",
+  },
+} as const;
+
+function stage61MapT() {
+  return stage61MapLocaleText[stage61ReadLocale()];
+}
+
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formatDate, formatEuro, translateGroup } from "@/lib/format";
@@ -363,17 +421,13 @@ if (!mapElementRef.current) return;
       </div>
 
       <div className="map-actions">
-        <button type="button" className="btn btn-primary btn-small" onClick={applyVisibleMapArea} disabled={withCoordinates.length === 0 || Boolean(error)}>
-          In diesem Kartenausschnitt suchen
-        </button>
+        <button type="button" className="btn btn-primary btn-small" onClick={applyVisibleMapArea} disabled={withCoordinates.length === 0 || Boolean(error)}>{stage61MapT().searchVisible}</button>
         {mapBoundsActive ? (
           <button type="button" className="btn btn-ghost btn-small" onClick={clearVisibleMapArea}>
             Kartenausschnitt entfernen
           </button>
         ) : null}
-        <button type="button" className="btn btn-ghost btn-small" onClick={startPolygonDrawing} disabled={Boolean(error)}>
-          Region zeichnen
-        </button>
+        <button type="button" className="btn btn-ghost btn-small" onClick={startPolygonDrawing} disabled={Boolean(error)}>{stage61MapT().drawRegion}</button>
         {polygonActive ? (
           <button type="button" className="btn btn-ghost btn-small" onClick={removePolygonFilter}>
             Polygon entfernen
@@ -384,19 +438,13 @@ if (!mapElementRef.current) return;
       {drawingMode ? (
         <div className="polygon-toolbar">
           <div>
-            <b>Region zeichnen</b>
-            <span>Klicken Sie auf die Karte, um Punkte zu setzen. Mindestens 3 Punkte.</span>
+            <b>{stage61MapT().drawRegion}</b>
+            <span>{stage61MapT().drawHelp}</span>
           </div>
           <div className="polygon-toolbar-actions">
-            <button type="button" className="btn btn-primary btn-small" onClick={applyPolygonSearch} disabled={drawPoints.length < 3}>
-              Polygon anwenden ({drawPoints.length})
-            </button>
-            <button type="button" className="btn btn-ghost btn-small" onClick={clearDraftPolygon} disabled={drawPoints.length === 0}>
-              Punkte löschen
-            </button>
-            <button type="button" className="btn btn-ghost btn-small" onClick={cancelPolygonDrawing}>
-              Abbrechen
-            </button>
+            <button type="button" className="btn btn-primary btn-small" onClick={applyPolygonSearch} disabled={drawPoints.length < 3}>{stage61MapT().applyPolygon} ({drawPoints.length})</button>
+            <button type="button" className="btn btn-ghost btn-small" onClick={clearDraftPolygon} disabled={drawPoints.length === 0}>{stage61MapT().clearPoints}</button>
+            <button type="button" className="btn btn-ghost btn-small" onClick={cancelPolygonDrawing}>{stage61MapT().cancel}</button>
           </div>
         </div>
       ) : null}
@@ -419,11 +467,11 @@ if (!mapElementRef.current) return;
       )}
 
       <div className="map-legend">
-        <span><i className="legend-dot wohnhaus" /> Häuser</span>
-        <span><i className="legend-dot wohnung" /> Wohnungen</span>
-        <span><i className="legend-dot grund" /> Grundstücke</span>
-        <span><i className="legend-dot gewerbe" /> Gewerbe</span>
-        <span><i className="legend-dot cancelled" /> aufgehoben</span>
+        <span><i className="legend-dot wohnhaus" />{stage61MapT().houses}</span>
+        <span><i className="legend-dot wohnung" />{stage61MapT().apartments}</span>
+        <span><i className="legend-dot grund" />{stage61MapT().land}</span>
+        <span><i className="legend-dot gewerbe" />{stage61MapT().commercial}</span>
+        <span><i className="legend-dot cancelled" />{stage61MapT().cancelled}</span>
       </div>
     </aside>
   );
