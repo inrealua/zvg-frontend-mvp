@@ -13,7 +13,7 @@ import { resolvePostalCodeCenter } from "@/lib/postal-codes";
 import { getI18n } from "@/lib/i18n/server";
 import { getSiteText } from "@/lib/i18n/site-text";
 import { pickPropertyTranslation, translationInclude } from "@/lib/i18n/property-translations";
-import { getPaginationRange, getPaginationState } from "@/lib/pagination";
+import { getPaginationRange } from "@/lib/pagination";
 import { pointInPolygon } from "@/lib/polygon";
 import { prisma } from "@/lib/prisma";
 import {
@@ -251,9 +251,14 @@ export async function PublicPropertiesPage({
   const baseWhere = buildPropertyWhere(paramsForWhere);
   const where = withArchiveMode(baseWhere, mode);
   const orderBy = buildPropertyOrderBy(params);
-  const activeChips = buildActiveFilterChips(params);
+  const activeChips = buildActiveFilterChips(params).filter((chip) => chip.key !== "perPage" && chip.key !== "sort");
   const currentUser = await getCurrentUser();
-  const paginationState = getPaginationState({ ...params, perPage: asString(params.perPage) || "12" });
+  const requestedPage = Math.max(1, asNumber(params.page) || 1);
+  const requestedPerPage = asNumber(params.perPage) || 12;
+  const paginationState = {
+    page: requestedPage,
+    perPage: allowedPageSizesV57.includes(requestedPerPage) ? requestedPerPage : 12,
+  };
   const polygonPoints = parsePolygonParam(params.poly);
   const copy = pageCopy(mode, siteText, locale);
 
@@ -507,12 +512,6 @@ export async function PublicPropertiesPage({
         {notices}
 
         <div className="search-map-section-v54">
-          <div className="section-heading-row">
-            <div>
-              <strong>{siteText.map.sectionTitle}</strong>
-              <span>{siteText.map.sectionText}</span>
-            </div>
-          </div>
           <PropertyMap properties={mapProperties} variant="wide" />
         </div>
 
