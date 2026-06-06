@@ -2,9 +2,11 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { PAGE_SIZE_OPTIONS, SORT_OPTIONS, type SelectOption } from "@/lib/filter-options";
+import { SORT_OPTIONS, type SelectOption } from "@/lib/filter-options";
 
 type Locale = "de" | "ru" | "en";
+
+const pageSizeOptions = [12, 24, 48, 96];
 
 const labels = {
   de: {
@@ -101,7 +103,7 @@ export function SortControls() {
   }
 
   return (
-    <form className="sort-controls-v54" onSubmit={onSubmit}>
+    <form className="sort-controls-v54 sort-controls-v55" onSubmit={onSubmit}>
       <label>
         <span>{t.sort}</span>
         <select name="sort" defaultValue={searchParams.get("sort") || "auctionDateAsc"}>
@@ -113,11 +115,9 @@ export function SortControls() {
 
       <label>
         <span>{t.perPage}</span>
-        <select name="perPage" defaultValue={searchParams.get("perPage") || "20"}>
-          {PAGE_SIZE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.value ? `${option.value} ${t.perPageSuffix}` : option.label}
-            </option>
+        <select name="perPage" defaultValue={searchParams.get("perPage") || "12"}>
+          {pageSizeOptions.map((value) => (
+            <option key={value} value={value}>{value} {t.perPageSuffix}</option>
           ))}
         </select>
       </label>

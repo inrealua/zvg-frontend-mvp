@@ -252,7 +252,7 @@ export async function PublicPropertiesPage({
   const orderBy = buildPropertyOrderBy(params);
   const activeChips = buildActiveFilterChips(params);
   const currentUser = await getCurrentUser();
-  const paginationState = getPaginationState(params);
+  const paginationState = getPaginationState({ ...params, perPage: asString(params.perPage) || "12" });
   const polygonPoints = parsePolygonParam(params.poly);
   const copy = pageCopy(mode, siteText, locale);
 

@@ -3,8 +3,11 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import {
+  AUCTION_ATTEMPT_OPTIONS,
+  BOOLEAN_OPTIONS,
   PROPERTY_GROUP_OPTIONS,
   STATUS_OPTIONS,
+  WERTGRENZEN_OPTIONS,
   type SelectOption,
 } from "@/lib/filter-options";
 
@@ -31,6 +34,8 @@ const labels = {
     allStates: "Alle Bundesländer",
     city: "Ort",
     allCities: "Alle Orte",
+    court: "Amtsgericht",
+    allCourts: "Alle Gerichte",
     postalCode: "PLZ",
     postalPlaceholder: "z. B. 09111",
     radius: "Umkreis",
@@ -45,6 +50,11 @@ const labels = {
     dateTo: "Termin bis",
     datePlaceholder: "JJJJ-MM-TT",
     status: "Status",
+    heritage: "Denkmalschutz",
+    valueLimits: "Wertgrenzen",
+    attempt: "Termin-Nr.",
+    any: "Egal",
+    anyAttempt: "Jeder Termin",
     submit: "Ergebnisse anzeigen",
     reset: "Zurücksetzen",
   },
@@ -57,6 +67,8 @@ const labels = {
     allStates: "Все земли",
     city: "Город",
     allCities: "Все города",
+    court: "Суд",
+    allCourts: "Все суды",
     postalCode: "Индекс",
     postalPlaceholder: "например: 09111",
     radius: "Радиус",
@@ -71,6 +83,11 @@ const labels = {
     dateTo: "Торги до",
     datePlaceholder: "ГГГГ-ММ-ДД",
     status: "Статус",
+    heritage: "Памятник архитектуры",
+    valueLimits: "Ценовые границы",
+    attempt: "№ термина",
+    any: "Не важно",
+    anyAttempt: "Любой термин",
     submit: "Показать результаты",
     reset: "Сбросить",
   },
@@ -83,6 +100,8 @@ const labels = {
     allStates: "All states",
     city: "City",
     allCities: "All cities",
+    court: "Court",
+    allCourts: "All courts",
     postalCode: "ZIP",
     postalPlaceholder: "e.g. 09111",
     radius: "Radius",
@@ -97,6 +116,11 @@ const labels = {
     dateTo: "Auction to",
     datePlaceholder: "YYYY-MM-DD",
     status: "Status",
+    heritage: "Listed monument",
+    valueLimits: "Value limits",
+    attempt: "Auction no.",
+    any: "Any",
+    anyAttempt: "Any auction",
     submit: "Show results",
     reset: "Reset",
   },
@@ -115,6 +139,14 @@ const optionLabels: Record<Locale, Record<string, string>> = {
     LAND_WALD: "Land / Wald",
     GARAGEN: "Garagen / Parken",
     SONSTIGE: "Sonstige",
+    true: "Ja",
+    false: "Nein",
+    weggefallen: "Weggefallen",
+    nicht_weggefallen: "Nicht weggefallen / unbekannt",
+    "1": "1. Termin",
+    "2": "2. Termin",
+    "3": "3. und weitere",
+    "3plus": "3. und weitere",
   },
   ru: {
     ACTIVE: "Активно",
@@ -128,6 +160,14 @@ const optionLabels: Record<Locale, Record<string, string>> = {
     LAND_WALD: "Земля / лес",
     GARAGEN: "Гаражи / парковки",
     SONSTIGE: "Прочее",
+    true: "Да",
+    false: "Нет",
+    weggefallen: "Сняты",
+    nicht_weggefallen: "Не сняты / неизвестно",
+    "1": "1-й термин",
+    "2": "2-й термин",
+    "3": "3-й и далее",
+    "3plus": "3-й и далее",
   },
   en: {
     ACTIVE: "Active",
@@ -141,11 +181,16 @@ const optionLabels: Record<Locale, Record<string, string>> = {
     LAND_WALD: "Land / forest",
     GARAGEN: "Garages / parking",
     SONSTIGE: "Other",
+    true: "Yes",
+    false: "No",
+    weggefallen: "Removed",
+    nicht_weggefallen: "Not removed / unknown",
+    "1": "1st auction",
+    "2": "2nd auction",
+    "3": "3rd and later",
+    "3plus": "3rd and later",
   },
 };
-
-const priceOptions = [50_000, 100_000, 150_000, 250_000, 400_000, PRICE_MAX];
-const areaOptions = [50, 75, 100, 150, 200, 300, AREA_MAX];
 
 function readLocaleFromCookie(): Locale {
   if (typeof document === "undefined") return "de";
@@ -199,14 +244,14 @@ function RadiusSlider({ initialValue, locale }: { initialValue: string; locale: 
   const percent = (value / RADIUS_MAX) * 100;
 
   return (
-    <div className="field search-field-v54 radius-field-v54">
+    <div className="field search-field-v54 filter-range-field-v55 radius-field-v54">
       <label htmlFor="radiusKmSlider">{t.radius}</label>
-      <div className="radius-compact-v54">
-        <div className="radius-compact-top-v54">
+      <div className="filter-range-compact-v55">
+        <div className="filter-range-top-v55">
           <span>{value > 0 ? `${value} km` : t.noRadius}</span>
           <b>0–1000 km</b>
         </div>
-        <div className="radius-track-v54" style={{ ["--radius-end" as string]: `${percent}%` }}>
+        <div className="filter-range-track-v55" style={{ ["--range-end" as string]: `${percent}%` }}>
           <input
             id="radiusKmSlider"
             type="range"
@@ -219,6 +264,87 @@ function RadiusSlider({ initialValue, locale }: { initialValue: string; locale: 
         </div>
       </div>
       <input type="hidden" name="radiusKm" value={value > 0 ? String(value) : ""} />
+    </div>
+  );
+}
+
+function SingleRange({
+  label,
+  name,
+  initialValue,
+  max,
+  step,
+  suffix,
+  emptyLabel,
+  mode,
+}: {
+  label: string;
+  name: string;
+  initialValue: string;
+  max: number;
+  step: number;
+  suffix: string;
+  emptyLabel: string;
+  mode: "max" | "min";
+}) {
+  const fallback = mode === "max" ? max : 0;
+  const initial = Number(initialValue || String(fallback));
+  const [value, setValue] = useState(Number.isFinite(initial) ? Math.max(0, Math.min(initial, max)) : fallback);
+  const percent = (value / max) * 100;
+  const isEmpty = mode === "max" ? value >= max : value <= 0;
+
+  return (
+    <div className="field search-field-v54 filter-range-field-v55">
+      <label htmlFor={`${name}Slider`}>{label}</label>
+      <div className="filter-range-compact-v55">
+        <div className="filter-range-top-v55">
+          <span>{isEmpty ? emptyLabel : `${formatNumber(value)}${suffix}`}</span>
+          <b>{mode === "max" ? `0–${formatNumber(max)}${suffix}` : `0+ ${suffix.trim()}`}</b>
+        </div>
+        <div className="filter-range-track-v55" style={{ ["--range-end" as string]: `${percent}%` }}>
+          <input
+            id={`${name}Slider`}
+            type="range"
+            min="0"
+            max={max}
+            step={step}
+            value={value}
+            onChange={(event) => setValue(Math.max(0, Math.min(Number(event.target.value), max)))}
+          />
+        </div>
+      </div>
+      <input type="hidden" name={name} value={isEmpty ? "" : String(value)} />
+    </div>
+  );
+}
+
+function OptionSelect({
+  id,
+  label,
+  name,
+  defaultValue,
+  emptyLabel,
+  options,
+  locale,
+}: {
+  id: string;
+  label: string;
+  name: string;
+  defaultValue: string;
+  emptyLabel: string;
+  options: SelectOption[];
+  locale: Locale;
+}) {
+  return (
+    <div className="field search-field-v54">
+      <label htmlFor={id}>{label}</label>
+      <select id={id} name={name} defaultValue={defaultValue}>
+        <option value="">{emptyLabel}</option>
+        {options.filter((option) => option.value).map((option) => {
+          const localized = localizeOption(option, locale);
+          return <option key={localized.value} value={localized.value}>{localized.label}</option>;
+        })}
+      </select>
     </div>
   );
 }
@@ -241,7 +367,6 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
       if (text.length > 0) next.append(key, text);
     }
 
-    // Keep sort/perPage when the user filters.
     const currentSort = searchParams.get("sort");
     const currentPerPage = searchParams.get("perPage");
     if (currentSort && !next.has("sort")) next.set("sort", currentSort);
@@ -264,19 +389,19 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
   }
 
   return (
-    <form key={searchParams.toString()} className="filters search-filter-v54" onSubmit={onSubmit}>
-      <div className="search-filter-head-v54">
+    <form key={searchParams.toString()} className="filters search-filter-v54 search-filter-v55" onSubmit={onSubmit}>
+      <div className="search-filter-head-v54 search-filter-head-v55">
         <div>
           <h2>{t.title}</h2>
           <p>{t.subtitle}</p>
         </div>
-        <div className="search-filter-actions-v54">
+        <div className="search-filter-actions-v54 search-filter-actions-v55">
           <button type="submit" className="btn btn-primary">{t.submit}</button>
           <button type="button" onClick={clearFilters} className="btn btn-ghost">{t.reset}</button>
         </div>
       </div>
 
-      <div className="search-filter-grid-v54">
+      <div className="search-filter-grid-v54 search-filter-grid-v55">
         <div className="field search-field-v54 span-3-v54">
           <label htmlFor="q">{t.q}</label>
           <input id="q" name="q" placeholder={t.qPlaceholder} defaultValue={getInitialValue(searchParams, "q")} />
@@ -305,32 +430,37 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
 
         <RadiusSlider initialValue={getInitialValue(searchParams, "radiusKm")} locale={locale} />
 
-        <div className="field search-field-v54">
-          <label htmlFor="typeGroup">{t.propertyType}</label>
-          <select id="typeGroup" name="typeGroup" defaultValue={getInitialValues(searchParams, "typeGroup")[0] ?? ""}>
-            <option value="">{t.allTypes}</option>
-            {PROPERTY_GROUP_OPTIONS.filter((option) => option.value).map((option) => {
-              const localized = localizeOption(option, locale);
-              return <option key={localized.value} value={localized.value}>{localized.label}</option>;
-            })}
-          </select>
-        </div>
+        <OptionSelect
+          id="typeGroup"
+          label={t.propertyType}
+          name="typeGroup"
+          defaultValue={getInitialValues(searchParams, "typeGroup")[0] ?? ""}
+          emptyLabel={t.allTypes}
+          options={PROPERTY_GROUP_OPTIONS}
+          locale={locale}
+        />
 
-        <div className="field search-field-v54">
-          <label htmlFor="maxPrice">{t.price}</label>
-          <select id="maxPrice" name="maxPrice" defaultValue={getInitialValue(searchParams, "maxPrice")}>
-            <option value="">{t.anyPrice}</option>
-            {priceOptions.map((price) => <option key={price} value={price}>{formatNumber(price)} €</option>)}
-          </select>
-        </div>
+        <SingleRange
+          label={t.price}
+          name="maxPrice"
+          initialValue={getInitialValue(searchParams, "maxPrice")}
+          max={PRICE_MAX}
+          step={5000}
+          suffix=" €"
+          emptyLabel={t.anyPrice}
+          mode="max"
+        />
 
-        <div className="field search-field-v54">
-          <label htmlFor="minLivingArea">{t.livingArea}</label>
-          <select id="minLivingArea" name="minLivingArea" defaultValue={getInitialValue(searchParams, "minLivingArea")}>
-            <option value="">{t.anyArea}</option>
-            {areaOptions.map((area) => <option key={area} value={area}>{area} m²</option>)}
-          </select>
-        </div>
+        <SingleRange
+          label={t.livingArea}
+          name="minLivingArea"
+          initialValue={getInitialValue(searchParams, "minLivingArea")}
+          max={AREA_MAX}
+          step={5}
+          suffix=" m²"
+          emptyLabel={t.anyArea}
+          mode="min"
+        />
 
         <div className="field search-field-v54">
           <label htmlFor="dateFrom">{t.dateFrom}</label>
@@ -343,6 +473,14 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
         </div>
 
         <div className="field search-field-v54">
+          <label htmlFor="court">{t.court}</label>
+          <select id="court" name="court" defaultValue={getInitialValue(searchParams, "court")}>
+            <option value="">{t.allCourts}</option>
+            {courts.map((court) => <option key={court} value={court}>{court}</option>)}
+          </select>
+        </div>
+
+        <div className="field search-field-v54">
           <label htmlFor="status">{t.status}</label>
           <select id="status" name="status" defaultValue={getInitialValue(searchParams, "status")}>
             {STATUS_OPTIONS.map((option) => {
@@ -352,6 +490,36 @@ export function FilterBar({ states, courts, cities }: FilterBarProps) {
             })}
           </select>
         </div>
+
+        <OptionSelect
+          id="denkmalschutz"
+          label={t.heritage}
+          name="denkmalschutz"
+          defaultValue={getInitialValue(searchParams, "denkmalschutz")}
+          emptyLabel={t.any}
+          options={BOOLEAN_OPTIONS}
+          locale={locale}
+        />
+
+        <OptionSelect
+          id="wertgrenzen"
+          label={t.valueLimits}
+          name="wertgrenzen"
+          defaultValue={getInitialValue(searchParams, "wertgrenzen")}
+          emptyLabel={t.any}
+          options={WERTGRENZEN_OPTIONS}
+          locale={locale}
+        />
+
+        <OptionSelect
+          id="auctionAttempt"
+          label={t.attempt}
+          name="auctionAttempt"
+          defaultValue={getInitialValue(searchParams, "auctionAttempt")}
+          emptyLabel={t.anyAttempt}
+          options={AUCTION_ATTEMPT_OPTIONS}
+          locale={locale}
+        />
       </div>
     </form>
   );
