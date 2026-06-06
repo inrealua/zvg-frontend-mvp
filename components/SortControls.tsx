@@ -1,43 +1,46 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
-import { SORT_OPTIONS, type SelectOption } from "@/lib/filter-options";
+import { useEffect, useState } from "react";
 
 type Locale = "de" | "ru" | "en";
-
-const pageSizeOptions = [12, 24, 48, 96];
 
 const labels = {
   de: {
     sort: "Sortierung",
     perPage: "Anzeigen",
-    apply: "Anwenden",
     auctionDateAsc: "Termin aufsteigend",
     auctionDateDesc: "Termin absteigend",
     priceAsc: "Preis aufsteigend",
     priceDesc: "Preis absteigend",
-    perPageSuffix: "pro Seite",
+    12: "12 pro Seite",
+    24: "24 pro Seite",
+    48: "48 pro Seite",
+    96: "96 pro Seite",
   },
   ru: {
     sort: "Сортировка",
     perPage: "Показывать",
-    apply: "Применить",
     auctionDateAsc: "Дата торгов по возрастанию",
     auctionDateDesc: "Дата торгов по убыванию",
     priceAsc: "Цена по возрастанию",
     priceDesc: "Цена по убыванию",
-    perPageSuffix: "на странице",
+    12: "12 на странице",
+    24: "24 на странице",
+    48: "48 на странице",
+    96: "96 на странице",
   },
   en: {
     sort: "Sorting",
     perPage: "Show",
-    apply: "Apply",
     auctionDateAsc: "Auction date ascending",
     auctionDateDesc: "Auction date descending",
     priceAsc: "Price ascending",
     priceDesc: "Price descending",
-    perPageSuffix: "per page",
+    12: "12 per page",
+    24: "24 per page",
+    48: "48 per page",
+    96: "96 per page",
   },
 } as const;
 
@@ -69,11 +72,6 @@ function useClientLocale(): Locale {
   return locale;
 }
 
-function localizeSort(option: SelectOption, locale: Locale) {
-  const value = option.value as keyof typeof labels.de;
-  return labels[locale][value] || option.label;
-}
-
 export function SortControls() {
   const locale = useClientLocale();
   const t = labels[locale];
@@ -81,48 +79,46 @@ export function SortControls() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
+  function updateParam(key: string, value: string) {
     const next = new URLSearchParams(searchParams.toString());
 
-    const sort = String(formData.get("sort") || "").trim();
-    const perPage = String(formData.get("perPage") || "").trim();
-
-    if (sort) next.set("sort", sort);
-    else next.delete("sort");
-
-    if (perPage) next.set("perPage", perPage);
-    else next.delete("perPage");
+    if (value) {
+      next.set(key, value);
+    } else {
+      next.delete(key);
+    }
 
     next.delete("page");
-
-    const query = next.toString();
-    router.push(query ? `${pathname}?${query}` : pathname);
+    router.push(`${pathname}?${next.toString()}`);
   }
 
   return (
-    <form className="sort-controls-v54 sort-controls-v55" onSubmit={onSubmit}>
+    <div className="sort-controls-v56">
       <label>
         <span>{t.sort}</span>
-        <select name="sort" defaultValue={searchParams.get("sort") || "auctionDateAsc"}>
-          {SORT_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>{localizeSort(option, locale)}</option>
-          ))}
+        <select
+          value={searchParams.get("sort") || "auctionDateAsc"}
+          onChange={(event) => updateParam("sort", event.target.value)}
+        >
+          <option value="auctionDateAsc">{t.auctionDateAsc}</option>
+          <option value="auctionDateDesc">{t.auctionDateDesc}</option>
+          <option value="priceAsc">{t.priceAsc}</option>
+          <option value="priceDesc">{t.priceDesc}</option>
         </select>
       </label>
 
       <label>
         <span>{t.perPage}</span>
-        <select name="perPage" defaultValue={searchParams.get("perPage") || "12"}>
-          {pageSizeOptions.map((value) => (
-            <option key={value} value={value}>{value} {t.perPageSuffix}</option>
-          ))}
+        <select
+          value={searchParams.get("perPage") || "12"}
+          onChange={(event) => updateParam("perPage", event.target.value)}
+        >
+          <option value="12">{t[12]}</option>
+          <option value="24">{t[24]}</option>
+          <option value="48">{t[48]}</option>
+          <option value="96">{t[96]}</option>
         </select>
       </label>
-
-      <button type="submit" className="btn btn-soft">{t.apply}</button>
-    </form>
+    </div>
   );
 }
