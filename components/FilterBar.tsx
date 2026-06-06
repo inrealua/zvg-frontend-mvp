@@ -31,9 +31,6 @@ const labels = {
     selected: "ausgewählt",
     notSet: "nicht gesetzt",
     any: "Beliebig",
-    title: "Suche",
-    subtitle: "Filtern Sie Objekte nach Region, Preis, Fläche und Auktion.",
-    reset: "Zurücksetzen",
     search: "Suche",
     searchPlaceholder: "Ort, PLZ, Adresse, Aktenzeichen, Gericht",
     city: "Ort",
@@ -68,9 +65,6 @@ const labels = {
     selected: "выбрано",
     notSet: "не задано",
     any: "Любая",
-    title: "Поиск",
-    subtitle: "Фильтруйте объекты по региону, цене, площади и дате торгов.",
-    reset: "Сбросить",
     search: "Поиск",
     searchPlaceholder: "Город, индекс, адрес, номер дела, суд",
     city: "Город",
@@ -105,9 +99,6 @@ const labels = {
     selected: "selected",
     notSet: "not set",
     any: "Any",
-    title: "Search",
-    subtitle: "Filter properties by region, price, area and auction date.",
-    reset: "Reset",
     search: "Search",
     searchPlaceholder: "City, ZIP, address, case number, court",
     city: "City",
@@ -281,15 +272,15 @@ function MultiSelectDropdown({
   }
 
   return (
-    <details className="multi-filter-v56">
+    <details className="multi-filter-v57">
       <summary>
         <span>{title}</span>
         <b>{summaryLabel(values, emptyLabel, locale)}</b>
       </summary>
 
-      <div className="multi-filter-panel-v56">
+      <div className="multi-filter-panel-v57">
         {realOptions.map((option) => (
-          <label key={option.value} className={selectedSet.has(option.value) ? "multi-option-v56 is-selected" : "multi-option-v56"}>
+          <label key={option.value} className={selectedSet.has(option.value) ? "multi-option-v57 is-selected" : "multi-option-v57"}>
             <input
               name={name}
               type="checkbox"
@@ -305,15 +296,7 @@ function MultiSelectDropdown({
   );
 }
 
-function StateMultiSelect({
-  states,
-  selected,
-  locale,
-}: {
-  states: string[];
-  selected: string[];
-  locale: Locale;
-}) {
+function StateMultiSelect({ states, selected, locale }: { states: string[]; selected: string[]; locale: Locale }) {
   const [values, setValues] = useState<string[]>(selected);
   const selectedSet = useMemo(() => new Set(values), [values]);
 
@@ -322,15 +305,15 @@ function StateMultiSelect({
   }
 
   return (
-    <details className="multi-filter-v56">
+    <details className="multi-filter-v57">
       <summary>
         <span>{labels[locale].state}</span>
         <b>{summaryLabel(values, labels[locale].allStates, locale)}</b>
       </summary>
 
-      <div className="multi-filter-panel-v56">
+      <div className="multi-filter-panel-v57">
         {states.map((state) => (
-          <label key={state} className={selectedSet.has(state) ? "multi-option-v56 is-selected" : "multi-option-v56"}>
+          <label key={state} className={selectedSet.has(state) ? "multi-option-v57 is-selected" : "multi-option-v57"}>
             <input
               name="state"
               type="checkbox"
@@ -346,15 +329,7 @@ function StateMultiSelect({
   );
 }
 
-function CityMultiSelect({
-  cities,
-  selected,
-  locale,
-}: {
-  cities: string[];
-  selected: string[];
-  locale: Locale;
-}) {
+function CityMultiSelect({ cities, selected, locale }: { cities: string[]; selected: string[]; locale: Locale }) {
   const [values, setValues] = useState<string[]>(selected);
   const selectedSet = useMemo(() => new Set(values), [values]);
 
@@ -363,15 +338,15 @@ function CityMultiSelect({
   }
 
   return (
-    <details className="multi-filter-v56">
+    <details className="multi-filter-v57">
       <summary>
         <span>{labels[locale].city}</span>
         <b>{values.length === 0 ? labels[locale].allCities : values.length === 1 ? values[0] : `${values.length} ${labels[locale].selected}`}</b>
       </summary>
 
-      <div className="multi-filter-panel-v56 multi-filter-panel-scroll-v56">
+      <div className="multi-filter-panel-v57 multi-filter-panel-scroll-v57">
         {cities.map((city) => (
-          <label key={city} className={selectedSet.has(city) ? "multi-option-v56 is-selected" : "multi-option-v56"}>
+          <label key={city} className={selectedSet.has(city) ? "multi-option-v57 is-selected" : "multi-option-v57"}>
             <input
               name="city"
               type="checkbox"
@@ -400,7 +375,7 @@ function RangeTrack({
 }) {
   return (
     <div
-      className={single ? "range-track-v56 range-track-single-v56" : "range-track-v56"}
+      className={single ? "range-track-v57 range-track-single-v57" : "range-track-v57"}
       style={{
         ["--range-start" as string]: `${start}%`,
         ["--range-end" as string]: `${end}%`,
@@ -445,8 +420,8 @@ function DualRange({
   const display = isDefault ? labels[locale].any : `${formatNumber(safeMin)}${suffix} — ${formatNumber(safeMax)}${suffix}`;
 
   return (
-    <div className="range-filter-v56">
-      <div className="range-title-v56">
+    <div className="range-filter-v57">
+      <div className="range-title-v57">
         <span>{label}</span>
         <b>{display}</b>
       </div>
@@ -506,8 +481,8 @@ function SingleRange({
   const display = value > 0 ? `${formatNumber(value)}${suffix}` : labels[locale].noRadius;
 
   return (
-    <div className="range-filter-v56">
-      <div className="range-title-v56">
+    <div className="range-filter-v57">
+      <div className="range-title-v57">
         <span>{label}</span>
         <b>0–{formatNumber(max)}{suffix}</b>
       </div>
@@ -557,32 +532,20 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const query = buildNextParams(event.currentTarget).toString();
-    router.push(query ? `${pathname}?${query}` : pathname);
+    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }
 
   function clearFilters() {
-    router.push(pathname);
+    router.push(pathname, { scroll: false });
   }
 
   return (
     <form
       key={searchParams.toString()}
-      className={compact ? "filters search-filter-v56 filters-compact" : "filters search-filter-v56"}
+      className={compact ? "filters search-filter-v57 filters-compact" : "filters search-filter-v57"}
       onSubmit={onSubmit}
     >
-      <div className="search-filter-head-v56">
-        <div>
-          <h2>{t.title}</h2>
-          <p>{t.subtitle}</p>
-        </div>
-
-        <div className="search-filter-actions-v56">
-          <button type="submit" className="btn btn-primary">{t.submit}</button>
-          <button type="button" onClick={clearFilters} className="btn btn-ghost">{t.reset}</button>
-        </div>
-      </div>
-
-      <div className="search-filter-grid-v56">
+      <div className="search-filter-grid-v57">
         <div className="field span-6">
           <label htmlFor="q">{t.search}</label>
           <input id="q" name="q" placeholder={t.searchPlaceholder} defaultValue={getInitialValue(searchParams, "q")} />
@@ -598,6 +561,11 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         </div>
 
         <SingleRange label={t.radius} name="radiusKm" max={RADIUS_MAX} step={10} defaultValue={getInitialValue(searchParams, "radiusKm")} suffix=" km" locale={locale} />
+
+        <div className="filter-action-cell-v57">
+          <button type="submit" className="btn btn-primary">{t.submit}</button>
+          <button type="button" onClick={clearFilters} className="btn btn-ghost">{t.resetFilters}</button>
+        </div>
 
         <MultiSelectDropdown title={t.propertyType} name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} emptyLabel={t.allTypes} locale={locale} />
 
@@ -670,11 +638,6 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
             })}
           </select>
         </div>
-      </div>
-
-      <div className="search-filter-bottom-v56">
-        <button type="submit" className="btn btn-primary">{t.submit}</button>
-        <button type="button" onClick={clearFilters} className="btn">{t.resetFilters}</button>
       </div>
     </form>
   );

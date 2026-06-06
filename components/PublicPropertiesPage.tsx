@@ -241,6 +241,7 @@ export async function PublicPropertiesPage({
   params: SearchParamRecord;
   mode: PageMode;
 }) {
+  const allowedPageSizesV57 = [12, 24, 48, 96];
   const { locale } = await getI18n();
   const siteText = getSiteText(locale);
   const t = localText[locale];

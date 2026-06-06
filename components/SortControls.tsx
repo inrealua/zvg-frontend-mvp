@@ -89,11 +89,13 @@ export function SortControls() {
     }
 
     next.delete("page");
-    router.push(`${pathname}?${next.toString()}`);
+
+    const query = next.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   }
 
   return (
-    <div className="sort-controls-v56">
+    <div className="sort-controls-v57" id="results-sort">
       <label>
         <span>{t.sort}</span>
         <select
