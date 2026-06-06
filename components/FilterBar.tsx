@@ -206,27 +206,93 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
   return (
     <form key={searchParams.toString()} className={compact ? "filters search-filter-v60 filters-compact" : "filters search-filter-v60"} onSubmit={onSubmit}>
       <div className="search-filter-grid-v60">
-        <div className="field span-6"><label htmlFor="q">{t.search}</label><input id="q" name="q" placeholder={t.searchPlaceholder} defaultValue={getInitialValue(searchParams, "q")} /></div>
+        {/* Row 1: normal search fields */}
+        <div className="field span-2">
+          <label htmlFor="q">{t.search}</label>
+          <input id="q" name="q" placeholder={t.searchPlaceholder} defaultValue={getInitialValue(searchParams, "q")} />
+        </div>
+
+        <div className="field span-1">
+          <label htmlFor="postalCode">{t.postalCode}</label>
+          <input id="postalCode" name="postalCode" placeholder={t.postalPlaceholder} defaultValue={getInitialValue(searchParams, "postalCode")} />
+        </div>
+
+        <div className="field span-1">
+          <label htmlFor="court">{t.court}</label>
+          <select id="court" name="court" defaultValue={getInitialValue(searchParams, "court")}>
+            <option value="">{t.allCourts}</option>
+            {courts.map((court) => <option key={court} value={court}>{court}</option>)}
+          </select>
+        </div>
+
+        {/* Row 2: all multiselect fields */}
         <StateMultiSelect states={states} selected={getInitialValues(searchParams, "state")} locale={locale} />
         <CityMultiSelect cities={cities} selected={getInitialValues(searchParams, "city")} locale={locale} />
-
-        <div className="field span-3"><label htmlFor="postalCode">{t.postalCode}</label><input id="postalCode" name="postalCode" placeholder={t.postalPlaceholder} defaultValue={getInitialValue(searchParams, "postalCode")} /></div>
-        <div className="field span-3"><label htmlFor="court">{t.court}</label><select id="court" name="court" defaultValue={getInitialValue(searchParams, "court")}><option value="">{t.allCourts}</option>{courts.map((court) => <option key={court} value={court}>{court}</option>)}</select></div>
         <MultiSelectDropdown title={t.propertyType} name="typeGroup" options={PROPERTY_GROUP_OPTIONS} selected={getInitialValues(searchParams, "typeGroup")} emptyLabel={t.allTypes} locale={locale} />
         <MultiSelectDropdown title={t.usage} name="occupancy" options={OCCUPANCY_OPTIONS} selected={getInitialValues(searchParams, "occupancy")} emptyLabel={t.anyUsage} locale={locale} />
 
+        {/* Row 3: sliders */}
         <SingleRange label={t.radius} name="radiusKm" max={RADIUS_MAX} step={10} defaultValue={getInitialValue(searchParams, "radiusKm")} suffix=" km" locale={locale} />
         <DualRange label={t.marketValue} minName="minPrice" maxName="maxPrice" max={PRICE_MAX} step={5000} minDefault={getInitialValue(searchParams, "minPrice")} maxDefault={getInitialValue(searchParams, "maxPrice")} suffix=" €" locale={locale} />
         <DualRange label={t.livingArea} minName="minLivingArea" maxName="maxLivingArea" max={AREA_MAX} step={5} minDefault={getInitialValue(searchParams, "minLivingArea")} maxDefault={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" locale={locale} />
         <DualRange label={t.plotArea} minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" locale={locale} />
 
-        <div className="field span-3"><label htmlFor="dateFrom">{t.dateFrom}</label><input id="dateFrom" name="dateFrom" type="date" defaultValue={getInitialValue(searchParams, "dateFrom")} /></div>
-        <div className="field span-3"><label htmlFor="dateTo">{t.dateTo}</label><input id="dateTo" name="dateTo" type="date" defaultValue={getInitialValue(searchParams, "dateTo")} /></div>
-        <div className="field span-3"><label htmlFor="status">{t.status}</label><select id="status" name="status" defaultValue={getInitialValue(searchParams, "status")}>{STATUS_OPTIONS.map((option) => { const localized = localizeOption(option, locale); const label = localized.value ? localized.label : t.allCurrent; return <option key={localized.value} value={localized.value}>{label}</option>; })}</select></div>
-        <div className="field span-3"><label htmlFor="denkmalschutz">{t.heritage}</label><select id="denkmalschutz" name="denkmalschutz" defaultValue={getInitialValue(searchParams, "denkmalschutz")}>{BOOLEAN_OPTIONS.map((option) => { const localized = localizeOption(option, locale); const label = localized.value ? localized.label : t.any; return <option key={localized.value} value={localized.value}>{label}</option>; })}</select></div>
+        {/* Row 4: date/status filters */}
+        <div className="field span-1">
+          <label htmlFor="dateFrom">{t.dateFrom}</label>
+          <input id="dateFrom" name="dateFrom" type="date" defaultValue={getInitialValue(searchParams, "dateFrom")} />
+        </div>
 
-        <div className="field span-3"><label htmlFor="wertgrenzen">{t.valueLimits}</label><select id="wertgrenzen" name="wertgrenzen" defaultValue={getInitialValue(searchParams, "wertgrenzen")}>{WERTGRENZEN_OPTIONS.map((option) => { const localized = localizeOption(option, locale); const label = localized.value ? localized.label : t.any; return <option key={localized.value} value={localized.value}>{label}</option>; })}</select></div>
-        <div className="field span-3"><label htmlFor="auctionAttempt">{t.attempt}</label><select id="auctionAttempt" name="auctionAttempt" defaultValue={getInitialValue(searchParams, "auctionAttempt")}>{AUCTION_ATTEMPT_OPTIONS.map((option) => { const localized = localizeOption(option, locale); const label = localized.value ? localized.label : t.any; return <option key={localized.value} value={localized.value}>{label}</option>; })}</select></div>
+        <div className="field span-1">
+          <label htmlFor="dateTo">{t.dateTo}</label>
+          <input id="dateTo" name="dateTo" type="date" defaultValue={getInitialValue(searchParams, "dateTo")} />
+        </div>
+
+        <div className="field span-1">
+          <label htmlFor="status">{t.status}</label>
+          <select id="status" name="status" defaultValue={getInitialValue(searchParams, "status")}>
+            {STATUS_OPTIONS.map((option) => {
+              const localized = localizeOption(option, locale);
+              const label = localized.value ? localized.label : t.allCurrent;
+              return <option key={localized.value} value={localized.value}>{label}</option>;
+            })}
+          </select>
+        </div>
+
+        <div className="field span-1">
+          <label htmlFor="denkmalschutz">{t.heritage}</label>
+          <select id="denkmalschutz" name="denkmalschutz" defaultValue={getInitialValue(searchParams, "denkmalschutz")}>
+            {BOOLEAN_OPTIONS.map((option) => {
+              const localized = localizeOption(option, locale);
+              const label = localized.value ? localized.label : t.any;
+              return <option key={localized.value} value={localized.value}>{label}</option>;
+            })}
+          </select>
+        </div>
+
+        {/* Row 5: value limits / attempt / actions */}
+        <div className="field span-1">
+          <label htmlFor="wertgrenzen">{t.valueLimits}</label>
+          <select id="wertgrenzen" name="wertgrenzen" defaultValue={getInitialValue(searchParams, "wertgrenzen")}>
+            {WERTGRENZEN_OPTIONS.map((option) => {
+              const localized = localizeOption(option, locale);
+              const label = localized.value ? localized.label : t.any;
+              return <option key={localized.value} value={localized.value}>{label}</option>;
+            })}
+          </select>
+        </div>
+
+        <div className="field span-1">
+          <label htmlFor="auctionAttempt">{t.attempt}</label>
+          <select id="auctionAttempt" name="auctionAttempt" defaultValue={getInitialValue(searchParams, "auctionAttempt")}>
+            {AUCTION_ATTEMPT_OPTIONS.map((option) => {
+              const localized = localizeOption(option, locale);
+              const label = localized.value ? localized.label : t.any;
+              return <option key={localized.value} value={localized.value}>{label}</option>;
+            })}
+          </select>
+        </div>
+
         <button type="submit" className="btn btn-primary filter-action-button-v60">{t.submit}</button>
         <button type="button" onClick={clearFilters} className="btn btn-ghost filter-action-button-v60">{t.resetFilters}</button>
       </div>
