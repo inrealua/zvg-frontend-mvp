@@ -9709,3 +9709,397 @@ input[type="date"] {
     margin-top: 8px !important;
   }
 }
+
+
+/* Stage 64 restore light filter and align columns */
+
+/* Main filter shell */
+.search-filter-v60,
+.search-filter-v59,
+.search-filter-v58 {
+  padding: 18px !important;
+  border: 1px solid rgba(47, 79, 62, 0.16) !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 18px 44px rgba(17, 36, 27, 0.06) !important;
+}
+
+/* Stable 4-column grid, but not ugly table blocks */
+.search-filter-grid-v60,
+.search-filter-grid-v59,
+.search-filter-grid-v58 {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  align-items: start !important;
+  grid-auto-rows: auto !important;
+}
+
+.search-filter-v60 .span-6,
+.search-filter-v59 .span-6,
+.search-filter-v58 .span-6 {
+  grid-column: span 2 !important;
+}
+
+/* Regular fields: like the old light version */
+.search-filter-v60 .field,
+.search-filter-v59 .field,
+.search-filter-v58 .field {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  min-height: 54px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+}
+
+.search-filter-v60 .field > label,
+.search-filter-v59 .field > label,
+.search-filter-v58 .field > label {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  color: #5a6b84 !important;
+  text-align: left !important;
+}
+
+.search-filter-v60 .field > input,
+.search-filter-v60 .field > select,
+.search-filter-v59 .field > input,
+.search-filter-v59 .field > select,
+.search-filter-v58 .field > input,
+.search-filter-v58 .field > select {
+  width: 100% !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  margin: 0 !important;
+  padding: 0 14px !important;
+  border: 1px solid rgba(47, 79, 62, 0.18) !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  color: #0d3327 !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+}
+
+.search-filter-v60 .field > input::placeholder,
+.search-filter-v59 .field > input::placeholder,
+.search-filter-v58 .field > input::placeholder {
+  color: #6d7890 !important;
+  font-weight: 400 !important;
+}
+
+/* Native calendar restored but visually light */
+.search-filter-v60 .field > input[type="date"],
+.search-filter-v59 .field > input[type="date"],
+.search-filter-v58 .field > input[type="date"] {
+  color-scheme: light !important;
+}
+
+/* Multiselect: same outer height and baseline as normal fields */
+.search-filter-v60 .multi-filter-v60,
+.search-filter-v59 .multi-filter-v59,
+.search-filter-v58 .multi-filter-v58 {
+  display: block !important;
+  min-height: 54px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-self: start !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
+
+.multi-filter-v60 summary,
+.multi-filter-v59 summary,
+.multi-filter-v58 summary {
+  min-height: 64px !important;
+  height: 64px !important;
+  margin: 0 !important;
+  padding: 8px 12px 9px !important;
+  border: 1px solid rgba(47, 79, 62, 0.18) !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
+  list-style: none !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+.multi-filter-v60 summary::-webkit-details-marker,
+.multi-filter-v59 summary::-webkit-details-marker,
+.multi-filter-v58 summary::-webkit-details-marker {
+  display: none !important;
+}
+
+.multi-filter-v60 summary span,
+.multi-filter-v59 summary span,
+.multi-filter-v58 summary span {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  color: #5a6b84 !important;
+  text-align: left !important;
+}
+
+.multi-filter-v60 summary b,
+.multi-filter-v59 summary b,
+.multi-filter-v58 summary b {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #0d3327 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  text-align: left !important;
+}
+
+/* Range cells: light, slightly taller, with separate scale row */
+.search-filter-v60 .range-filter-v60,
+.search-filter-v59 .range-filter-v59,
+.search-filter-v58 .range-filter-v58 {
+  min-height: 78px !important;
+  height: 78px !important;
+  margin: 0 !important;
+  padding: 10px 14px 8px !important;
+  border: 1px solid rgba(47, 79, 62, 0.16) !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+  align-self: start !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+
+.range-title-v60,
+.range-title-v59,
+.range-title-v58 {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: baseline !important;
+  gap: 8px !important;
+  height: 17px !important;
+  min-height: 17px !important;
+  margin: 0 0 7px !important;
+  padding: 0 !important;
+  line-height: 1.15 !important;
+}
+
+.range-title-v60 span,
+.range-title-v59 span,
+.range-title-v58 span {
+  font-size: 12px !important;
+  line-height: 1.15 !important;
+  font-weight: 800 !important;
+  color: #5a6b84 !important;
+  text-align: left !important;
+}
+
+.range-title-v60 b,
+.range-title-v59 b,
+.range-title-v58 b {
+  font-size: 14px !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  color: #0d3327 !important;
+  white-space: nowrap !important;
+}
+
+/* Slider row */
+.range-track-v60,
+.range-track-v59,
+.range-track-v58 {
+  position: relative !important;
+  height: 26px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+}
+
+.range-track-v60::before,
+.range-track-v59::before,
+.range-track-v58::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 12px !important;
+  right: 12px !important;
+  top: 11px !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: rgba(47, 79, 62, 0.14) !important;
+}
+
+.range-track-v60::after,
+.range-track-v59::after,
+.range-track-v58::after {
+  content: "" !important;
+  position: absolute !important;
+  left: calc(12px + (100% - 24px) * var(--range-start, 0) / 100) !important;
+  right: calc(12px + (100% - 24px) * (100 - var(--range-end, 100)) / 100) !important;
+  top: 11px !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: #2f604f !important;
+}
+
+.range-track-single-v60::after,
+.range-track-single-v59::after,
+.range-track-single-v58::after {
+  left: 12px !important;
+  right: calc(12px + (100% - 24px) * (100 - var(--range-end, 0)) / 100) !important;
+}
+
+.range-track-v60 input,
+.range-track-v59 input,
+.range-track-v58 input {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 26px !important;
+  margin: 0 !important;
+  appearance: none !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+  border: 0 !important;
+}
+
+.range-track-v60 input::-webkit-slider-runnable-track,
+.range-track-v59 input::-webkit-slider-runnable-track,
+.range-track-v58 input::-webkit-slider-runnable-track {
+  height: 26px !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.range-track-v60 input::-webkit-slider-thumb,
+.range-track-v59 input::-webkit-slider-thumb,
+.range-track-v58 input::-webkit-slider-thumb {
+  appearance: none !important;
+  pointer-events: auto !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin-top: 2px !important;
+  border-radius: 999px !important;
+  border: 4px solid #ffffff !important;
+  background: #2f604f !important;
+  box-shadow: 0 3px 10px rgba(17, 36, 27, 0.25) !important;
+  cursor: grab !important;
+}
+
+.range-track-v60 input::-moz-range-track,
+.range-track-v59 input::-moz-range-track,
+.range-track-v58 input::-moz-range-track {
+  height: 26px !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.range-track-v60 input::-moz-range-thumb,
+.range-track-v59 input::-moz-range-thumb,
+.range-track-v58 input::-moz-range-thumb {
+  pointer-events: auto !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 999px !important;
+  border: 4px solid #ffffff !important;
+  background: #2f604f !important;
+  box-shadow: 0 3px 10px rgba(17, 36, 27, 0.25) !important;
+  cursor: grab !important;
+}
+
+/* Scale row below slider, not under the thumb */
+.range-scale {
+  height: 14px !important;
+  margin-top: 1px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #5a6b84 !important;
+  overflow: hidden !important;
+}
+
+/* Buttons: back to search-cell height, not huge */
+.filter-action-button-v60,
+.filter-action-button-v59,
+.filter-action-button-v58 {
+  height: 64px !important;
+  min-height: 64px !important;
+  margin: 0 !important;
+  padding: 0 18px !important;
+  border-radius: 14px !important;
+  align-self: start !important;
+  box-sizing: border-box !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+}
+
+/* Dropdown panels overlay */
+.multi-filter-panel-v60,
+.multi-filter-panel-v59,
+.multi-filter-panel-v58 {
+  position: absolute !important;
+  z-index: 100 !important;
+}
+
+/* Fix visual alignment of the last 2 columns by removing inherited top offsets */
+.search-filter-grid-v60 > *,
+.search-filter-grid-v59 > *,
+.search-filter-grid-v58 > * {
+  transform: none !important;
+}
+
+@media (max-width: 1100px) {
+  .search-filter-grid-v60,
+  .search-filter-grid-v59,
+  .search-filter-grid-v58 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .search-filter-v60 .span-6,
+  .search-filter-v59 .span-6,
+  .search-filter-v58 .span-6 {
+    grid-column: span 2 !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .search-filter-grid-v60,
+  .search-filter-grid-v59,
+  .search-filter-grid-v58 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .search-filter-v60 .span-6,
+  .search-filter-v59 .span-6,
+  .search-filter-v58 .span-6 {
+    grid-column: span 1 !important;
+  }
+
+  .multi-filter-panel-v60,
+  .multi-filter-panel-v59,
+  .multi-filter-panel-v58 {
+    position: static !important;
+    margin-top: 8px !important;
+  }
+}
