@@ -20,7 +20,7 @@ export async function Header() {
 
         <nav className="main-nav design-nav" aria-label={t.nav.aria}>
           <Link href="/">{t.nav.home}</Link>
-          <Link href="/map">{t.nav.advancedSearch}</Link>
+          
           <Link href="/archive">{t.nav.archive}</Link>
 
           {currentUser ? (
