@@ -5,13 +5,12 @@ import { FilterBar } from "@/components/FilterBar";
 import { Pagination } from "@/components/Pagination";
 import { PropertyCard } from "@/components/PropertyCard";
 import { PropertyMap } from "@/components/PropertyMap";
-import { QuickSearchBar } from "@/components/QuickSearchBar";
 import { SaveSearchButton } from "@/components/SaveSearchButton";
+import { SortControls } from "@/components/SortControls";
 import { formatEuro, formatNumber } from "@/lib/format";
 import { distanceKm, findKnownLocation, type GeoPoint } from "@/lib/geo";
 import { resolvePostalCodeCenter } from "@/lib/postal-codes";
 import { getI18n } from "@/lib/i18n/server";
-import { getPublicUi } from "@/lib/i18n/property-labels";
 import { getSiteText } from "@/lib/i18n/site-text";
 import { pickPropertyTranslation, translationInclude } from "@/lib/i18n/property-translations";
 import { getPaginationRange, getPaginationState } from "@/lib/pagination";
@@ -244,15 +243,15 @@ export async function PublicPropertiesPage({
 }) {
   const { locale } = await getI18n();
   const siteText = getSiteText(locale);
-  const publicUi = getPublicUi(locale);
   const t = localText[locale];
 
-  const baseWhere = buildPropertyWhere(params);
+  const radiusFilter = await resolveRadiusFilter(params);
+  const paramsForWhere = radiusFilter ? { ...params, postalCode: undefined } : params;
+  const baseWhere = buildPropertyWhere(paramsForWhere);
   const where = withArchiveMode(baseWhere, mode);
   const orderBy = buildPropertyOrderBy(params);
   const activeChips = buildActiveFilterChips(params);
   const currentUser = await getCurrentUser();
-  const radiusFilter = await resolveRadiusFilter(params);
   const paginationState = getPaginationState(params);
   const polygonPoints = parsePolygonParam(params.poly);
   const copy = pageCopy(mode, siteText, locale);
@@ -313,8 +312,7 @@ export async function PublicPropertiesPage({
   const paginatedProperties = propertiesWithPolygon
     .slice(pagination.startIndex, pagination.endIndex)
     .map((item) => item.property);
-  const topHomeProperties = propertiesWithPolygon.slice(0, 12).map((item) => item.property);
-  const properties = mode === "objects" ? topHomeProperties : paginatedProperties;
+  const properties = paginatedProperties;
   const allFilteredProperties = propertiesWithPolygon.map((item) => item.property);
   const marketStats = calculateMarketStats(allFilteredProperties);
 
@@ -402,11 +400,10 @@ export async function PublicPropertiesPage({
           <strong>{copy.listTitle}</strong>
           <span>{copy.listText}</span>
         </div>
-        {mode === "objects" ? (
-          <a className="text-link" href="/map">{publicUi.advancedSearch || siteText.list.advancedLink}</a>
-        ) : (
-          <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} />
-        )}
+        <div className="results-actions-v54">
+          <SortControls />
+          {mode !== "objects" ? <SaveSearchButton filtersUrl={filtersUrl} summary={searchSummary} /> : null}
+        </div>
       </div>
 
       {properties.length === 0 ? (
@@ -423,16 +420,14 @@ export async function PublicPropertiesPage({
               />
             ))}
           </div>
-          {mode !== "objects" ? (
-            <Pagination
-              params={params}
-              page={pagination.page}
-              totalPages={pagination.totalPages}
-              totalItems={totalCount}
-              fromItem={pagination.fromItem}
-              toItem={pagination.toItem}
-            />
-          ) : null}
+          <Pagination
+            params={params}
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            totalItems={totalCount}
+            fromItem={pagination.fromItem}
+            toItem={pagination.toItem}
+          />
         </>
       )}
     </div>
@@ -481,41 +476,48 @@ export async function PublicPropertiesPage({
   }
 
   return (
-    <main>
-      <section className="hero">
-        <div className="container hero-grid">
+    <main className="zvg-search-page-v54">
+      <section className="hero search-hero-v54">
+        <div className="container search-hero-inner-v54">
           <div>
             <p className="hero-kicker">{copy.kicker}</p>
             <h1>{copy.title}</h1>
             <p>{copy.text}</p>
+            <div className="hero-trust-row">
+              <span>{siteText.hero.checkedSources}</span>
+              <span>{siteText.hero.dailyUpdated}</span>
+              <span>{siteText.hero.nationwide}</span>
+            </div>
           </div>
-          <div className="hero-stats">
+          <div className="hero-stats hero-stats-v54">
             <div><span>{formatNumber(allCount)}</span><b>{siteText.hero.objectsInDatabase}</b></div>
-            <div><span>16</span><b>{siteText.hero.federalStates}</b></div>
-            <div><span>100%</span><b>{siteText.hero.freeSearch}</b></div>
+            <div><span>{formatNumber(totalCount)}</span><b>{siteText.hero.objectsOnMap}</b></div>
+            <div><span>{formatEuro(marketStats.avg)}</span><b>{siteText.hero.averageMarketValue}</b></div>
           </div>
         </div>
       </section>
 
-      <section className="container page-section home-search-section">
-        <QuickSearchBar states={states} />
+      <section className="container page-section unified-search-page-v54">
+        <div className="horizontal-filter-shell-v54">
+          {filterBlock}
+        </div>
+
         {activeFilterBlock}
         {notices}
 
-        <div className="home-map-block">
+        <div className="search-map-section-v54">
           <div className="section-heading-row">
             <div>
               <strong>{siteText.map.sectionTitle}</strong>
               <span>{siteText.map.sectionText}</span>
             </div>
-            <a className="btn btn-soft" href="/map">{siteText.map.openLargeMap}</a>
           </div>
-          {activeFiltersMapToolbar}
           <PropertyMap properties={mapProperties} variant="wide" />
         </div>
 
-        <div className="home-top-objects">
-          {summary}
+        {summary}
+
+        <div className="search-results-grid-section-v54">
           {list}
         </div>
       </section>
