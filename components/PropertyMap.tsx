@@ -11,7 +11,7 @@ function stage61ReadLocale(): Stage61Locale {
 const stage61MapLocaleText = {
   de: {
     houses: "Häuser",
-    apartments: "Wohnungen",
+    apartments: "${stage75PropertyTypeLabel(property?.typeGroup || property?.propertyType || property?.type, stage75ReadClientLocale())}",
     land: "Grundstücke",
     commercial: "Gewerbe",
     landForest: "Land / Wald",
@@ -72,6 +72,213 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formatDate, formatEuro, translateGroup } from "@/lib/format";
 import { escapeHtml, loadLeaflet, type LatLngTuple, type LeafletLayer, type LeafletMapInstance } from "@/lib/leaflet-loader";
 
+
+type Stage75Locale = "de" | "ru" | "en";
+
+const stage75PopupText = {
+  de: {
+    details: "${stage75PopupT(stage75ReadClientLocale()).details}",
+    appointment: "Termin",
+    marketValue: "${stage75PopupT(stage75ReadClientLocale()).marketValue}",
+    active: "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}",
+    cancelled: "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}",
+    archive: "Archiv",
+    unknown: "Unbekannt",
+    propertyTypes: {
+      residential: "${stage75PropertyTypeLabel(property?.typeGroup || property?.propertyType || property?.type, stage75ReadClientLocale())}",
+      apartments: "${stage75PropertyTypeLabel(property?.typeGroup || property?.propertyType || property?.type, stage75ReadClientLocale())}",
+      commercial: "Gewerbe",
+      land: "Grundstücke",
+      landForest: "Land / Wald",
+      garages: "Garagen / Parken",
+      other: "Sonstige",
+    },
+  },
+  ru: {
+    details: "Подробнее",
+    appointment: "Термин",
+    marketValue: "Оценочная стоимость",
+    active: "Активно",
+    cancelled: "Термин отменён",
+    archive: "Архив",
+    unknown: "Неизвестно",
+    propertyTypes: {
+      residential: "Жилые дома",
+      apartments: "Квартиры",
+      commercial: "Коммерция",
+      land: "Участки",
+      landForest: "Земля / лес",
+      garages: "Гаражи / парковки",
+      other: "Прочее",
+    },
+  },
+  en: {
+    details: "View details",
+    appointment: "Auction date",
+    marketValue: "Market value",
+    active: "Active",
+    cancelled: "Auction cancelled",
+    archive: "Archive",
+    unknown: "Unknown",
+    propertyTypes: {
+      residential: "Residential houses",
+      apartments: "Apartments",
+      commercial: "Commercial",
+      land: "Plots",
+      landForest: "Land / forest",
+      garages: "Garages / parking",
+      other: "Other",
+    },
+  },
+} as const;
+
+function stage75Locale(input?: string): Stage75Locale {
+  return input === "ru" || input === "en" || input === "de" ? input : "de";
+}
+
+function stage75ReadClientLocale(): Stage75Locale {
+  if (typeof document === "undefined") return "de";
+  const pathLocale = window.location.pathname.split("/").filter(Boolean)[0];
+  if (pathLocale === "ru" || pathLocale === "de" || pathLocale === "en") return pathLocale;
+  const cookie = document.cookie.match(/(?:^|;\s*)zvg_locale=(ru|de|en)(?:;|$)/);
+  return stage75Locale(cookie?.[1]);
+}
+
+function stage75PopupT(locale?: string) {
+  return stage75PopupText[stage75Locale(locale)];
+}
+
+function stage75Normalize(text: unknown) {
+  return String(text ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/ё/g, "е")
+    .replace(/[._\s/]+/g, "-");
+}
+
+function stage75PropertyTypeLabel(value: unknown, locale?: string) {
+  const t = stage75PopupT(stage75ReadClientLocale());
+  const key = stage75Normalize(value);
+
+  if (["wohnhauser", "wohnhäuser", "wohnhaus", "residential", "residential-houses", "houses", "hauser", "häuser", "жилые-дома", "жилой-дом"].includes(key)) return t.propertyTypes.residential;
+  if (["wohnungen", "wohnung", "apartment", "apartments", "квартиры", "квартира"].includes(key)) return t.propertyTypes.apartments;
+  if (["gewerbe", "commercial", "коммерция"].includes(key)) return t.propertyTypes.commercial;
+  if (["grundstucke", "grundstücke", "grundstuecke", "plots", "land", "участки", "участок"].includes(key)) return t.propertyTypes.land;
+  if (["land-wald", "land-forest", "земля-лес"].includes(key)) return t.propertyTypes.landForest;
+  if (["garagen-parken", "garagen", "parking", "garages", "гаражи-парковки"].includes(key)) return t.propertyTypes.garages;
+  if (["sonstige", "other", "прочее"].includes(key)) return t.propertyTypes.other;
+
+  return String(value || t.propertyTypes.other);
+}
+
+function stage75StatusLabel(value: unknown, locale?: string) {
+  const t = stage75PopupT(stage75ReadClientLocale());
+  const key = stage75Normalize(value);
+
+  if (["active", "aktiv", "aktuell", "активно"].includes(key)) return t.active;
+  if (["cancelled", "aufgehoben", "termin-aufgehoben", "отменено", "термин-отменен", "термин-отменён"].includes(key)) return t.cancelled;
+  if (["archive", "archiv", "archived", "архив"].includes(key)) return t.archive;
+
+  return t.unknown;
+}
+
+function stage75BestTitle(property: any, locale?: string) {
+  const loc = stage75Locale(locale);
+
+  if (property?.title) return property.title;
+  if (loc === "ru" && property?.titleRu) return property.titleRu;
+  if (loc === "de" && property?.titleDe) return property.titleDe;
+  if (loc === "en" && property?.titleEn) return property.titleEn;
+
+  return (
+    property?.headline ||
+    property?.address ||
+    property?.street ||
+    stage75PropertyTypeLabel(property?.typeGroup || property?.propertyType || property?.type, stage75ReadClientLocale())
+  );
+}
+
+function stage75ImageUrls(property: any) {
+  const raw = [
+    ...(Array.isArray(property?.images) ? property.images : []),
+    ...(Array.isArray(property?.photos) ? property.photos : []),
+    ...(Array.isArray(property?.propertyImages) ? property.propertyImages : []),
+    property?.imageUrl,
+    property?.mainImage,
+    property?.coverImage,
+    property?.photoUrl,
+  ];
+
+  const urls = raw
+    .map((item: any) => typeof item === "string" ? item : item?.url || item?.src || item?.imageUrl)
+    .filter(Boolean);
+
+  return Array.from(new Set(urls));
+}
+
+function stage75PopupGalleryHtml(property: any, fallback: string, alt: string) {
+  const urls = stage75ImageUrls(property);
+  if (fallback && !urls.includes(fallback)) urls.unshift(fallback);
+  const safeUrls = urls.length ? urls : [fallback].filter(Boolean);
+
+  if (!safeUrls.length) return "";
+
+  const encoded = escapeHtml(JSON.stringify(safeUrls));
+  const first = escapeHtml(safeUrls[0]);
+  const safeAlt = escapeHtml(alt);
+
+  const controls = safeUrls.length > 1
+    ? `<button type="button" class="popup-gallery-nav-v75 popup-gallery-prev-v75" data-popup-gallery-prev aria-label="Previous photo">‹</button>
+       <button type="button" class="popup-gallery-nav-v75 popup-gallery-next-v75" data-popup-gallery-next aria-label="Next photo">›</button>
+       <span class="popup-gallery-count-v75" data-popup-gallery-count>1/${safeUrls.length}</span>`
+    : "";
+
+  return `<div class="popup-gallery-v75" data-popup-gallery data-images="${encoded}" data-index="0">
+    <img src="${first}" alt="${safeAlt}" />
+    ${controls}
+  </div>`;
+}
+
+function stage75BindPopupGallery(root: ParentNode = document) {
+  const galleries = Array.from(root.querySelectorAll<HTMLElement>("[data-popup-gallery]"));
+
+  for (const gallery of galleries) {
+    if (gallery.dataset.bound === "1") continue;
+    gallery.dataset.bound = "1";
+
+    let urls: string[] = [];
+    try {
+      urls = JSON.parse(gallery.dataset.images || "[]");
+    } catch {
+      urls = [];
+    }
+
+    if (urls.length < 2) continue;
+
+    const img = gallery.querySelector<HTMLImageElement>("img");
+    const count = gallery.querySelector<HTMLElement>("[data-popup-gallery-count]");
+
+    function render(index: number) {
+      const safeIndex = (index + urls.length) % urls.length;
+      gallery.dataset.index = String(safeIndex);
+      if (img) img.src = urls[safeIndex];
+      if (count) count.textContent = `${safeIndex + 1}/${urls.length}`;
+    }
+
+    gallery.querySelector("[data-popup-gallery-prev]")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      render(Number(gallery.dataset.index || "0") - 1);
+    });
+
+    gallery.querySelector("[data-popup-gallery-next]")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      render(Number(gallery.dataset.index || "0") + 1);
+    });
+  }
+}
+
 export type MapProperty = {
   id: string;
   title: string;
@@ -107,7 +314,7 @@ function popupHtml(property: MapProperty): string {
     ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(property.title)}" />`
     : `<div class="osm-popup-placeholder">Kein Foto</div>`;
 
-  const statusLabel = property.status === "CANCELLED" ? "Termin aufgehoben" : "Aktuell";
+  const statusLabel = property.status === "CANCELLED" ? "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}" : "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}";
 
   return `
     <div class="osm-popup-card osm-popup-card-redesigned osm-popup-card-balanced">
@@ -121,9 +328,9 @@ function popupHtml(property: MapProperty): string {
         <span class="osm-popup-address">${escapeHtml(property.address || property.city)}</span>
         <div class="osm-popup-facts">
           <small>Termin<br><strong>${escapeHtml(formatDate(property.auctionDate))}</strong></small>
-          <small>Verkehrswert<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
+          <small>${stage75PopupT(stage75ReadClientLocale()).marketValue}<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
         </div>
-        <a href="/properties/${encodeURIComponent(property.id)}">Details ansehen</a>
+        <a href="/properties/${encodeURIComponent(property.id)}">${stage75PopupT(stage75ReadClientLocale()).details}</a>
       </div>
     </div>
   `;
@@ -258,6 +465,7 @@ export function PropertyMap({ properties, variant = "default" }: { properties: M
   }
 
   useEffect(() => {
+    const stage75GalleryTimer = window.setInterval(() => stage75BindPopupGallery(), 350);
     let cancelled = false;
 
     async function initMap() {
@@ -319,6 +527,7 @@ if (!mapElementRef.current) return;
     initMap();
 
     return () => {
+      window.clearInterval(stage75GalleryTimer);
       cancelled = true;
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();

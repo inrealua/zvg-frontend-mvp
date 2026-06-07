@@ -373,7 +373,8 @@ export async function PublicPropertiesPage({
       orderBy,
       take: 1000,
     }),
-    prisma.property.findMany({ select: { state: true }, distinct: ["state"], orderBy: { state: "asc" } }),
+    prisma.property.findMany({ 
+      select: { state: true }, distinct: ["state"], orderBy: { state: "asc" } }),
     prisma.property.findMany({ select: { court: true }, distinct: ["court"], orderBy: { court: "asc" } }),
     prisma.property.findMany({ select: { city: true }, distinct: ["city"], orderBy: { city: "asc" } }),
     prisma.property.count(),

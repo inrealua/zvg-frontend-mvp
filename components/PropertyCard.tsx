@@ -1,3 +1,4 @@
+import { MainCardGallery } from "@/components/MainCardGallery";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import {
@@ -87,7 +88,7 @@ export function PropertyCard({
         aria-label={`${ui.details}: ${translated.title}`}
       >
         {mainImage ? (
-          <img src={mainImage.url} alt={mainImage.alt ?? translated.title} />
+          <MainCardGallery images={(property as any).images || (property as any).photos || (property as any).propertyImages} fallbackSrc={mainImage.url} alt={(property as any).title || ""} />
         ) : (
           <div className="image-placeholder">{ui.noPhoto}</div>
         )}
