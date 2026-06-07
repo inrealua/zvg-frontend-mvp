@@ -3,25 +3,26 @@ type Stage73HeroLocale = "de" | "ru" | "en";
 
 const stage73HeroText: Record<Stage73HeroLocale, { kicker: string; title: string; subtitle: string }> = {
   de: {
-    kicker: "ZVG-DE.COM · ALLE GERICHTLICHEN AUKTIONEN AN EINEM ORT",
+    kicker: "ZVG-DE.COM · ALLE GERICHTLICHEN VERSTEIGERUNGEN AN EINEM ORT",
     title: "Professionelles Werkzeug",
-    subtitle: "für die Immobiliensuche in Deutschland",
+    subtitle: "für die Suche nach Zwangsversteigerungen in Deutschland",
   },
   ru: {
     kicker: "ZVG-DE.COM · ВСЕ СУДЕБНЫЕ АУКЦИОНЫ В ОДНОМ МЕСТЕ",
     title: "Профессиональный инструмент",
-    subtitle: "для поиска недвижимости в Германии",
+    subtitle: "для поиска принудительных торгов в Германии",
   },
   en: {
     kicker: "ZVG-DE.COM · ALL JUDICIAL AUCTIONS IN ONE PLACE",
     title: "Professional tool",
-    subtitle: "for finding real estate in Germany",
+    subtitle: "for finding forced auctions in Germany",
   },
 };
 
 function stage73Hero(locale: Stage73HeroLocale) {
   return stage73HeroText[locale] || stage73HeroText.de;
 }
+
 
 
 

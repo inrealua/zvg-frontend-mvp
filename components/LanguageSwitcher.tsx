@@ -57,12 +57,17 @@ export function LanguageSwitcher({ locale, labels }: LanguageSwitcherProps) {
     router.refresh();
   }
 
+  const shortLabel = selected.toUpperCase();
+
   return (
-    <select className="language-select" value={selected} onChange={onChange} aria-label={labels?.label ?? "Language"}>
-      <option value="de">{labels?.de ?? "DE"}</option>
-      <option value="ru">{labels?.ru ?? "RU"}</option>
-      <option value="en">{labels?.en ?? "EN"}</option>
-    </select>
+    <label className="language-switcher-shell-v74" aria-label={labels?.label ?? "Language"}>
+      <span className="language-switcher-current-v74">{shortLabel}</span>
+      <select className="language-select language-select-v74" value={selected} onChange={onChange}>
+        <option value="de">{labels?.de ?? "Deutsch"}</option>
+        <option value="ru">{labels?.ru ?? "Русский"}</option>
+        <option value="en">{labels?.en ?? "English"}</option>
+      </select>
+    </label>
   );
 }
 

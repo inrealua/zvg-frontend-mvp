@@ -18,7 +18,7 @@ export const uiText = {
     },
     hero: {
       title: "Professionelles Werkzeug",
-      subtitle: "für die Immobiliensuche in Deutschland, Grundstücke und weitere Objekte aus gerichtlichen Versteigerungen mit Karte, Filtern und strukturierten Informationen.",
+      subtitle: "für die Suche nach Zwangsversteigerungen in Deutschland, Grundstücke und weitere Objekte aus gerichtlichen Versteigerungen mit Karte, Filtern und strukturierten Informationen.",
       checkedSources: "Geprüfte Quellen",
       dailyUpdated: "Täglich aktualisiert",
       nationwide: "Deutschlandweit",
@@ -200,7 +200,7 @@ export const uiText = {
     },
     hero: {
       title: "Professional tool",
-      subtitle: "for finding real estate in Germany, land and other judicial auction properties with maps, filters and structured information.",
+      subtitle: "for finding forced auctions in Germany, land and other judicial auction properties with maps, filters and structured information.",
       checkedSources: "Verified sources",
       dailyUpdated: "Updated daily",
       nationwide: "Germany-wide",
