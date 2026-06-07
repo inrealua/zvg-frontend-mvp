@@ -27,8 +27,37 @@ type FilterBarProps = {
 };
 
 const labels = {
-  de: { selected: "ausgewählt", any: "Beliebig", search: "Suche", searchPlaceholder: "Ort, PLZ, Adresse, Aktenzeichen, Gericht", city: "Ort", allCities: "Alle Orte", postalCode: "PLZ", postalPlaceholder: "z. B. 09111", radius: "Umkreis", noRadius: "Kein Radius", court: "Amtsgericht", allCourts: "Alle Gerichte", status: "Status", allCurrent: "Alle aktuellen", state: "Bundesland", allStates: "Alle Bundesländer", propertyType: "Objektart", allTypes: "Alle Typen", usage: "Nutzung", anyUsage: "Jede Nutzung", marketValue: "Verkehrswert", livingArea: "Wohnfläche", plotArea: "Grundstück", dateFrom: "Termin ab", dateTo: "Termin bis", datePlaceholder: "JJJJ-MM-TT", heritage: "Denkmalschutz", valueLimits: "Wertgrenzen", attempt: "Termin-Nr.", submit: "Ergebnisse anzeigen", resetFilters: "Filter zurücksetzen" },
-  ru: { selected: "выбрано", any: "Любая", search: "Поиск", searchPlaceholder: "Город, индекс, адрес, номер дела, суд", city: "Город", allCities: "Все города", postalCode: "Индекс", postalPlaceholder: "например: 09111", radius: "Радиус", noRadius: "Без радиуса", court: "Суд", allCourts: "Все суды", status: "Статус", allCurrent: "Все актуальные", state: "Федеральная земля", allStates: "Все земли", propertyType: "Тип объекта", allTypes: "Все типы", usage: "Использование", anyUsage: "Любое использование", marketValue: "Оценочная стоимость", livingArea: "Жилая площадь", plotArea: "Участок", dateFrom: "Торги от", dateTo: "Торги до", datePlaceholder: "ГГГГ-ММ-ДД", heritage: "Памятник архитектуры", valueLimits: "Ценовые границы", attempt: "№ термина", submit: "Показать результаты", resetFilters: "Сбросить фильтр" },
+  de: {
+    "3plus": "3. und weitere",
+    "notRemoved": "Nicht weggefallen / unbekannt",
+    "not_removed": "Nicht weggefallen / unbekannt",
+    "removed": "Weggefallen",
+    "Не сняты / неизвестно": "Nicht weggefallen / unbekannt",
+    "Сняты": "Weggefallen",
+    "3-й и больше": "3. und weitere",
+    "2-й термин": "2. Termin",
+    "1-й термин": "1. Termin",
+    "Любой термин": "Jeder Termin",
+    "Любая": "Beliebig",
+    "Не важно": "Beliebig",
+    "Нет": "Nein",
+    "Да": "Ja",
+    "nein": "Nein",
+    "ja": "Ja",
+    "no": "Nein",
+    "yes": "Ja",
+    "2": "2. Termin",
+    "1": "1. Termin", selected: "ausgewählt", any: "Beliebig", search: "Suche", searchPlaceholder: "Ort, PLZ, Adresse, Aktenzeichen, Gericht", city: "Ort", allCities: "Alle Orte", postalCode: "PLZ", postalPlaceholder: "z. B. 09111", radius: "Umkreis", noRadius: "Kein Radius", court: "Amtsgericht", allCourts: "Alle Gerichte", status: "Status", allCurrent: "Alle aktuellen", state: "Bundesland", allStates: "Alle Bundesländer", propertyType: "Objektart", allTypes: "Alle Typen", usage: "Nutzung", anyUsage: "Jede Nutzung", marketValue: "Verkehrswert", livingArea: "Wohnfläche", plotArea: "Grundstück", dateFrom: "Termin ab", dateTo: "Termin bis", datePlaceholder: "JJJJ-MM-TT", heritage: "Denkmalschutz", valueLimits: "Wertgrenzen", attempt: "Termin-Nr.", submit: "Ergebnisse anzeigen", resetFilters: "Filter zurücksetzen" },
+  ru: {
+    "Nicht weggefallen / unbekannt": "Не сняты / неизвестно",
+    "Weggefallen": "Сняты",
+    "3. und weitere": "3-й и больше",
+    "2. Termin": "2-й термин",
+    "1. Termin": "1-й термин",
+    "Jeder Termin": "Любой термин",
+    "Beliebig": "Любая",
+    "Nein": "Нет",
+    "Ja": "Да", selected: "выбрано", any: "Любая", search: "Поиск", searchPlaceholder: "Город, индекс, адрес, номер дела, суд", city: "Город", allCities: "Все города", postalCode: "Индекс", postalPlaceholder: "например: 09111", radius: "Радиус", noRadius: "Без радиуса", court: "Суд", allCourts: "Все суды", status: "Статус", allCurrent: "Все актуальные", state: "Федеральная земля", allStates: "Все земли", propertyType: "Тип объекта", allTypes: "Все типы", usage: "Использование", anyUsage: "Любое использование", marketValue: "Оценочная стоимость", livingArea: "Жилая площадь", plotArea: "Участок", dateFrom: "Торги от", dateTo: "Торги до", datePlaceholder: "ГГГГ-ММ-ДД", heritage: "Памятник архитектуры", valueLimits: "Ценовые границы", attempt: "№ термина", submit: "Показать результаты", resetFilters: "Сбросить фильтр" },
   en: { selected: "selected", any: "Any", search: "Search", searchPlaceholder: "City, ZIP, address, case number, court", city: "City", allCities: "All cities", postalCode: "ZIP", postalPlaceholder: "e.g. 09111", radius: "Radius", noRadius: "No radius", court: "Court", allCourts: "All courts", status: "Status", allCurrent: "All current", state: "Federal state", allStates: "All states", propertyType: "Property type", allTypes: "All types", usage: "Use", anyUsage: "Any use", marketValue: "Market value", livingArea: "Living area", plotArea: "Plot size", dateFrom: "Auction from", dateTo: "Auction to", datePlaceholder: "YYYY-MM-DD", heritage: "Listed monument", valueLimits: "Value limits", attempt: "Auction no.", submit: "Show results", resetFilters: "Reset filters" },
 } as const;
 
@@ -61,7 +90,10 @@ function useClientLocale(): Locale {
 
 function localizeOption(option: SelectOption, locale: Locale): SelectOption {
   if (!option.value) return option;
-  return { ...option, label: optionLabels[locale][option.value] || option.label };
+  const dict = optionLabels[locale] as Record<string, string>;
+  const byValue = dict[String(option.value)];
+  const byLabel = dict[String(option.label)];
+  return { ...option, label: byValue || byLabel || option.label };
 }
 
 function getInitialValue(params: URLSearchParams, key: string): string { return params.get(key) ?? ""; }

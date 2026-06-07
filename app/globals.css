@@ -10748,3 +10748,73 @@ input[type="date"] {
 }
 
 /* Explicit language pages are provided by app/[locale]/page.tsx and app/ru|de|en/page.tsx */
+
+
+/* Stage 72 locale redirect filter option and map legend fixes */
+
+/* Keep action buttons in the corrected line */
+.search-filter-grid-v60 > .filter-action-button-v60,
+.search-filter-grid-v59 > .filter-action-button-v59,
+.search-filter-grid-v58 > .filter-action-button-v58 {
+  margin-top: 18px !important;
+}
+
+/* Map legend: every property type must have a colored dot */
+.legend-dot,
+.map-legend .legend-dot,
+.property-map-legend .legend-dot {
+  width: 11px !important;
+  height: 11px !important;
+  min-width: 11px !important;
+  border-radius: 999px !important;
+  display: inline-block !important;
+  margin-right: 8px !important;
+  vertical-align: -1px !important;
+}
+
+.legend-dot.haus,
+.legend-dot.haeuser,
+.legend-dot.wohnhaus,
+.legend-dot.wohnhaeuser {
+  background: #1f6b55 !important;
+}
+
+.legend-dot.wohnung,
+.legend-dot.wohnungen {
+  background: #2b6478 !important;
+}
+
+.legend-dot.grundstueck,
+.legend-dot.grundstuecke {
+  background: #7d9448 !important;
+}
+
+.legend-dot.gewerbe {
+  background: #b26b38 !important;
+}
+
+.legend-dot.land-wald {
+  background: #6d7f3f !important;
+}
+
+.legend-dot.garagen {
+  background: #6a557e !important;
+}
+
+.legend-dot.sonstige {
+  background: #7a7f87 !important;
+}
+
+/* Hide only cancelled, never hide the last legend item blindly */
+.map-legend > *:last-child,
+.property-map-legend > *:last-child,
+.leaflet-container + .map-legend > *:last-child {
+  display: inline-flex !important;
+}
+
+.map-legend span:has(.legend-dot.cancelled),
+.map-legend span:has(.legend-dot.aufgehoben),
+.property-map-legend span:has(.legend-dot.cancelled),
+.property-map-legend span:has(.legend-dot.aufgehoben) {
+  display: none !important;
+}
