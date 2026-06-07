@@ -1,3 +1,4 @@
+import { RuntimeUiCleanup } from "@/components/RuntimeUiCleanup";
 import { FilterMiniApplyEnhancer } from "@/components/FilterMiniApplyEnhancer";
 import { BackToTopButton } from "@/components/BackToTopButton";
 import { LanguageRuntimeFix } from "@/components/LanguageRuntimeFix";
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
+        <RuntimeUiCleanup />
         <Header />
         {children}
         <Footer />

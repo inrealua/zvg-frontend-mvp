@@ -11511,3 +11511,33 @@ input[type="date"] {
   padding-top: 20px !important;
   padding-bottom: 20px !important;
 }
+
+
+/* Stage 78 runtime cleanup */
+.saved-search-compact-v78 {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+.saved-search-compact-v78 button,
+.saved-search-compact-v78 a,
+.saved-search-compact-v78 .btn {
+  min-height: 40px !important;
+  height: 40px !important;
+  padding: 0 16px !important;
+  border-radius: 14px !important;
+}
+.saved-search-compact-v78 input {
+  min-height: 42px !important;
+  height: 42px !important;
+}
+.leaflet-popup-content h1:empty,
+.leaflet-popup-content h2:empty,
+.leaflet-popup-content h3:empty,
+.leaflet-popup-content h4:empty {
+  display: none !important;
+}
+.main-card-gallery-nav-v77,
+.main-card-gallery-nav-v76,
+.main-card-gallery-nav-v75b {
+  opacity: 1 !important;
+}
