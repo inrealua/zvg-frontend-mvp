@@ -10584,3 +10584,47 @@ input[type="date"] {
     max-height: 48px !important;
   }
 }
+
+
+/* Stage 68 final small fixes */
+
+/* Buttons: move 2px up compared to Stage 67 */
+.search-filter-grid-v60 > .filter-action-button-v60,
+.search-filter-grid-v59 > .filter-action-button-v59,
+.search-filter-grid-v58 > .filter-action-button-v58 {
+  margin-top: 20px !important;
+}
+
+/* Hide cancelled as a legend item, because it is not a property type */
+.map-legend [data-type="cancelled"],
+.map-legend [data-status="cancelled"],
+.map-legend [data-key="cancelled"],
+.map-legend [class*="cancelled"],
+.map-legend [class*="aufgehoben"],
+.property-map-legend [data-type="cancelled"],
+.property-map-legend [data-status="cancelled"],
+.property-map-legend [data-key="cancelled"],
+.property-map-legend [class*="cancelled"],
+.property-map-legend [class*="aufgehoben"] {
+  display: none !important;
+}
+
+/* Fallback: in current map legend cancelled is the last item */
+.map-legend > *:last-child,
+.property-map-legend > *:last-child,
+.leaflet-container + .map-legend > *:last-child {
+  display: none !important;
+}
+
+.search-filter-v60 input[type="date"],
+.search-filter-v59 input[type="date"],
+.search-filter-v58 input[type="date"] {
+  color-scheme: light !important;
+}
+
+.multi-filter-panel-v60,
+.multi-filter-panel-v59,
+.multi-filter-panel-v58 {
+  position: absolute !important;
+  z-index: 150 !important;
+}

@@ -471,7 +471,6 @@ if (!mapElementRef.current) return;
         <span><i className="legend-dot wohnung" />{stage61MapT().apartments}</span>
         <span><i className="legend-dot grund" />{stage61MapT().land}</span>
         <span><i className="legend-dot gewerbe" />{stage61MapT().commercial}</span>
-        <span><i className="legend-dot cancelled" />{stage61MapT().cancelled}</span>
       </div>
     </aside>
   );

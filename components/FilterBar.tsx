@@ -184,6 +184,21 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  useEffect(() => {
+    function stage68CloseOtherMultiselects(event: MouseEvent) {
+      const target = event.target as HTMLElement | null;
+      const currentDetails = target?.closest?.(".multi-filter-v60, .multi-filter-v59, .multi-filter-v58") as HTMLDetailsElement | null;
+      const opened = Array.from(document.querySelectorAll<HTMLDetailsElement>(".multi-filter-v60[open], .multi-filter-v59[open], .multi-filter-v58[open]"));
+      for (const details of opened) {
+        if (currentDetails && details === currentDetails) continue;
+        details.open = false;
+      }
+    }
+
+    document.addEventListener("click", stage68CloseOtherMultiselects, true);
+    return () => document.removeEventListener("click", stage68CloseOtherMultiselects, true);
+  }, []);
+
   function buildNextParams(form: HTMLFormElement): URLSearchParams {
     const formData = new FormData(form);
     const next = new URLSearchParams();
@@ -240,12 +255,12 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         {/* Row 4: date/status filters */}
         <div className="field span-1">
           <label htmlFor="dateFrom">{t.dateFrom}</label>
-          <input id="dateFrom" name="dateFrom" type="date" defaultValue={getInitialValue(searchParams, "dateFrom")} />
+          <input id="dateFrom" name="dateFrom" type="date" lang={locale} defaultValue={getInitialValue(searchParams, "dateFrom")} />
         </div>
 
         <div className="field span-1">
           <label htmlFor="dateTo">{t.dateTo}</label>
-          <input id="dateTo" name="dateTo" type="date" defaultValue={getInitialValue(searchParams, "dateTo")} />
+          <input id="dateTo" name="dateTo" type="date" lang={locale} defaultValue={getInitialValue(searchParams, "dateTo")} />
         </div>
 
         <div className="field span-1">

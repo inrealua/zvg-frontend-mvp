@@ -1,3 +1,22 @@
+
+type Stage68PaginationLocale = "de" | "ru" | "en";
+
+function stage68ReadPaginationLocale(): Stage68PaginationLocale {
+  if (typeof document === "undefined") return "de";
+  const match = document.cookie.match(/(?:^|;\s*)zvg_locale=(de|ru|en)(?:;|$)/);
+  return (match?.[1] as Stage68PaginationLocale) || "de";
+}
+
+const stage68PaginationText = {
+  de: { prev: "Zurück", next: "Weiter" },
+  ru: { prev: "Назад", next: "Вперёд" },
+  en: { prev: "Back", next: "Next" },
+} as const;
+
+function stage68Pg() {
+  return stage68PaginationText[stage68ReadPaginationLocale()];
+}
+
 import Link from "next/link";
 import { buildPageUrl } from "@/lib/pagination";
 import type { SearchParamRecord } from "@/lib/search-params";
@@ -43,9 +62,9 @@ export function Pagination({ params, page, totalPages, totalItems, fromItem, toI
 
       <div className="pagination-links">
         {page > 1 ? (
-          <Link className="page-link" href={buildPageUrl(params, page - 1)}>← Назад</Link>
+          <Link className="page-link" href={buildPageUrl(params, page - 1)}>← {stage68Pg().prev}</Link>
         ) : (
-          <span className="page-link disabled">← Назад</span>
+          <span className="page-link disabled">← {stage68Pg().prev}</span>
         )}
 
         {pages.map((item) => {
@@ -65,9 +84,9 @@ export function Pagination({ params, page, totalPages, totalItems, fromItem, toI
         })}
 
         {page < totalPages ? (
-          <Link className="page-link" href={buildPageUrl(params, page + 1)}>Вперёд →</Link>
+          <Link className="page-link" href={buildPageUrl(params, page + 1)}>{stage68Pg().next} →</Link>
         ) : (
-          <span className="page-link disabled">Вперёд →</span>
+          <span className="page-link disabled">{stage68Pg().next} →</span>
         )}
       </div>
     </nav>
