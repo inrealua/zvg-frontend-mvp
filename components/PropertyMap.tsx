@@ -423,20 +423,20 @@ if (!mapElementRef.current) return;
     <aside className={`map-panel ${variant === "wide" ? "map-panel-wide" : ""} ${variant === "large" ? "map-panel-large" : ""}`} id="map">
       <div className="map-head">
         <div>
-          <h2>Karte der Objekte</h2>
+          <div className="map-title-actions-row-v73"><h2>Karte der Objekte</h2>
           <p className="meta">Suchen Sie in der sichtbaren Kartenfläche oder zeichnen Sie eine eigene Suchregion.</p>
         </div>
         <span className="map-count">{withCoordinates.length}</span>
       </div>
 
       <div className="map-actions">
-        <button type="button" className="btn btn-primary btn-small" onClick={applyVisibleMapArea} disabled={withCoordinates.length === 0 || Boolean(error)}>{stage61MapT().searchVisible}</button>
+        <div className="map-title-actions-v73"><button type="button" className="btn btn-primary btn-small" onClick={applyVisibleMapArea} disabled={withCoordinates.length === 0 || Boolean(error)}>{stage61MapT().searchVisible}</button>
         {mapBoundsActive ? (
           <button type="button" className="btn btn-ghost btn-small" onClick={clearVisibleMapArea}>
             Kartenausschnitt entfernen
           </button>
         ) : null}
-        <button type="button" className="btn btn-ghost btn-small" onClick={startPolygonDrawing} disabled={Boolean(error)}>{stage61MapT().drawRegion}</button>
+        <button type="button" className="btn btn-ghost btn-small" onClick={startPolygonDrawing} disabled={Boolean(error)}>{stage61MapT().drawRegion}</button></div><span className="map-title-actions-row-v73-closed" /></div>
         {polygonActive ? (
           <button type="button" className="btn btn-ghost btn-small" onClick={removePolygonFilter}>
             Polygon entfernen

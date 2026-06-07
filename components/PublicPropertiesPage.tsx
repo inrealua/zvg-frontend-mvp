@@ -1,4 +1,30 @@
 
+type Stage73HeroLocale = "de" | "ru" | "en";
+
+const stage73HeroText: Record<Stage73HeroLocale, { kicker: string; title: string; subtitle: string }> = {
+  de: {
+    kicker: "ZVG-DE.COM · ALLE GERICHTLICHEN AUKTIONEN AN EINEM ORT",
+    title: "Professionelles Werkzeug",
+    subtitle: "für die Immobiliensuche in Deutschland",
+  },
+  ru: {
+    kicker: "ZVG-DE.COM · ВСЕ СУДЕБНЫЕ АУКЦИОНЫ В ОДНОМ МЕСТЕ",
+    title: "Профессиональный инструмент",
+    subtitle: "для поиска недвижимости в Германии",
+  },
+  en: {
+    kicker: "ZVG-DE.COM · ALL JUDICIAL AUCTIONS IN ONE PLACE",
+    title: "Professional tool",
+    subtitle: "for finding real estate in Germany",
+  },
+};
+
+function stage73Hero(locale: Stage73HeroLocale) {
+  return stage73HeroText[locale] || stage73HeroText.de;
+}
+
+
+
 type Stage70Locale = "de" | "ru" | "en";
 
 const stage70ListText = {
@@ -276,8 +302,8 @@ function pageCopy(mode: PageMode, siteText: SiteText, locale: keyof typeof local
   if (mode === "archive") {
     return {
       kicker: t.archiveKicker,
-      title: t.archiveTitle,
-      text: t.archiveText,
+      title: stage73Hero(locale as Stage73HeroLocale).title,
+      text: stage73Hero(locale as Stage73HeroLocale).subtitle,
       listTitle: "",
       listText: "",
     };
@@ -286,8 +312,8 @@ function pageCopy(mode: PageMode, siteText: SiteText, locale: keyof typeof local
   if (mode === "map") {
     return {
       kicker: siteText.hero.kickerMap,
-      title: siteText.hero.mapTitle,
-      text: siteText.hero.mapSubtitle,
+      title: stage73Hero(locale as Stage73HeroLocale).title,
+      text: stage73Hero(locale as Stage73HeroLocale).subtitle,
       listTitle: "",
       listText: "",
     };
@@ -295,8 +321,8 @@ function pageCopy(mode: PageMode, siteText: SiteText, locale: keyof typeof local
 
   return {
     kicker: siteText.hero.kickerHome,
-    title: siteText.list.title,
-    text: siteText.list.subtitle,
+    title: stage73Hero(locale as Stage73HeroLocale).title,
+    text: stage73Hero(locale as Stage73HeroLocale).subtitle,
     listTitle: "",
     listText: "",
   };
@@ -404,7 +430,7 @@ export async function PublicPropertiesPage({
 
     return {
       id: property.id,
-      title: translated.title,
+      title: stage73Hero(locale as Stage73HeroLocale).title,
       address: property.address,
       latitude: property.latitude,
       longitude: property.longitude,

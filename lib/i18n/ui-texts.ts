@@ -17,8 +17,8 @@ export const uiText = {
       notSet: "nicht gesetzt"
     },
     hero: {
-      title: "Alle gerichtlichen Versteigerungen an einem Ort.",
-      subtitle: "Transparent. Verlässlich. Übersichtlich. Finden Sie Immobilien, Grundstücke und weitere Objekte aus gerichtlichen Versteigerungen mit Karte, Filtern und strukturierten Informationen.",
+      title: "Professionelles Werkzeug",
+      subtitle: "für die Immobiliensuche in Deutschland, Grundstücke und weitere Objekte aus gerichtlichen Versteigerungen mit Karte, Filtern und strukturierten Informationen.",
       checkedSources: "Geprüfte Quellen",
       dailyUpdated: "Täglich aktualisiert",
       nationwide: "Deutschlandweit",
@@ -108,7 +108,7 @@ export const uiText = {
       notSet: "не задано"
     },
     hero: {
-      title: "Все судебные аукционы в одном месте.",
+      title: "Профессиональный инструмент",
       subtitle: "Прозрачно. Надёжно. Удобно. Находите недвижимость, участки и другие объекты судебных торгов с картой, фильтрами и структурированной информацией.",
       checkedSources: "Проверенные источники",
       dailyUpdated: "Ежедневное обновление",
@@ -199,8 +199,8 @@ export const uiText = {
       notSet: "not set"
     },
     hero: {
-      title: "All judicial auctions in one place.",
-      subtitle: "Transparent. Reliable. Clear. Find real estate, land and other judicial auction properties with maps, filters and structured information.",
+      title: "Professional tool",
+      subtitle: "for finding real estate in Germany, land and other judicial auction properties with maps, filters and structured information.",
       checkedSources: "Verified sources",
       dailyUpdated: "Updated daily",
       nationwide: "Germany-wide",

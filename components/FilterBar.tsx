@@ -89,11 +89,169 @@ function useClientLocale(): Locale {
 }
 
 function localizeOption(option: SelectOption, locale: Locale): SelectOption {
-  if (!option.value) return option;
-  const dict = optionLabels[locale] as Record<string, string>;
-  const byValue = dict[String(option.value)];
-  const byLabel = dict[String(option.label)];
-  return { ...option, label: byValue || byLabel || option.label };
+  const rawValue = String(option.value || "");
+  const rawLabel = String(option.label || "");
+  if (!rawValue && !rawLabel) return option;
+
+  const normalize = (text: string) =>
+    text
+      .trim()
+      .toLowerCase()
+      .replace(/ё/g, "е")
+      .replace(/[._\s]+/g, "-");
+
+  const keyCandidates = [
+    rawValue,
+    rawLabel,
+    normalize(rawValue),
+    normalize(rawLabel),
+  ];
+
+  const dict: Record<Locale, Record<string, string>> = {
+    de: {
+      "": "Beliebig",
+      "true": "Ja",
+      "false": "Nein",
+      "yes": "Ja",
+      "no": "Nein",
+      "да": "Ja",
+      "нет": "Nein",
+      "не-важно": "Beliebig",
+      "любая": "Beliebig",
+      "любой": "Beliebig",
+      "egal": "Beliebig",
+      "beliebig": "Beliebig",
+
+      "active": "Aktiv",
+      "cancelled": "Aufgehoben",
+      "archived": "Archiv",
+      "sold": "Verkauft",
+      "активно": "Aktiv",
+      "отменено": "Aufgehoben",
+      "архив": "Archiv",
+      "продано": "Verkauft",
+      "все-актуальные": "Alle aktuellen",
+      "alle-aktuellen": "Alle aktuellen",
+      "all-current": "Alle aktuellen",
+
+      "weggefallen": "Weggefallen",
+      "removed": "Weggefallen",
+      "сняты": "Weggefallen",
+      "nicht-weggefallen": "Nicht weggefallen / unbekannt",
+      "nicht-weggefallen-unbekannt": "Nicht weggefallen / unbekannt",
+      "not-removed": "Nicht weggefallen / unbekannt",
+      "not-removed-unknown": "Nicht weggefallen / unbekannt",
+      "не-сняты-неизвестно": "Nicht weggefallen / unbekannt",
+
+      "1": "1. Termin",
+      "2": "2. Termin",
+      "3": "3. und weitere",
+      "3plus": "3. und weitere",
+      "1-й-термин": "1. Termin",
+      "2-й-термин": "2. Termin",
+      "3-й-и-больше": "3. und weitere",
+      "любой-термин": "Jeder Termin",
+      "jeder-termin": "Jeder Termin",
+      "any-auction": "Jeder Termin",
+    },
+    ru: {
+      "": "Любая",
+      "true": "Да",
+      "false": "Нет",
+      "yes": "Да",
+      "no": "Нет",
+      "ja": "Да",
+      "nein": "Нет",
+      "egal": "Любая",
+      "beliebig": "Любая",
+      "any": "Любая",
+
+      "active": "Активно",
+      "cancelled": "Отменено",
+      "archived": "Архив",
+      "sold": "Продано",
+      "aktiv": "Активно",
+      "aufgehoben": "Отменено",
+      "archiv": "Архив",
+      "verkauft": "Продано",
+      "alle-aktuellen": "Все актуальные",
+      "all-current": "Все актуальные",
+
+      "weggefallen": "Сняты",
+      "removed": "Сняты",
+      "nicht-weggefallen": "Не сняты / неизвестно",
+      "nicht-weggefallen-unbekannt": "Не сняты / неизвестно",
+      "not-removed": "Не сняты / неизвестно",
+      "not-removed-unknown": "Не сняты / неизвестно",
+
+      "1": "1-й термин",
+      "2": "2-й термин",
+      "3": "3-й и больше",
+      "3plus": "3-й и больше",
+      "1-termin": "1-й термин",
+      "2-termin": "2-й термин",
+      "3-und-weitere": "3-й и больше",
+      "jeder-termin": "Любой термин",
+      "any-auction": "Любой термин",
+    },
+    en: {
+      "": "Any",
+      "true": "Yes",
+      "false": "No",
+      "ja": "Yes",
+      "nein": "No",
+      "да": "Yes",
+      "нет": "No",
+      "egal": "Any",
+      "beliebig": "Any",
+      "любая": "Any",
+
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "archived": "Archive",
+      "sold": "Sold",
+      "aktiv": "Active",
+      "aufgehoben": "Cancelled",
+      "archiv": "Archive",
+      "verkauft": "Sold",
+      "активно": "Active",
+      "отменено": "Cancelled",
+      "архив": "Archive",
+      "продано": "Sold",
+      "alle-aktuellen": "All current",
+      "все-актуальные": "All current",
+
+      "weggefallen": "Removed",
+      "removed": "Removed",
+      "сняты": "Removed",
+      "nicht-weggefallen": "Not removed / unknown",
+      "nicht-weggefallen-unbekannt": "Not removed / unknown",
+      "not-removed": "Not removed / unknown",
+      "not-removed-unknown": "Not removed / unknown",
+      "не-сняты-неизвестно": "Not removed / unknown",
+
+      "1": "1st auction",
+      "2": "2nd auction",
+      "3": "3rd and more",
+      "3plus": "3rd and more",
+      "1-termin": "1st auction",
+      "2-termin": "2nd auction",
+      "3-und-weitere": "3rd and more",
+      "1-й-термин": "1st auction",
+      "2-й-термин": "2nd auction",
+      "3-й-и-больше": "3rd and more",
+      "jeder-termin": "Any auction",
+      "любой-термин": "Any auction",
+    },
+  };
+
+  for (const key of keyCandidates) {
+    const translated = dict[locale][key] || dict[locale][normalize(key)];
+    if (translated) return { ...option, label: translated };
+  }
+
+  const legacyDict = optionLabels[locale] as Record<string, string>;
+  return { ...option, label: legacyDict[rawValue] || legacyDict[rawLabel] || option.label };
 }
 
 function getInitialValue(params: URLSearchParams, key: string): string { return params.get(key) ?? ""; }

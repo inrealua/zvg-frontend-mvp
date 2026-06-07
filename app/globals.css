@@ -10818,3 +10818,122 @@ input[type="date"] {
 .property-map-legend span:has(.legend-dot.aufgehoben) {
   display: none !important;
 }
+
+
+/* Stage 73 hero map actions language and filter option fixes */
+
+/* Hero title/subtitle formatting */
+.hero-kicker,
+.hero-eyebrow,
+[class*="hero"] .kicker,
+[class*="hero"] .eyebrow {
+  letter-spacing: 0.08em;
+}
+
+[class*="hero"] h1 {
+  max-width: 760px;
+}
+
+/* Map title + buttons in one row */
+.map-title-actions-row-v73,
+.property-map-card .map-title-actions-row-v73,
+[class*="map"] .map-title-actions-row-v73 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  margin-bottom: 6px !important;
+}
+
+.map-title-actions-v73 {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-left: auto !important;
+}
+
+.map-title-actions-v73 .btn,
+.map-title-actions-v73 button {
+  white-space: nowrap !important;
+}
+
+/* Fallback: if buttons still render in old block below title, float that block right */
+.property-map-card .map-actions,
+.property-map-card .map-buttons,
+.map-card .map-actions,
+.map-card .map-buttons,
+[class*="map"] [class*="actions"] {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Map legend colored dots for all property groups */
+.legend-dot,
+.map-legend .legend-dot,
+.property-map-legend .legend-dot {
+  width: 11px !important;
+  height: 11px !important;
+  min-width: 11px !important;
+  border-radius: 999px !important;
+  display: inline-block !important;
+  margin-right: 8px !important;
+  vertical-align: -1px !important;
+}
+
+.legend-dot.haus,
+.legend-dot.haeuser,
+.legend-dot.wohnhaus,
+.legend-dot.wohnhaeuser {
+  background: #1f6b55 !important;
+}
+
+.legend-dot.wohnung,
+.legend-dot.wohnungen {
+  background: #2b6478 !important;
+}
+
+.legend-dot.grundstueck,
+.legend-dot.grundstuecke {
+  background: #7d9448 !important;
+}
+
+.legend-dot.gewerbe {
+  background: #b26b38 !important;
+}
+
+.legend-dot.land-wald {
+  background: #6d7f3f !important;
+}
+
+.legend-dot.garagen {
+  background: #6a557e !important;
+}
+
+.legend-dot.sonstige {
+  background: #7a7f87 !important;
+}
+
+.map-legend > *:last-child,
+.property-map-legend > *:last-child,
+.leaflet-container + .map-legend > *:last-child {
+  display: inline-flex !important;
+}
+
+.map-legend span:has(.legend-dot.cancelled),
+.map-legend span:has(.legend-dot.aufgehoben),
+.property-map-legend span:has(.legend-dot.cancelled),
+.property-map-legend span:has(.legend-dot.aufgehoben) {
+  display: none !important;
+}
+
+@media (max-width: 800px) {
+  .map-title-actions-row-v73 {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .map-title-actions-v73 {
+    margin-left: 0 !important;
+  }
+}
