@@ -7,6 +7,8 @@ type ImageLike = {
   src?: string | null;
   imageUrl?: string | null;
   path?: string | null;
+  href?: string | null;
+  fileUrl?: string | null;
 };
 
 type MainCardGalleryProps = {
@@ -18,12 +20,12 @@ type MainCardGalleryProps = {
 function getUrl(item: ImageLike | string | null | undefined): string | null {
   if (!item) return null;
   if (typeof item === "string") return item;
-  return item.url || item.src || item.imageUrl || item.path || null;
+  return item.url || item.src || item.imageUrl || item.path || item.href || item.fileUrl || null;
 }
 
 export function MainCardGallery({ images, fallbackSrc, alt = "" }: MainCardGalleryProps) {
   const urls = useMemo(() => {
-    const list = Array.isArray(images) ? images.map(getUrl).filter(Boolean) as string[] : [];
+    const list = Array.isArray(images) ? (images.map(getUrl).filter(Boolean) as string[]) : [];
     if (fallbackSrc && !list.includes(fallbackSrc)) list.unshift(fallbackSrc);
     return Array.from(new Set(list.filter(Boolean)));
   }, [images, fallbackSrc]);
@@ -39,22 +41,22 @@ export function MainCardGallery({ images, fallbackSrc, alt = "" }: MainCardGalle
   }
 
   if (!src) {
-    return <div className="main-card-gallery-v76 main-card-gallery-empty-v76" aria-label={alt} />;
+    return <div className="main-card-gallery-v77 main-card-gallery-empty-v77" aria-label={alt} />;
   }
 
   return (
-    <div className="main-card-gallery-v76">
-      <img src={src} alt={alt} className="main-card-gallery-img-v76" loading="lazy" />
+    <div className="main-card-gallery-v77">
+      <img src={src} alt={alt} className="main-card-gallery-img-v77" loading="lazy" />
 
       {urls.length > 1 ? (
         <>
-          <button type="button" className="main-card-gallery-nav-v76 main-card-gallery-prev-v76" aria-label="Previous photo" onClick={(event) => move(-1, event)}>
+          <button type="button" className="main-card-gallery-nav-v77 main-card-gallery-prev-v77" aria-label="Previous photo" onClick={(event) => move(-1, event)}>
             ‹
           </button>
-          <button type="button" className="main-card-gallery-nav-v76 main-card-gallery-next-v76" aria-label="Next photo" onClick={(event) => move(1, event)}>
+          <button type="button" className="main-card-gallery-nav-v77 main-card-gallery-next-v77" aria-label="Next photo" onClick={(event) => move(1, event)}>
             ›
           </button>
-          <span className="main-card-gallery-count-v76">{index + 1}/{urls.length}</span>
+          <span className="main-card-gallery-count-v77">{index + 1}/{urls.length}</span>
         </>
       ) : null}
     </div>

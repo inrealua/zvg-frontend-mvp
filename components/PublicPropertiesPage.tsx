@@ -367,8 +367,7 @@ export async function PublicPropertiesPage({
         ...translationInclude(locale),
         images: {
           orderBy: [{ isMain: "desc" }, { sortOrder: "asc" }],
-          take: 1,
-        },
+          },
       },
       orderBy,
       take: 1000,

@@ -11391,3 +11391,123 @@ input[type="date"] {
 .property-gallery-image-v74 {
   min-height: unset;
 }
+
+
+/* Stage 77 final card popup cabinet cleanup */
+
+.main-card-gallery-v77,
+.main-card-gallery-v76,
+.main-card-gallery-v75b {
+  position: relative !important;
+  width: 100% !important;
+  height: 220px !important;
+  min-height: 220px !important;
+  overflow: hidden !important;
+  background: #edf3ef !important;
+}
+
+.main-card-gallery-img-v77,
+.main-card-gallery-img-v76,
+.main-card-gallery-image-v75b {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+}
+
+.main-card-gallery-nav-v77,
+.main-card-gallery-nav-v76,
+.main-card-gallery-nav-v75b {
+  opacity: 1 !important;
+  position: absolute !important;
+  top: 50% !important;
+  z-index: 8 !important;
+  width: 34px !important;
+  height: 34px !important;
+  transform: translateY(-50%) !important;
+  border: 1px solid rgba(255,255,255,0.9) !important;
+  border-radius: 999px !important;
+  background: rgba(13, 38, 28, 0.72) !important;
+  color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.main-card-gallery-prev-v77,
+.main-card-gallery-prev-v76,
+.main-card-gallery-prev-v75b {
+  left: 10px !important;
+}
+
+.main-card-gallery-next-v77,
+.main-card-gallery-next-v76,
+.main-card-gallery-next-v75b {
+  right: 10px !important;
+}
+
+.main-card-gallery-count-v77,
+.main-card-gallery-count-v76,
+.main-card-gallery-count-v75b {
+  position: absolute !important;
+  right: 10px !important;
+  bottom: 10px !important;
+  z-index: 8 !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(13, 38, 28, 0.72) !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+/* Cabinet saved searches compact */
+.saved-search-card,
+.saved-search-item,
+.cabinet-saved-search,
+[class*="saved-search"] {
+  min-height: unset !important;
+}
+
+.saved-search-card,
+.saved-search-item,
+.cabinet-saved-search {
+  padding: 14px 16px !important;
+}
+
+.saved-search-actions,
+[class*="saved-search"] [class*="actions"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.saved-search-actions .btn,
+[class*="saved-search"] [class*="actions"] .btn,
+[class*="saved-search"] button,
+[class*="saved-search"] a.btn {
+  min-height: 42px !important;
+  height: 42px !important;
+  padding: 0 18px !important;
+  border-radius: 14px !important;
+}
+
+[class*="saved-search"] input {
+  height: 44px !important;
+  min-height: 44px !important;
+}
+
+[class*="saved-search"] .danger,
+[class*="saved-search"] .btn-danger {
+  min-width: 96px !important;
+}
+
+.cabinet-section,
+.account-section,
+.saved-searches-section {
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+}

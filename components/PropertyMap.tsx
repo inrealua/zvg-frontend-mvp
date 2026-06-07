@@ -74,6 +74,56 @@ import { escapeHtml, loadLeaflet, type LatLngTuple, type LeafletLayer, type Leaf
 
 
 
+
+function stage77PopupLocale() {
+  if (typeof window === "undefined") return "de";
+  const first = window.location.pathname.split("/").filter(Boolean)[0];
+  if (first === "ru" || first === "de" || first === "en") return first;
+  const cookie = document.cookie.match(/(?:^|;\s*)zvg_locale=(ru|de|en)(?:;|$)/);
+  return cookie?.[1] || "de";
+}
+
+function stage77PopupDetails() {
+  const locale = stage77PopupLocale();
+  if (locale === "ru") return "Подробнее";
+  if (locale === "en") return "View details";
+  return "Details ansehen";
+}
+
+function stage77PopupValue() {
+  const locale = stage77PopupLocale();
+  if (locale === "ru") return "Оценочная стоимость";
+  if (locale === "en") return "Market value";
+  return "Verkehrswert";
+}
+
+function stage77PopupStatus(property: any) {
+  const locale = stage77PopupLocale();
+  const raw = String(property?.status || "").toLowerCase();
+  if (raw.includes("cancel") || raw.includes("aufgeh") || raw.includes("отмен")) {
+    if (locale === "ru") return "Термин отменён";
+    if (locale === "en") return "Auction cancelled";
+    return "Termin aufgehoben";
+  }
+  if (raw.includes("archiv") || raw.includes("archive") || raw.includes("архив")) {
+    if (locale === "ru") return "Архив";
+    if (locale === "en") return "Archive";
+    return "Archiv";
+  }
+  if (locale === "ru") return "Активно";
+  if (locale === "en") return "Active";
+  return "Aktuell";
+}
+
+function stage77PopupTitle(property: any) {
+  const title = property?.title || property?.headline || property?.address || property?.street || "";
+  const bad = ["${escapeHtml(stage77PopupTitle(property))}", "${escapeHtml(stage77PopupTitle(property))}", "${escapeHtml(stage77PopupTitle(property))}"];
+  if (bad.includes(String(title).trim())) {
+    return property?.address || property?.street || property?.city || "";
+  }
+  return title;
+}
+
 function stage76PopupLocale() {
   if (typeof window === "undefined") return "de";
   const first = window.location.pathname.split("/").filter(Boolean)[0];
@@ -107,8 +157,8 @@ const stage75PopupText = {
     details: "${escapeHtml(stage76PopupDetails())}",
     appointment: "Termin",
     marketValue: "${escapeHtml(stage76PopupValue())}",
-    active: "${escapeHtml(statusText)}",
-    cancelled: "${escapeHtml(statusText)}",
+    active: "${escapeHtml(stage77PopupStatus(property))}",
+    cancelled: "${escapeHtml(stage77PopupStatus(property))}",
     archive: "Archiv",
     unknown: "Unbekannt",
     propertyTypes: {
@@ -341,7 +391,7 @@ function popupHtml(property: MapProperty): string {
     ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(property.title)}" />`
     : `<div class="osm-popup-placeholder">Kein Foto</div>`;
 
-  const statusLabel = property.status === "CANCELLED" ? "${escapeHtml(statusText)}" : "${escapeHtml(statusText)}";
+  const statusLabel = property.status === "CANCELLED" ? "${escapeHtml(stage77PopupStatus(property))}" : "${escapeHtml(stage77PopupStatus(property))}";
 
   return `
     <div class="osm-popup-card osm-popup-card-redesigned osm-popup-card-balanced">

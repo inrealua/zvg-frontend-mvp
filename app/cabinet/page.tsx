@@ -91,7 +91,7 @@ const user = await getCurrentUser();
           </div>
           <div className="cabinet-stats">
             <a href="#favorites"><span>{favoriteCount}</span><b>{locale === "ru" ? "Избранное" : locale === "en" ? "Favorites" : "Favoriten"}</b></a>
-            <a href="#searches"><span>{savedSearchCount}</span><b>{locale === "ru" ? "Поиски" : locale === "en" ? "Saved searches" : "Gespeicherte Suchen"}</b></a>
+            <a href="#searches"><span>{savedSearchCount}</span><b>{locale === "ru" ? "Поиски" : locale === "en" ? "Saved searches" : "Сохранённые поиски"}</b></a>
             <a href="#calendar"><span>{calendarEvents.length}</span><b>{locale === "ru" ? "Календарь" : locale === "en" ? "Calendar" : "Kalendertermine"}</b></a>
           </div>
         </section>
@@ -162,13 +162,13 @@ const user = await getCurrentUser();
         <section id="searches" className="panel cabinet-section">
           <div className="section-head">
             <div>
-              <h2>{locale === "ru" ? "Сохранённые поиски" : locale === "en" ? "Saved Searches" : "Gespeicherte Suchen"}</h2>
+              <h2>{locale === "ru" ? "Сохранённые поиски" : locale === "en" ? "Saved Searches" : "Сохранённые поиски"}</h2>
               <p className="meta">
                 {locale === "ru"
                   ? "Переименуйте поиски, чтобы позже получать уведомления по понятным названиям."
                   : locale === "en"
                     ? "Name your searches so future email notifications are easy to understand."
-                    : "Benennen Sie Ihre Suchaufträge für spätere E-Mail-Benachrichtigungen."}
+                    : "Переименуйте поиски, чтобы позже получать уведомления с понятными названиями."}
               </p>
             </div>
           </div>
@@ -191,7 +191,7 @@ const user = await getCurrentUser();
                     <span className="meta">{savedSearch.createdAt.toLocaleDateString(locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "de-DE")}</span>
                   </div>
                   <div className="cabinet-actions">
-                    <Link className="btn btn-primary" href={savedSearch.filtersUrl}>{locale === "ru" ? "Открыть поиск" : locale === "en" ? "Open search" : "Suche öffnen"}</Link>
+                    <Link className="btn btn-primary" href={savedSearch.filtersUrl}>{locale === "ru" ? "Открыть поиск" : locale === "en" ? "Open search" : "Открыть поиск"}</Link>
                     <DeleteSavedSearchButton searchId={savedSearch.id} />
                   </div>
                 </article>

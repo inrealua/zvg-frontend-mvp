@@ -91,7 +91,7 @@ export function PropertyCard({
           <MainCardGallery
               images={(property as any).images || (property as any).photos}
               fallbackSrc={(property as any).imageUrl || (property as any).mainImage || (property as any).coverImage || (property as any).photoUrl || (property as any).images?.[0]?.url || (property as any).images?.[0]?.src || (property as any).images?.[0]?.imageUrl}
-              alt={(property as any).title || (property as any).address || ""}
+              alt={(property as any).title || (property as any).headline || (property as any).address || ""}
             />
         ) : (
           <div className="image-placeholder">{ui.noPhoto}</div>
