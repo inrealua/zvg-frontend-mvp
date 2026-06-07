@@ -11312,3 +11312,82 @@ input[type="date"] {
   min-height: 220px !important;
   overflow: hidden !important;
 }
+
+
+/* Stage 76 restore main cards and map popup */
+
+.main-card-gallery-v76 {
+  position: relative !important;
+  width: 100% !important;
+  height: 220px !important;
+  min-height: 220px !important;
+  overflow: hidden !important;
+  background: #edf3ef !important;
+}
+
+.main-card-gallery-img-v76 {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+}
+
+.main-card-gallery-empty-v76 {
+  background: #edf3ef !important;
+}
+
+.main-card-gallery-nav-v76 {
+  position: absolute !important;
+  top: 50% !important;
+  z-index: 6 !important;
+  width: 34px !important;
+  height: 34px !important;
+  transform: translateY(-50%) !important;
+  border: 1px solid rgba(255,255,255,0.9) !important;
+  border-radius: 999px !important;
+  background: rgba(13, 38, 28, 0.72) !important;
+  color: #fff !important;
+  font-size: 25px !important;
+  font-weight: 800 !important;
+  line-height: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.22) !important;
+  opacity: 0 !important;
+  transition: opacity 0.15s ease, background 0.15s ease !important;
+}
+
+.property-card:hover .main-card-gallery-nav-v76,
+.card:hover .main-card-gallery-nav-v76,
+[class*="card"]:hover .main-card-gallery-nav-v76 {
+  opacity: 1 !important;
+}
+
+.main-card-gallery-prev-v76 {
+  left: 10px !important;
+}
+
+.main-card-gallery-next-v76 {
+  right: 10px !important;
+}
+
+.main-card-gallery-count-v76 {
+  position: absolute !important;
+  right: 10px !important;
+  bottom: 10px !important;
+  z-index: 6 !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(13, 38, 28, 0.72) !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+/* Old broken gallery wrappers should not add blank space over image */
+.main-card-gallery-v75b,
+.property-gallery-image-v74 {
+  min-height: unset;
+}

@@ -11,7 +11,7 @@ function stage61ReadLocale(): Stage61Locale {
 const stage61MapLocaleText = {
   de: {
     houses: "Häuser",
-    apartments: "${stage75PropertyTypeLabel(property?.typeGroup || property?.propertyType || property?.type, stage75ReadClientLocale())}",
+    apartments: "${escapeHtml(groupText)}",
     land: "Grundstücke",
     commercial: "Gewerbe",
     landForest: "Land / Wald",
@@ -73,20 +73,47 @@ import { formatDate, formatEuro, translateGroup } from "@/lib/format";
 import { escapeHtml, loadLeaflet, type LatLngTuple, type LeafletLayer, type LeafletMapInstance } from "@/lib/leaflet-loader";
 
 
+
+function stage76PopupLocale() {
+  if (typeof window === "undefined") return "de";
+  const first = window.location.pathname.split("/").filter(Boolean)[0];
+  if (first === "ru" || first === "de" || first === "en") return first;
+  const cookie = document.cookie.match(/(?:^|;\s*)zvg_locale=(ru|de|en)(?:;|$)/);
+  return cookie?.[1] || "de";
+}
+
+function stage76PopupDetails() {
+  const locale = stage76PopupLocale();
+  if (locale === "ru") return "Подробнее";
+  if (locale === "en") return "View details";
+  return "Details ansehen";
+}
+
+function stage76PopupValue() {
+  const locale = stage76PopupLocale();
+  if (locale === "ru") return "Оценочная стоимость";
+  if (locale === "en") return "Market value";
+  return "Verkehrswert";
+}
+
+function stage76PopupTitle(property: any) {
+  return property?.title || property?.headline || property?.address || property?.street || "";
+}
+
 type Stage75Locale = "de" | "ru" | "en";
 
 const stage75PopupText = {
   de: {
-    details: "${stage75PopupT(stage75ReadClientLocale()).details}",
+    details: "${escapeHtml(stage76PopupDetails())}",
     appointment: "Termin",
-    marketValue: "${stage75PopupT(stage75ReadClientLocale()).marketValue}",
-    active: "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}",
-    cancelled: "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}",
+    marketValue: "${escapeHtml(stage76PopupValue())}",
+    active: "${escapeHtml(statusText)}",
+    cancelled: "${escapeHtml(statusText)}",
     archive: "Archiv",
     unknown: "Unbekannt",
     propertyTypes: {
-      residential: "${stage75PropertyTypeLabel(property?.typeGroup || property?.propertyType || property?.type, stage75ReadClientLocale())}",
-      apartments: "${stage75PropertyTypeLabel(property?.typeGroup || property?.propertyType || property?.type, stage75ReadClientLocale())}",
+      residential: "${escapeHtml(groupText)}",
+      apartments: "${escapeHtml(groupText)}",
       commercial: "Gewerbe",
       land: "Grundstücke",
       landForest: "Land / Wald",
@@ -314,7 +341,7 @@ function popupHtml(property: MapProperty): string {
     ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(property.title)}" />`
     : `<div class="osm-popup-placeholder">Kein Foto</div>`;
 
-  const statusLabel = property.status === "CANCELLED" ? "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}" : "${stage75StatusLabel(property?.status, stage75ReadClientLocale())}";
+  const statusLabel = property.status === "CANCELLED" ? "${escapeHtml(statusText)}" : "${escapeHtml(statusText)}";
 
   return `
     <div class="osm-popup-card osm-popup-card-redesigned osm-popup-card-balanced">
@@ -328,9 +355,9 @@ function popupHtml(property: MapProperty): string {
         <span class="osm-popup-address">${escapeHtml(property.address || property.city)}</span>
         <div class="osm-popup-facts">
           <small>Termin<br><strong>${escapeHtml(formatDate(property.auctionDate))}</strong></small>
-          <small>${stage75PopupT(stage75ReadClientLocale()).marketValue}<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
+          <small>${escapeHtml(stage76PopupValue())}<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
         </div>
-        <a href="/properties/${encodeURIComponent(property.id)}">${stage75PopupT(stage75ReadClientLocale()).details}</a>
+        <a href="/properties/${encodeURIComponent(property.id)}">${escapeHtml(stage76PopupDetails())}</a>
       </div>
     </div>
   `;
