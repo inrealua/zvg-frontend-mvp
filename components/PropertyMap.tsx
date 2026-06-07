@@ -75,6 +75,108 @@ import { escapeHtml, loadLeaflet, type LatLngTuple, type LeafletLayer, type Leaf
 
 
 
+
+function popupLocaleStage81() {
+  if (typeof window === "undefined") return "de";
+  const first = window.location.pathname.split("/").filter(Boolean)[0];
+  if (first === "ru" || first === "de" || first === "en") return first;
+  const cookie = document.cookie.match(/(?:^|;\s*)zvg_locale=(ru|de|en)(?:;|$)/);
+  return cookie?.[1] || "de";
+}
+
+function popupTextStage81(key: "active" | "cancelled" | "archive" | "details" | "value" | "noPhoto") {
+  const locale = popupLocaleStage81();
+  const dict = {
+    de: {
+      active: "Aktuell",
+      cancelled: "Termin aufgehoben",
+      archive: "Archiv",
+      details: "Details ansehen",
+      value: "Verkehrswert",
+      noPhoto: "Kein Foto",
+    },
+    ru: {
+      active: "Активно",
+      cancelled: "Термин отменён",
+      archive: "Архив",
+      details: "Подробнее",
+      value: "Оценочная стоимость",
+      noPhoto: "Нет фото",
+    },
+    en: {
+      active: "Active",
+      cancelled: "Auction cancelled",
+      archive: "Archive",
+      details: "View details",
+      value: "Market value",
+      noPhoto: "No photo",
+    },
+  } as const;
+
+  return (dict as any)[locale]?.[key] || dict.de[key];
+}
+
+function popupStatusStage81(property: MapProperty) {
+  const raw = String(property.status || "").toUpperCase();
+  if (raw.includes("CANCEL")) return popupTextStage81("cancelled");
+  if (raw.includes("ARCHIV")) return popupTextStage81("archive");
+  return popupTextStage81("active");
+}
+
+function popupTitleStage81(property: MapProperty) {
+  const bad = new Set(["Professionelles Werkzeug", "Профессиональный инструмент", "Professional tool", ""]);
+  const title = String(property.title || "").trim();
+
+  if (title && !bad.has(title)) return title;
+  if (property.address) return property.address;
+  if (property.city) return property.city;
+  return "";
+}
+
+function popupAddressStage81(property: MapProperty) {
+  const title = popupTitleStage81(property).trim();
+  const address = String(property.address || "").trim();
+  return address && address !== title ? address : "";
+}
+
+function popupGroupStage81(group: string) {
+  const locale = popupLocaleStage81();
+  const key = String(group || "").toUpperCase();
+
+  const dict = {
+    de: {
+      WOHNHAEUSER: "Wohnhäuser",
+      WOHNUNGEN: "Wohnungen",
+      GRUNDSTUECKE: "Grundstücke",
+      GEWERBE: "Gewerbe",
+      LAND_WALD: "Land / Wald",
+      GARAGEN: "Garagen / Parken",
+      SONSTIGE: "Sonstige",
+    },
+    ru: {
+      WOHNHAEUSER: "Жилые дома",
+      WOHNUNGEN: "Квартиры",
+      GRUNDSTUECKE: "Участки",
+      GEWERBE: "Коммерция",
+      LAND_WALD: "Земля / лес",
+      GARAGEN: "Гаражи / парковки",
+      SONSTIGE: "Прочее",
+    },
+    en: {
+      WOHNHAEUSER: "Residential houses",
+      WOHNUNGEN: "Apartments",
+      GRUNDSTUECKE: "Plots",
+      GEWERBE: "Commercial",
+      LAND_WALD: "Land / forest",
+      GARAGEN: "Garages / parking",
+      SONSTIGE: "Other",
+    },
+  } as const;
+
+  return (dict as any)[locale]?.[key] || translateGroup(group);
+}
+
+
 function stage77PopupLocale() {
   if (typeof window === "undefined") return "de";
   const first = window.location.pathname.split("/").filter(Boolean)[0];
@@ -157,8 +259,8 @@ const stage75PopupText = {
     details: "${escapeHtml(stage76PopupDetails())}",
     appointment: "Termin",
     marketValue: "${escapeHtml(stage76PopupValue())}",
-    active: "${escapeHtml(stage77PopupStatus(property))}",
-    cancelled: "${escapeHtml(stage77PopupStatus(property))}",
+    active: "${escapeHtml(popupStatusStage81(property))}",
+    cancelled: "${escapeHtml(popupStatusStage81(property))}",
     archive: "Archiv",
     unknown: "Unbekannt",
     propertyTypes: {
@@ -387,27 +489,33 @@ function markerClass(property: MapProperty): string {
 }
 
 function popupHtml(property: MapProperty): string {
-  const image = property.imageUrl
-    ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(property.title)}" />`
-    : `<div class="osm-popup-placeholder">Kein Foto</div>`;
+  const title = popupTitleStage81(property);
+  const address = popupAddressStage81(property);
 
-  const statusLabel = property.status === "CANCELLED" ? "${escapeHtml(stage77PopupStatus(property))}" : "${escapeHtml(stage77PopupStatus(property))}";
+  const image = property.imageUrl
+    ? `<img src="${escapeHtml(property.imageUrl)}" alt="${escapeHtml(title)}" />`
+    : `<div class="osm-popup-placeholder">${escapeHtml(popupTextStage81("noPhoto"))}</div>`;
+
+  const statusLabel = popupStatusStage81(property);
+  const typeLabel = popupGroupStage81(property.propertyTypeGroup);
+
+  const addressLine = address ? `<p>${escapeHtml(address)}</p>` : "";
 
   return `
     <div class="osm-popup-card osm-popup-card-redesigned osm-popup-card-balanced">
       ${image}
       <div class="osm-popup-body">
         <div class="osm-popup-topline">
-          <span class="osm-popup-type">${escapeHtml(translateGroup(property.propertyTypeGroup))}</span>
-          <span class="osm-popup-status">${escapeHtml(statusLabel)}</span>
+          <span>${escapeHtml(typeLabel)}</span>
+          <span>${escapeHtml(statusLabel)}</span>
         </div>
-        <b>${escapeHtml(property.title)}</b>
-        <span class="osm-popup-address">${escapeHtml(property.address || property.city)}</span>
+        <h3>${escapeHtml(title)}</h3>
+        ${addressLine}
         <div class="osm-popup-facts">
           <small>Termin<br><strong>${escapeHtml(formatDate(property.auctionDate))}</strong></small>
-          <small>${escapeHtml(stage76PopupValue())}<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
+          <small>${escapeHtml(popupTextStage81("value"))}<br><strong>${escapeHtml(formatEuro(property.marketValue))}</strong></small>
         </div>
-        <a href="/properties/${encodeURIComponent(property.id)}">${escapeHtml(stage76PopupDetails())}</a>
+        <a href="/properties/${encodeURIComponent(property.id)}">${escapeHtml(popupTextStage81("details"))}</a>
       </div>
     </div>
   `;
