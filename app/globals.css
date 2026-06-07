@@ -11602,3 +11602,147 @@ input[type="date"] {
 .leaflet-popup-content h3:empty {
   display: none !important;
 }
+
+
+/* Stage 82 gallery calendar filters save */
+
+/* 1. Card gallery arrows — cleaner and more compact */
+.main-card-gallery-v77,
+.main-card-gallery-v76,
+.main-card-gallery-v75b {
+  position: relative !important;
+}
+
+.main-card-gallery-nav-v77,
+.main-card-gallery-nav-v76,
+.main-card-gallery-nav-v75b,
+.gallery-nav-v74 {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,255,255,0.82) !important;
+  background: rgba(15, 41, 31, 0.72) !important;
+  color: #fff !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.20) !important;
+  backdrop-filter: blur(5px) !important;
+  transform: translateY(-50%) !important;
+  opacity: 0.96 !important;
+}
+
+.main-card-gallery-prev-v77,
+.main-card-gallery-prev-v76,
+.main-card-gallery-prev-v75b,
+.gallery-prev-v74 {
+  left: 14px !important;
+}
+
+.main-card-gallery-next-v77,
+.main-card-gallery-next-v76,
+.main-card-gallery-next-v75b,
+.gallery-next-v74 {
+  right: 14px !important;
+}
+
+.main-card-gallery-nav-v77:hover,
+.main-card-gallery-nav-v76:hover,
+.main-card-gallery-nav-v75b:hover,
+.gallery-nav-v74:hover {
+  background: rgba(15, 41, 31, 0.88) !important;
+  transform: translateY(-50%) scale(1.04) !important;
+}
+
+.main-card-gallery-count-v77,
+.main-card-gallery-count-v76,
+.main-card-gallery-count-v75b,
+.gallery-count-v74 {
+  right: 12px !important;
+  bottom: 12px !important;
+  padding: 4px 8px !important;
+  border-radius: 999px !important;
+  background: rgba(15, 41, 31, 0.78) !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+/* 2. Auction calendar time badges */
+.auction-calendar-day-with-time-v82 {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.auction-time-badge-v82 {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 22px !important;
+  min-width: 48px !important;
+  padding: 0 8px !important;
+  margin-left: 6px !important;
+  border-radius: 999px !important;
+  background: rgba(47, 97, 79, 0.14) !important;
+  color: #24604d !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 22px !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  transform: translateY(-1px) !important;
+}
+
+/* If the date cell is flex-like, keep date and time centered together */
+.auction-calendar-day-with-time-v82 {
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 3. Active filters row */
+.active-filter-row-v82 {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.active-filter-row-v82 [class*="chip"],
+.active-filter-row-v82 span,
+.active-filter-row-v82 button,
+.active-filter-row-v82 a {
+  line-height: 1.1 !important;
+}
+
+.active-filter-save-search-v82 {
+  min-height: 34px !important;
+  height: 34px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(47, 97, 79, 0.28) !important;
+  border-radius: 999px !important;
+  background: #2f654f !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  box-shadow: 0 8px 18px rgba(20, 55, 41, 0.14) !important;
+}
+
+.active-filter-save-search-v82:hover {
+  background: #255640 !important;
+}
+
+/* Make active filters less tall when many chips are selected */
+.active-filter-row-v82 {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
