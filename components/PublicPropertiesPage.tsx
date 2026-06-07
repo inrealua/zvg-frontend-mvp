@@ -1,3 +1,37 @@
+
+type Stage69Locale = "de" | "ru" | "en";
+
+const stage69TextDict = {
+  de: {
+    activeFilters: "Aktive Filter:",
+    clearAll: "Alles löschen",
+    emptyTitle: "Keine Objekte gefunden",
+    emptyText: "Entfernen Sie einige Filter, erweitern Sie den Preisbereich oder wählen Sie eine andere Stadt.",
+    prev: "Zurück",
+    next: "Weiter",
+  },
+  ru: {
+    activeFilters: "Активные фильтры:",
+    clearAll: "Очистить всё",
+    emptyTitle: "Объекты не найдены",
+    emptyText: "Попробуй убрать часть фильтров, расширить диапазон цены или выбрать другой город.",
+    prev: "Назад",
+    next: "Вперёд",
+  },
+  en: {
+    activeFilters: "Active filters:",
+    clearAll: "Clear all",
+    emptyTitle: "No objects found",
+    emptyText: "Try removing some filters, expanding the price range, or choosing another city.",
+    prev: "Back",
+    next: "Next",
+  },
+} as const;
+
+function stage69Text(locale: Stage69Locale = "de") {
+  return stage69TextDict[locale] || stage69TextDict.de;
+}
+
 import { Prisma, PropertyStatus } from "@prisma/client";
 import { ActiveFilters } from "@/components/ActiveFilters";
 import { EmptyState } from "@/components/EmptyState";
@@ -210,8 +244,8 @@ function pageCopy(mode: PageMode, siteText: SiteText, locale: keyof typeof local
       kicker: t.archiveKicker,
       title: t.archiveTitle,
       text: t.archiveText,
-      listTitle: t.archiveListTitle,
-      listText: t.archiveListText,
+      listTitle: "",
+      listText: "",
     };
   }
 
@@ -220,8 +254,8 @@ function pageCopy(mode: PageMode, siteText: SiteText, locale: keyof typeof local
       kicker: siteText.hero.kickerMap,
       title: siteText.hero.mapTitle,
       text: siteText.hero.mapSubtitle,
-      listTitle: siteText.map.title,
-      listText: siteText.map.subtitle,
+      listTitle: "",
+      listText: "",
     };
   }
 
@@ -229,8 +263,8 @@ function pageCopy(mode: PageMode, siteText: SiteText, locale: keyof typeof local
     kicker: siteText.hero.kickerHome,
     title: siteText.list.title,
     text: siteText.list.subtitle,
-    listTitle: siteText.list.title,
-    listText: siteText.list.subtitle,
+    listTitle: "",
+    listText: "",
   };
 }
 

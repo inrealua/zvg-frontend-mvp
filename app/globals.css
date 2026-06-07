@@ -10628,3 +10628,67 @@ input[type="date"] {
   position: absolute !important;
   z-index: 150 !important;
 }
+
+
+/* Stage 69 i18n empty/map/button fixes */
+
+/* 5) Buttons: raise 2px more */
+.search-filter-grid-v60 > .filter-action-button-v60,
+.search-filter-grid-v59 > .filter-action-button-v59,
+.search-filter-grid-v58 > .filter-action-button-v58 {
+  margin-top: 18px !important;
+}
+
+/* 1) Hide old list heading/subtitle if still rendered */
+.section-heading-row h2:empty,
+.section-heading-row p:empty {
+  display: none !important;
+}
+
+.section-heading-row:has(h2:empty):has(p:empty) {
+  display: none !important;
+}
+
+/* Hide Top 12 heading block by common classes */
+.properties-heading-v54,
+.properties-heading-v55,
+.list-heading-v54,
+.list-heading-v55 {
+  display: none !important;
+}
+
+/* 6) Do NOT hide last legend item anymore. Stage 68 accidentally hid commercial. */
+.map-legend > *:last-child,
+.property-map-legend > *:last-child,
+.leaflet-container + .map-legend > *:last-child {
+  display: inline-flex !important;
+}
+
+/* Hide only cancelled legend item by explicit signals */
+.map-legend [data-type="cancelled"],
+.map-legend [data-status="cancelled"],
+.map-legend [data-key="cancelled"],
+.property-map-legend [data-type="cancelled"],
+.property-map-legend [data-status="cancelled"],
+.property-map-legend [data-key="cancelled"],
+.map-legend .legend-dot.cancelled,
+.map-legend .legend-dot.aufgehoben,
+.property-map-legend .legend-dot.cancelled,
+.property-map-legend .legend-dot.aufgehoben {
+  display: none !important;
+}
+
+/* If the dot itself is hidden, hide its parent legend text too in modern browsers. */
+.map-legend span:has(.legend-dot.cancelled),
+.map-legend span:has(.legend-dot.aufgehoben),
+.property-map-legend span:has(.legend-dot.cancelled),
+.property-map-legend span:has(.legend-dot.aufgehoben) {
+  display: none !important;
+}
+
+/* Date input gets locale hint; native calendar popup language still depends on browser/OS */
+.search-filter-v60 input[type="date"],
+.search-filter-v59 input[type="date"],
+.search-filter-v58 input[type="date"] {
+  color-scheme: light !important;
+}

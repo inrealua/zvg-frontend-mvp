@@ -1,4 +1,23 @@
 
+type Stage69PaginationLocale = "de" | "ru" | "en";
+
+function stage69ReadPaginationLocale(): Stage69PaginationLocale {
+  if (typeof document === "undefined") return "de";
+  const match = document.cookie.match(/(?:^|;\s*)zvg_locale=(de|ru|en)(?:;|$)/);
+  return (match?.[1] as Stage69PaginationLocale) || "de";
+}
+
+const stage69PaginationText = {
+  de: { prev: "Zurück", next: "Weiter" },
+  ru: { prev: "Назад", next: "Вперёд" },
+  en: { prev: "Back", next: "Next" },
+} as const;
+
+function stage69Pg() {
+  return stage69PaginationText[stage69ReadPaginationLocale()];
+}
+
+
 type Stage68PaginationLocale = "de" | "ru" | "en";
 
 function stage68ReadPaginationLocale(): Stage68PaginationLocale {
