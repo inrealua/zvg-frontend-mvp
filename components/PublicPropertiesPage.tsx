@@ -1,28 +1,62 @@
 
-type Stage69Locale = "de" | "ru" | "en";
+type Stage70Locale = "de" | "ru" | "en";
 
-const stage69TextDict = {
+const stage70ListText = {
   de: {
-    activeFilters: "Aktive Filter:",
-    clearAll: "Alles löschen",
-    emptyTitle: "Keine Objekte gefunden",
-    emptyText: "Entfernen Sie einige Filter, erweitern Sie den Preisbereich oder wählen Sie eine andere Stadt.",
+    emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+    emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+    activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+    clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
     prev: "Zurück",
     next: "Weiter",
   },
   ru: {
-    activeFilters: "Активные фильтры:",
-    clearAll: "Очистить всё",
-    emptyTitle: "Объекты не найдены",
-    emptyText: "Попробуй убрать часть фильтров, расширить диапазон цены или выбрать другой город.",
+    emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+    emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+    activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+    clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+    prev: "Назад",
+    next: "Вперёд",
+  },
+  en: {
+    emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+    emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+    activeFilters: "Active filters:",
+    clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+    prev: "Back",
+    next: "Next",
+  },
+} as const;
+
+function stage70T(locale: Stage70Locale) {
+  return stage70ListText[locale] || stage70ListText.de;
+}
+
+
+type Stage69Locale = "de" | "ru" | "en";
+
+const stage69TextDict = {
+  de: {
+    activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+    clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+    emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+    emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+    prev: "Zurück",
+    next: "Weiter",
+  },
+  ru: {
+    activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+    clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+    emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+    emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
     prev: "Назад",
     next: "Вперёд",
   },
   en: {
     activeFilters: "Active filters:",
-    clearAll: "Clear all",
-    emptyTitle: "No objects found",
-    emptyText: "Try removing some filters, expanding the price range, or choosing another city.",
+    clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+    emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+    emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
     prev: "Back",
     next: "Next",
   },

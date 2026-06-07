@@ -10692,3 +10692,48 @@ input[type="date"] {
 .search-filter-v58 input[type="date"] {
   color-scheme: light !important;
 }
+
+
+/* Stage 70 locale routes and i18n fixes */
+
+/* Remove old Top-12 heading area if still present as empty block */
+.section-heading-row h2:empty,
+.section-heading-row p:empty,
+.section-heading-row:has(h2:empty):has(p:empty) {
+  display: none !important;
+}
+
+/* Buttons: Stage 69 target = 18px */
+.search-filter-grid-v60 > .filter-action-button-v60,
+.search-filter-grid-v59 > .filter-action-button-v59,
+.search-filter-grid-v58 > .filter-action-button-v58 {
+  margin-top: 18px !important;
+}
+
+/* Map legend: do not hide last item. Show all property types except cancelled. */
+.map-legend > *:last-child,
+.property-map-legend > *:last-child,
+.leaflet-container + .map-legend > *:last-child {
+  display: inline-flex !important;
+}
+
+.map-legend span:has(.legend-dot.cancelled),
+.map-legend span:has(.legend-dot.aufgehoben),
+.property-map-legend span:has(.legend-dot.cancelled),
+.property-map-legend span:has(.legend-dot.aufgehoben) {
+  display: none !important;
+}
+
+/* Colors for additional legend items if CSS classes did not exist */
+.legend-dot.land-wald,
+.legend-dot.garagen,
+.legend-dot.sonstige {
+  display: inline-block;
+}
+
+/* Date inputs: browser popup locale mostly follows browser/OS; lang attribute is set in JSX */
+.search-filter-v60 input[type="date"],
+.search-filter-v59 input[type="date"],
+.search-filter-v58 input[type="date"] {
+  color-scheme: light !important;
+}

@@ -14,6 +14,9 @@ const stage61MapLocaleText = {
     apartments: "Wohnungen",
     land: "Grundstücke",
     commercial: "Gewerbe",
+    landForest: "Land / Wald",
+    garages: "Garagen / Parken",
+    other: "Sonstige",
     cancelled: "aufgehoben",
     drawTitle: "Bereich zeichnen",
     drawHelp: "Klicken Sie auf die Karte, um Punkte zu setzen. Mindestens 3 Punkte.",
@@ -28,6 +31,9 @@ const stage61MapLocaleText = {
     apartments: "Квартиры",
     land: "Участки",
     commercial: "Коммерция",
+    landForest: "Земля / лес",
+    garages: "Гаражи / парковки",
+    other: "Прочее",
     cancelled: "отменено",
     drawTitle: "Нарисовать область",
     drawHelp: "Кликните по карте, чтобы поставить точки. Минимум 3 точки.",
@@ -42,6 +48,9 @@ const stage61MapLocaleText = {
     apartments: "Apartments",
     land: "Land plots",
     commercial: "Commercial",
+    landForest: "Land / forest",
+    garages: "Garages / parking",
+    other: "Other",
     cancelled: "cancelled",
     drawTitle: "Draw area",
     drawHelp: "Click on the map to place points. At least 3 points.",
@@ -471,6 +480,9 @@ if (!mapElementRef.current) return;
         <span><i className="legend-dot wohnung" />{stage61MapT().apartments}</span>
         <span><i className="legend-dot grund" />{stage61MapT().land}</span>
         <span><i className="legend-dot gewerbe" />{stage61MapT().commercial}</span>
+        <span><i className="legend-dot land-wald" />{stage61MapT().landForest}</span>
+        <span><i className="legend-dot garagen" />{stage61MapT().garages}</span>
+        <span><i className="legend-dot sonstige" />{stage61MapT().other}</span>
       </div>
     </aside>
   );
