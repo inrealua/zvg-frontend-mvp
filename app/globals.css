@@ -10737,3 +10737,14 @@ input[type="date"] {
 .search-filter-v58 input[type="date"] {
   color-scheme: light !important;
 }
+
+
+/* Stage 71 real locale route fixes */
+
+/* Keep old Top-12/list intro hidden if any earlier text remains */
+.section-heading-row:has(h2):has(p) h2,
+.section-heading-row:has(h2):has(p) p {
+  /* Do not globally hide all headings; actual removal is done in component patches. */
+}
+
+/* Explicit language pages are provided by app/[locale]/page.tsx and app/ru|de|en/page.tsx */

@@ -305,12 +305,15 @@ function pageCopy(mode: PageMode, siteText: SiteText, locale: keyof typeof local
 export async function PublicPropertiesPage({
   params,
   mode,
+  forcedLocale,
 }: {
   params: SearchParamRecord;
   mode: PageMode;
-}) {
+
+  forcedLocale?: "de" | "ru" | "en";}) {
   const allowedPageSizesV57 = [12, 24, 48, 96];
-  const { locale } = await getI18n();
+  const i18n = await getI18n();
+  const locale = forcedLocale ?? i18n.locale;
   const siteText = getSiteText(locale);
   const t = localText[locale];
 
