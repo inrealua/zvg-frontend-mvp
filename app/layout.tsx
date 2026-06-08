@@ -1,3 +1,4 @@
+import { TargetedPolishStage90 } from "@/components/TargetedPolishStage90";
 import { TargetedSearchEnhancerStage89 } from "@/components/TargetedSearchEnhancerStage89";
 import { RuntimeUiCleanup } from "@/components/RuntimeUiCleanup";
 import { FilterMiniApplyEnhancer } from "@/components/FilterMiniApplyEnhancer";
@@ -51,6 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
+        <TargetedPolishStage90 />
         <TargetedSearchEnhancerStage89 />
 <RuntimeUiCleanup />
         <Header />
