@@ -11937,9 +11937,9 @@ input[type="date"] {
 
 
 
-/* Stage 97 clean mobile layout leaflet */
+/* Stage 99 mobile layout rebuild */
 
-/* Desktop language switcher from Stage94, kept but safe */
+/* Keep custom language dropdown styled on desktop/mobile */
 .language-switcher-v94 {
   position: relative;
   display: inline-flex;
@@ -11960,9 +11960,6 @@ input[type="date"] {
   align-items: center;
   gap: 10px;
   cursor: pointer;
-}
-.language-switcher-button-v94:hover {
-  background: rgba(234, 245, 240, .95);
 }
 .language-switcher-menu-v94 {
   position: absolute;
@@ -11993,14 +11990,9 @@ input[type="date"] {
 .language-switcher-menu-v94 button:hover,
 .language-switcher-menu-v94 button.is-active {
   background: rgba(234, 245, 240, .95);
-  color: #0b3b2e;
 }
 
-/*
-  Leaflet protection.
-  Keep these outside media queries so they always beat global img rules.
-  Do not force width/height for panes; Leaflet controls this.
-*/
+/* Leaflet global protection only. Do not change panes/transforms. */
 .leaflet-container img,
 .leaflet-container .leaflet-tile {
   max-width: none !important;
@@ -12010,19 +12002,8 @@ input[type="date"] {
   width: 256px !important;
   height: 256px !important;
 }
-.leaflet-container .leaflet-pane,
-.leaflet-container .leaflet-map-pane,
-.leaflet-container .leaflet-tile-pane,
-.leaflet-container .leaflet-overlay-pane,
-.leaflet-container .leaflet-marker-pane,
-.leaflet-container .leaflet-shadow-pane,
-.leaflet-container .leaflet-tooltip-pane,
-.leaflet-container .leaflet-popup-pane {
-  overflow: visible !important;
-  max-width: none !important;
-}
-.leaflet-container .leaflet-marker-icon,
-.leaflet-container .leaflet-marker-shadow {
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
   max-width: none !important;
 }
 
@@ -12034,19 +12015,17 @@ input[type="date"] {
     overflow-x: hidden !important;
   }
 
-  body {
-    position: relative;
-  }
-
   main {
     width: 100% !important;
     max-width: 100vw !important;
-    overflow-x: clip !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden !important;
   }
 
-  /*
-    Header: normal scroll, compact, no sticky.
-  */
+  /* Header: compact and scrolls away normally */
   header,
   .site-header,
   .public-header,
@@ -12130,61 +12109,52 @@ input[type="date"] {
     justify-content: center !important;
     height: 34px !important;
     padding: 0 9px !important;
-    margin: 0 !important;
     border-radius: 999px !important;
     white-space: nowrap !important;
     font-size: 13px !important;
     line-height: 1 !important;
-    flex: 0 0 auto !important;
   }
 
   header nav button,
   header nav select,
-  .site-header nav button,
-  .site-header nav select,
-  .public-header nav button,
-  .public-header nav select,
-  .header nav button,
-  .header nav select,
-  [class*="Header"] nav button,
-  [class*="Header"] nav select,
-  [class*="header"] nav button,
-  [class*="header"] nav select {
+  .language-switcher-button-v94 {
     height: 36px !important;
     min-height: 36px !important;
     max-height: 36px !important;
-    width: auto !important;
-    max-width: 130px !important;
     padding: 0 11px !important;
     border-radius: 999px !important;
-    white-space: nowrap !important;
     font-size: 13px !important;
-    line-height: 1 !important;
-    flex: 0 0 auto !important;
   }
 
-  /*
-    Mobile filter.
-    Force only the actual search/filter panel to be narrower.
-    Exclude Leaflet containers explicitly.
-  */
-  main form:not(:has(.leaflet-container)),
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button),
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) {
-    width: min(100% - 56px, 540px) !important;
-    max-width: min(100% - 56px, 540px) !important;
+  /* Hard reset only for direct main children. This fixes the right shift. */
+  main > * {
+    max-width: calc(100vw - 16px) !important;
+    width: calc(100vw - 16px) !important;
+    min-width: 0 !important;
     margin-left: auto !important;
     margin-right: auto !important;
     box-sizing: border-box !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+  }
+
+  /* Search/filter panel: class is added by Stage99 component */
+  .mobile-filter-panel-v99 {
+    width: calc(100vw - 56px) !important;
+    max-width: calc(100vw - 56px) !important;
+    min-width: 0 !important;
+    margin: 18px auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     overflow: hidden !important;
+    box-sizing: border-box !important;
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 10px !important;
   }
 
-  main form:not(:has(.leaflet-container)) > *,
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button) > *,
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) > * {
+  .mobile-filter-panel-v99 > * {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -12192,67 +12162,95 @@ input[type="date"] {
     box-sizing: border-box !important;
   }
 
-  main form input,
-  main form select,
-  main form textarea,
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button) input,
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button) select,
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) input,
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) select {
+  .mobile-filter-panel-v99 input,
+  .mobile-filter-panel-v99 select,
+  .mobile-filter-panel-v99 textarea,
+  .mobile-filter-panel-v99 button {
     max-width: 100% !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
   }
 
-  /*
-    Map outer container only.
-    Do not style map descendants except .leaflet-container itself.
-  */
-  main section:has(.leaflet-container),
-  main div:has(> .leaflet-container) {
-    width: min(100% - 28px, 760px) !important;
-    max-width: min(100% - 28px, 760px) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
+  .mobile-filter-panel-v99 input[type="range"] {
+    width: calc(100% - 18px) !important;
+    margin-left: 9px !important;
+    margin-right: 9px !important;
   }
 
-  .leaflet-container {
+  /* Map panel: class is added by Stage99 component */
+  .mobile-map-panel-v99 {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    min-width: 0 !important;
+    margin: 18px auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    transform: none !important;
+    left: auto !important;
+    right: auto !important;
+  }
+
+  .mobile-map-panel-v99 .leaflet-container {
     width: 100% !important;
-    height: 400px !important;
-    min-height: 340px !important;
+    height: 390px !important;
+    min-height: 330px !important;
     border-radius: 18px !important;
     overflow: hidden !important;
-    background: #e6e6e6 !important;
   }
 
-  main section:has(.leaflet-container) > div:has(button),
-  main div:has(> .leaflet-container) > div:has(button) {
-    display: flex !important;
-    flex-wrap: wrap !important;
+  .mobile-map-actions-v99 {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
     gap: 8px !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
+    width: 100% !important;
     max-width: 100% !important;
+    margin: 10px 0 12px !important;
   }
 
-  main section:has(.leaflet-container) > div:has(button) button,
-  main div:has(> .leaflet-container) > div:has(button) button {
-    flex: 1 1 150px !important;
-    min-width: 0 !important;
+  .mobile-map-actions-v99 button,
+  .mobile-map-actions-v99 a {
+    width: 100% !important;
     max-width: 100% !important;
-    white-space: normal !important;
     min-height: 42px !important;
+    white-space: normal !important;
     padding: 10px 12px !important;
     line-height: 1.15 !important;
+    justify-content: center !important;
   }
 
-  .language-switcher-button-v94 {
-    height: 34px;
-    min-height: 34px;
-    padding: 0 12px;
-    font-size: 13px;
+  /* Hide accidental escaped range overlays inside map panel */
+  .mobile-map-panel-v99 input[type="range"] {
+    display: none !important;
+  }
+
+  .mobile-sort-row-v99 {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .mobile-property-grid-v99 {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .mobile-property-grid-v99 > *,
+  .mobile-property-grid-v99 article,
+  .mobile-property-grid-v99 [href*="/properties/"] {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .language-switcher-menu-v94 {
@@ -12263,192 +12261,25 @@ input[type="date"] {
 }
 
 @media (max-width: 430px) {
-  main form:not(:has(.leaflet-container)),
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button),
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) {
-    width: calc(100vw - 52px) !important;
-    max-width: calc(100vw - 52px) !important;
+  main > * {
+    max-width: calc(100vw - 12px) !important;
+    width: calc(100vw - 12px) !important;
   }
 
-  main section:has(.leaflet-container),
-  main div:has(> .leaflet-container) {
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
+  .mobile-filter-panel-v99 {
+    width: calc(100vw - 60px) !important;
+    max-width: calc(100vw - 60px) !important;
   }
 
-  .leaflet-container {
-    height: 390px !important;
-    min-height: 330px !important;
-  }
-}
-
-
-/* Stage 98 mobile left align content */
-
-@media (max-width: 768px) {
-  html,
-  body {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+  .mobile-map-panel-v99,
+  .mobile-sort-row-v99,
+  .mobile-property-grid-v99 {
+    width: calc(100vw - 22px) !important;
+    max-width: calc(100vw - 22px) !important;
   }
 
-  main {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    min-width: 0 !important;
-    margin: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    overflow-x: hidden !important;
-    transform: none !important;
-    left: auto !important;
-    right: auto !important;
-  }
-
-  /*
-    Reset desktop wrappers that caused the whole content column to sit outside
-    the visible phone viewport. Do NOT affect Leaflet internals.
-  */
-  main > *,
-  main > section,
-  main > div,
-  main section:not(:has(.leaflet-container)),
-  main div:not(:has(.leaflet-container)):not(.leaflet-pane):not(.leaflet-control-container):not(.leaflet-control) {
-    min-width: 0 !important;
-    max-width: calc(100vw - 16px) !important;
-    width: calc(100vw - 16px) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    box-sizing: border-box !important;
-    transform: none !important;
-    left: auto !important;
-    right: auto !important;
-    float: none !important;
-  }
-
-  /*
-    If a desktop layout uses grid/flex columns around the content, collapse it.
-    Exclude Leaflet panes so map tiles/markers stay correct.
-  */
-  main > div:not(:has(.leaflet-container)),
-  main > section:not(:has(.leaflet-container)) {
-    display: block !important;
-    grid-template-columns: none !important;
-  }
-
-  /*
-    Search/filter panel: narrower and centered, but no right shift.
-  */
-  main form:not(:has(.leaflet-container)),
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button),
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) {
-    width: calc(100vw - 48px) !important;
-    max-width: calc(100vw - 48px) !important;
-    min-width: 0 !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 10px !important;
-    overflow: hidden !important;
-  }
-
-  main form:not(:has(.leaflet-container)) > *,
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button) > *,
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) > * {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    grid-column: 1 / -1 !important;
-    box-sizing: border-box !important;
-  }
-
-  main input,
-  main select,
-  main textarea,
-  main button {
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-  /*
-    Map: only outer wrapper. Leave Leaflet internals alone.
-  */
-  main section:has(.leaflet-container),
-  main div:has(> .leaflet-container) {
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
-    min-width: 0 !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-    transform: none !important;
-    left: auto !important;
-    right: auto !important;
-  }
-
-  .leaflet-container {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  /*
-    Cards/list/sort rows should not exceed viewport.
-  */
-  main article,
-  main [href*="/properties/"],
-  main [class*="card" i]:not(.leaflet-control),
-  main [class*="property" i],
-  main [class*="listing" i],
-  main [class*="sort" i] {
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  main [class*="grid" i]:not(:has(.leaflet-container)),
-  main [class*="list" i]:not(:has(.leaflet-container)) {
-    grid-template-columns: minmax(0, 1fr) !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  /*
-    Prevent Safari from keeping a previous horizontal scroll position after deploy.
-  */
-  body {
-    left: 0 !important;
-    right: auto !important;
-  }
-}
-
-@media (max-width: 430px) {
-  main > *,
-  main > section,
-  main > div,
-  main section:not(:has(.leaflet-container)),
-  main div:not(:has(.leaflet-container)):not(.leaflet-pane):not(.leaflet-control-container):not(.leaflet-control) {
-    width: calc(100vw - 14px) !important;
-    max-width: calc(100vw - 14px) !important;
-  }
-
-  main form:not(:has(.leaflet-container)),
-  main section:not(:has(.leaflet-container)):has(input):has(select):has(button),
-  main div:not(:has(.leaflet-container)):has(input):has(select):has(button) {
-    width: calc(100vw - 54px) !important;
-    max-width: calc(100vw - 54px) !important;
-  }
-
-  main section:has(.leaflet-container),
-  main div:has(> .leaflet-container) {
-    width: calc(100vw - 20px) !important;
-    max-width: calc(100vw - 20px) !important;
+  .mobile-map-panel-v99 .leaflet-container {
+    height: 380px !important;
+    min-height: 320px !important;
   }
 }
