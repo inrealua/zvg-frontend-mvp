@@ -12496,3 +12496,208 @@ input[type="date"] {
     width: calc(100vw - 18px) !important;
   }
 }
+
+
+/* Stage 94 mobile filter and language select */
+
+/* Styled language switcher */
+.language-switcher-v94 {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  z-index: 80;
+}
+
+.language-switcher-button-v94 {
+  height: 42px;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(47, 97, 79, .22);
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  color: #26483d;
+  font-weight: 800;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.language-switcher-button-v94:hover {
+  background: rgba(234, 245, 240, .95);
+}
+
+.language-switcher-chevron-v94 {
+  font-size: 13px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.language-switcher-menu-v94 {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  padding: 8px;
+  border: 1px solid rgba(47,97,79,.18);
+  border-radius: 18px;
+  background: rgba(255,255,255,.98);
+  box-shadow: 0 18px 38px rgba(18,45,34,.16);
+  display: grid;
+  gap: 4px;
+}
+
+.language-switcher-menu-v94 button {
+  width: 100%;
+  height: 38px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #203a33;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: left;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.language-switcher-menu-v94 button:hover,
+.language-switcher-menu-v94 button.is-active {
+  background: rgba(234, 245, 240, .95);
+  color: #0b3b2e;
+}
+
+/* Hide old raw select if both old select and new custom switcher accidentally render */
+header nav .language-switcher-v94 + select,
+header nav select + .language-switcher-v94 {
+  margin-left: 0;
+}
+
+/* Mobile content/filter width recovery */
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  main {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Search/filter panel: target by actual controls, not all page grids */
+  main form:has(input):has(select),
+  main section:has(input):has(select):has(button),
+  main div:has(> input):has(> select),
+  main div:has(input[placeholder*="PLZ"]),
+  main div:has(input[placeholder*="09111"]),
+  main div:has(input[placeholder*="Ort"]) {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  /* The filter's inner grid must never keep desktop min-width */
+  main form:has(input):has(select) *,
+  main section:has(input):has(select):has(button) *,
+  main div:has(input[placeholder*="PLZ"]) *,
+  main div:has(input[placeholder*="09111"]) *,
+  main div:has(input[placeholder*="Ort"]) * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  main form:has(input):has(select),
+  main section:has(input):has(select):has(button) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  main form:has(input):has(select) > *,
+  main section:has(input):has(select):has(button) > * {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Input/select controls */
+  main input,
+  main select,
+  main textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Range cards: prevent right values/handles from clipping */
+  main [class*="range" i],
+  main [class*="slider" i] {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  main [class*="range" i] input,
+  main [class*="slider" i] input {
+    width: calc(100% - 18px) !important;
+    margin-left: 9px !important;
+    margin-right: 9px !important;
+  }
+
+  /* Map block and object cards should fit viewport too, but no forced full-screen width */
+  main [class*="map" i],
+  main .leaflet-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  main [class*="card" i],
+  main article,
+  main [href*="/properties/"] {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .language-switcher-button-v94 {
+    height: 34px;
+    min-height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .language-switcher-menu-v94 {
+    right: 50%;
+    transform: translateX(50%);
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 430px) {
+  main form:has(input):has(select),
+  main section:has(input):has(select):has(button),
+  main div:has(input[placeholder*="PLZ"]),
+  main div:has(input[placeholder*="09111"]),
+  main div:has(input[placeholder*="Ort"]) {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  main input,
+  main select,
+  main textarea,
+  main button {
+    font-size: 15px !important;
+  }
+}

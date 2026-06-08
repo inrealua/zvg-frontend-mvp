@@ -1,73 +1,118 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent } from "react";
 
-const LOCALES = ["ru", "de", "en"] as const;
-type Locale = (typeof LOCALES)[number];
+type Locale = "de" | "ru" | "en";
 
-type LanguageSwitcherProps = {
-  locale?: Locale;
-  labels?: {
-    label?: string;
-    de?: string;
-    ru?: string;
-    en?: string;
-  };
+type Labels = {
+  label?: string;
+  de?: string;
+  ru?: string;
+  en?: string;
 };
 
-function isLocale(value: string | undefined): value is Locale {
-  return value === "ru" || value === "de" || value === "en";
-}
+type Props = {
+  locale?: Locale;
+  currentLocale?: Locale;
+  labels?: Labels;
+  className?: string;
+};
 
-function stripLocale(pathname: string) {
-  return pathname.replace(/^\/(ru|de|en)(?=\/|$)/, "") || "/";
-}
+const defaultLabels: Record<Locale, string> = {
+  de: "Deutsch",
+  ru: "Русский",
+  en: "English",
+};
 
-function currentLocale(pathname: string, fallback?: Locale): Locale {
-  if (isLocale(fallback)) return fallback;
-
-  const first = pathname.split("/").filter(Boolean)[0];
-  if (isLocale(first)) return first;
-
-  if (typeof document !== "undefined") {
-    const match = document.cookie.match(/(?:^|;\s*)zvg_locale=(ru|de|en)(?:;|$)/);
-    if (isLocale(match?.[1])) return match[1];
+function normalizeLocale(value?: string): Locale {
+  if (value === "ru" || value === "en" || value === "de") return value;
+  if (typeof window !== "undefined") {
+    const first = window.location.pathname.split("/").filter(Boolean)[0];
+    if (first === "ru" || first === "en" || first === "de") return first;
   }
-
   return "de";
 }
 
-export function LanguageSwitcher({ locale, labels }: LanguageSwitcherProps) {
+function buildLocalePath(pathname: string, next: Locale) {
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts[0] === "ru" || parts[0] === "de" || parts[0] === "en") {
+    parts[0] = next;
+    return "/" + parts.join("/");
+  }
+  return "/" + next + (pathname === "/" ? "" : pathname);
+}
+
+export function LanguageSwitcher({ locale, currentLocale, labels, className }: Props) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "/";
   const searchParams = useSearchParams();
-  const selected = currentLocale(pathname, locale);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [open, setOpen] = useState(false);
 
-  function onChange(event: ChangeEvent<HTMLSelectElement>) {
-    const nextLocale = event.target.value as Locale;
+  const active = normalizeLocale(locale || currentLocale);
+  const query = searchParams?.toString();
+  const names: Record<Locale, string> = {
+    de: labels?.de || defaultLabels.de,
+    ru: labels?.ru || defaultLabels.ru,
+    en: labels?.en || defaultLabels.en,
+  };
 
-    document.cookie = `zvg_locale=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+  useEffect(() => {
+    function onClick(event: MouseEvent) {
+      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
+    }
 
-    const cleanPath = stripLocale(pathname);
-    const query = searchParams.toString();
-    const nextPath = `/${nextLocale}${cleanPath === "/" ? "" : cleanPath}${query ? `?${query}` : ""}`;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
 
-    router.push(nextPath);
-    router.refresh();
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  function choose(next: Locale) {
+    document.cookie = "zvg_locale=" + next + "; path=/; max-age=31536000; SameSite=Lax";
+
+    const nextPath = buildLocalePath(pathname, next);
+    router.push(nextPath + (query ? "?" + query : ""));
+    setOpen(false);
   }
 
-  const shortLabel = selected.toUpperCase();
-
   return (
-    <label className="language-switcher-shell-v74" aria-label={labels?.label ?? "Language"}>
-      <span className="language-switcher-current-v74">{shortLabel}</span>
-      <select className="language-select language-select-v74" value={selected} onChange={onChange}>
-        <option value="de">{labels?.de ?? "Deutsch"}</option>
-        <option value="ru">{labels?.ru ?? "Русский"}</option>
-        <option value="en">{labels?.en ?? "English"}</option>
-      </select>
-    </label>
+    <div className={className || "language-switcher-v94"} ref={wrapperRef}>
+      <button
+        type="button"
+        className="language-switcher-button-v94"
+        onClick={() => setOpen((value) => !value)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        <span>{active.toUpperCase()}</span>
+        <span className="language-switcher-chevron-v94">⌄</span>
+      </button>
+
+      {open ? (
+        <div className="language-switcher-menu-v94" role="menu">
+          {(["de", "ru", "en"] as Locale[]).map((item) => (
+            <button
+              type="button"
+              role="menuitem"
+              className={item === active ? "is-active" : ""}
+              key={item}
+              onClick={() => choose(item)}
+            >
+              {names[item]}
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
