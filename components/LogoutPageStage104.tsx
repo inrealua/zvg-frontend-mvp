@@ -20,7 +20,14 @@ const text = {
   },
 } as const;
 
+
+function stage107ClearHostCookie() {
+  document.cookie = "__Host-zvg_session=; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax; Secure";
+  document.cookie = "__Host-zvg_session=; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=None; Secure";
+}
+
 function clearClientCookies() {
+  stage107ClearHostCookie();
   stage106ClientCookieClear();
 }
 
@@ -31,6 +38,7 @@ function stage106ClientCookieClear() {
     .filter(Boolean);
 
   const names = Array.from(new Set([
+    "__Host-zvg_session",
     ...rawNames,
     "zvg_user_session",
     "zvg_admin_session",
