@@ -12134,3 +12134,80 @@ input[type="date"] {
     min-height: 330px;
   }
 }
+
+
+/* Stage 101 mobile header full width */
+
+@media (max-width: 768px) {
+  /*
+    Header must use the same visual width as the rest of the page.
+    Stage100 centered the inner header grid too tightly. This keeps the
+    compact menu but lets the header background/container span the viewport.
+  */
+  header,
+  .site-header,
+  .public-header,
+  .header,
+  [class*="Header"],
+  [class*="header"] {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+    box-sizing: border-box !important;
+  }
+
+  header > div,
+  .site-header > div,
+  .public-header > div,
+  .header > div,
+  [class*="Header"] > div,
+  [class*="header"] > div {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: max(12px, env(safe-area-inset-left)) !important;
+    padding-right: max(12px, env(safe-area-inset-right)) !important;
+    box-sizing: border-box !important;
+  }
+
+  /*
+    The logo/menu themselves should stay centered and compact, not stretch.
+  */
+  header nav,
+  .site-header nav,
+  .public-header nav,
+  .header nav,
+  [class*="Header"] nav,
+  [class*="header"] nav {
+    max-width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  header a:has(img),
+  .site-header a:has(img),
+  .public-header a:has(img),
+  .header a:has(img),
+  [class*="Header"] a:has(img),
+  [class*="header"] a:has(img) {
+    max-width: calc(100vw - 24px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (max-width: 430px) {
+  header > div,
+  .site-header > div,
+  .public-header > div,
+  .header > div,
+  [class*="Header"] > div,
+  [class*="header"] > div {
+    padding-left: max(10px, env(safe-area-inset-left)) !important;
+    padding-right: max(10px, env(safe-area-inset-right)) !important;
+  }
+}
