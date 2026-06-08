@@ -1,4 +1,31 @@
-"use client";
+const fs = require("node:fs");
+const path = require("node:path");
+
+const root = process.cwd();
+const file = path.join(root, "components", "LogoutButtonStage103.tsx");
+
+if (!fs.existsSync(file)) {
+  console.error("File not found:", file);
+  process.exit(1);
+}
+
+/**
+ * Stage 106B
+ *
+ * Stage106 tried to patch LogoutButtonStage103 with regex and left a broken
+ * fragment:
+ *   });
+ *   await fetch("/api/auth/logout", { method: "DELETE" ... })
+ *
+ * The clean fix is to rewrite LogoutButtonStage103.tsx completely.
+ *
+ * Logout is now top-level navigation:
+ *   /api/auth/logout?next=/ru|/de|/en&t=...
+ *
+ * That lets the browser apply Set-Cookie deletion/Clear-Site-Data reliably.
+ */
+
+const content = `"use client";
 
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -13,7 +40,7 @@ function getLocale(pathname: string): Locale {
   }
 
   if (typeof document !== "undefined") {
-    const match = document.cookie.match(/(?:^|;\\s*)zvg_locale=(ru|de|en)(?:;|$)/);
+    const match = document.cookie.match(/(?:^|;\\\\s*)zvg_locale=(ru|de|en)(?:;|$)/);
     if (match?.[1] === "ru" || match?.[1] === "de" || match?.[1] === "en") {
       return match[1];
     }
@@ -109,3 +136,7 @@ export function LogoutButtonStage103({ className }: { className?: string }) {
 }
 
 export default LogoutButtonStage103;
+`;
+
+fs.writeFileSync(file, content, "utf8");
+console.log("Stage 106B completed: LogoutButtonStage103.tsx rewritten cleanly.");
