@@ -11657,3 +11657,111 @@ input[type="date"] {
   line-height: 20px;
   white-space: nowrap;
 }
+
+
+/* Stage 88 source saved search i18n */
+
+.save-search-button {
+  border: 0;
+  cursor: pointer;
+}
+
+.active-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: min(1280px, calc(100% - 48px));
+  margin: 18px auto;
+}
+
+.active-filters-label {
+  font-weight: 800;
+  color: #526381;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(47, 97, 79, .22);
+  background: rgba(234, 245, 240, .88);
+  color: #0b3b2e;
+  font-weight: 800;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.clear-chip {
+  background: #fff;
+  color: #526381;
+}
+
+.saved-search-list {
+  display: grid;
+  gap: 10px;
+}
+
+.saved-search-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  min-height: auto;
+}
+
+.cabinet-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cabinet-actions .btn,
+.cabinet-actions button {
+  min-height: 40px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 14px;
+}
+
+.cabinet-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.cabinet-stats a {
+  min-height: 40px;
+  height: 40px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stats-panel,
+.search-stats,
+.results-stats {
+  width: min(1280px, calc(100% - 48px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 760px) {
+  .active-filters {
+    width: min(100% - 24px, 1280px);
+  }
+
+  .saved-search-item {
+    grid-template-columns: 1fr;
+  }
+
+  .cabinet-actions {
+    justify-content: flex-start;
+  }
+}

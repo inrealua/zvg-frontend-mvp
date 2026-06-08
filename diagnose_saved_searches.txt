@@ -1,0 +1,856 @@
+
+
+===== app/api/saved-searches/route.ts =====
+
+   1: import { getI18n } from "@/lib/i18n/server";
+   2: import { getUiText } from "@/lib/i18n/ui-texts";
+   3: import crypto from "crypto";
+   4: import { NextRequest, NextResponse } from "next/server";
+   5: import { prisma } from "@/lib/prisma";
+   6: import { getCurrentUserFromRequest } from "@/lib/user-auth";
+   7: 
+   8: export const dynamic = "force-dynamic";
+   9: export const runtime = "nodejs";
+  10: export const revalidate = 0;
+  11: 
+  12: function noStoreJson(data: unknown, init?: ResponseInit) {
+  13:   return NextResponse.json(data, {
+  14:     ...init,
+  15:     headers: {
+  16:       "Cache-Control": "no-store, no-cache, must-revalidate",
+  17:       Pragma: "no-cache",
+  18:       Expires: "0",
+  19:       Vary: "Cookie",
+  20:       ...(init?.headers || {}),
+  21:     },
+  22:   });
+  23: }
+  24: 
+  25: function formatPrice(value: string | null) {
+  26:   const number = Number(value);
+  27:   if (!Number.isFinite(number) || number <= 0) return null;
+  28:   return new Intl.NumberFormat("de-DE").format(number) + " €";
+  29: }
+  30: 
+  31: function generateSearchName(filtersUrl: string, summary: string) {
+  32:   try {
+  33:     const url = new URL(filtersUrl, "https://zvg-de.com");
+  34:     const params = url.searchParams;
+  35: 
+  36:     const cityOrPlz = params.get("city") || params.get("postalCode") || params.get("q") || "";
+  37:     const radius = params.get("radius") || params.get("radiusKm") || "";
+  38:     const priceMax = params.get("priceMax") || params.get("marketValueMax") || "";
+  39:     const state = params.getAll("state").join(", ");
+  40:     const type = params.getAll("propertyTypeGroup").join(", ");
+  41: 
+  42:     const parts: string[] = [];
+  43: 
+  44:     if (cityOrPlz) {
+  45:       parts.push(radius ? `${cityOrPlz} +${radius} km` : cityOrPlz);
+  46:     } else if (state) {
+  47:       parts.push(state);
+  48:     } else if (type) {
+  49:       parts.push(type);
+  50:     }
+  51: 
+  52:     const formattedPrice = formatPrice(priceMax);
+  53:     if (formattedPrice) parts.push(`bis ${formattedPrice}`);
+  54: 
+  55:     if (parts.length > 0) return parts.join(" ");
+  56: 
+  57:     const cleanSummary = summary.replace(/\s+/g, " ").trim();
+  58:     if (cleanSummary && cleanSummary !== "Alle Objekte") {
+  59:       return cleanSummary.slice(0, 80);
+  60:     }
+  61:   } catch {
+  62:     // ignore invalid URL
+  63:   }
+  64: 
+  65:   return "Gespeicherte Suche";
+  66: }
+  67: 
+  68: export async function POST(request: NextRequest) {
+  69:   const { locale } = await getI18n();
+  70:   const ui = getUiText(locale);
+  71:   const user = await getCurrentUserFromRequest(request);
+  72:   if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });
+  73: 
+  74:   const body = (await request.json().catch(() => null)) as {
+  75:     filtersUrl?: string;
+  76:     summary?: string;
+  77:     name?: string;
+  78:   } | null;
+  79: 
+  80:   const filtersUrl =
+  81:     typeof body?.filtersUrl === "string" && body.filtersUrl.startsWith("/")
+  82:       ? body.filtersUrl.slice(0, 2000)
+  83:       : "/";
+  84: 
+  85:   const humanReadableSummary =
+  86:     typeof body?.summary === "string" && body.summary.trim()
+  87:       ? body.summary.trim().slice(0, 1000)
+  88:       : "Alle Objekte";
+  89: 
+  90:   const filtersHash = crypto.createHash("sha256").update(filtersUrl).digest("hex");
+  91: 
+  92:   const existing = await prisma.savedSearch.findUnique({
+  93:     where: { userId_filtersHash: { userId: user.id, filtersHash } },
+  94:   });
+  95: 
+  96:   if (existing) return noStoreJson({ error: "Already saved" }, { status: 409 });
+  97: 
+  98:   const rawName = typeof body?.name === "string" ? body.name.trim() : "";
+  99:   const name = (rawName || generateSearchName(filtersUrl, humanReadableSummary)).slice(0, 120);
+ 100: 
+ 101:   const savedSearch = await prisma.savedSearch.create({
+ 102:     data: {
+ 103:       userId: user.id,
+ 104:       name,
+ 105:       filtersUrl,
+ 106:       filtersHash,
+ 107:       humanReadableSummary,
+ 108:     },
+ 109:   });
+ 110: 
+ 111:   return noStoreJson({ success: true, id: savedSearch.id, name });
+ 112: }
+ 113: 
+
+
+===== app/api/saved-searches/[id]/route.ts =====
+
+   1: import { NextRequest, NextResponse } from "next/server";
+   2: import { prisma } from "@/lib/prisma";
+   3: import { getCurrentUserFromRequest } from "@/lib/user-auth";
+   4: 
+   5: export const dynamic = "force-dynamic";
+   6: export const runtime = "nodejs";
+   7: export const revalidate = 0;
+   8: 
+   9: type SavedSearchRouteContext = {
+  10:   params: Promise<{ id: string }>;
+  11: };
+  12: 
+  13: function noStoreJson(data: unknown, init?: ResponseInit) {
+  14:   return NextResponse.json(data, {
+  15:     ...init,
+  16:     headers: {
+  17:       "Cache-Control": "no-store, no-cache, must-revalidate",
+  18:       Pragma: "no-cache",
+  19:       Expires: "0",
+  20:       Vary: "Cookie",
+  21:       ...(init?.headers || {}),
+  22:     },
+  23:   });
+  24: }
+  25: 
+  26: export async function PATCH(request: NextRequest, context: SavedSearchRouteContext) {
+  27:   const user = await getCurrentUserFromRequest(request);
+  28:   if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });
+  29: 
+  30:   const { id } = await context.params;
+  31:   const body = (await request.json().catch(() => null)) as { name?: string } | null;
+  32:   const name = typeof body?.name === "string" ? body.name.trim().slice(0, 120) : "";
+  33: 
+  34:   if (!name) {
+  35:     return noStoreJson({ error: "Name is required" }, { status: 400 });
+  36:   }
+  37: 
+  38:   const result = await prisma.savedSearch.updateMany({
+  39:     where: {
+  40:       id,
+  41:       userId: user.id,
+  42:     },
+  43:     data: {
+  44:       name,
+  45:     },
+  46:   });
+  47: 
+  48:   if (result.count === 0) {
+  49:     return noStoreJson({ error: "Saved search not found" }, { status: 404 });
+  50:   }
+  51: 
+  52:   return noStoreJson({ success: true, name });
+  53: }
+  54: 
+  55: export async function DELETE(request: NextRequest, context: SavedSearchRouteContext) {
+  56:   const user = await getCurrentUserFromRequest(request);
+  57:   if (!user) return noStoreJson({ error: "Unauthorized" }, { status: 401 });
+  58: 
+  59:   const { id } = await context.params;
+  60:   await prisma.savedSearch.deleteMany({ where: { id, userId: user.id } });
+  61:   return noStoreJson({ success: true });
+  62: }
+  63: 
+
+
+===== components/PublicPropertiesPage.tsx =====
+
+   1: 
+   2: type Stage73HeroLocale = "de" | "ru" | "en";
+   3: 
+   4: const stage73HeroText: Record<Stage73HeroLocale, { kicker: string; title: string; subtitle: string }> = {
+   5:   de: {
+   6:     kicker: "ZVG-DE.COM · ALLE GERICHTLICHEN VERSTEIGERUNGEN AN EINEM ORT",
+   7:     title: "Professionelles Werkzeug",
+   8:     subtitle: "für die Suche nach Zwangsversteigerungen in Deutschland",
+   9:   },
+  10:   ru: {
+  11:     kicker: "ZVG-DE.COM · ВСЕ СУДЕБНЫЕ АУКЦИОНЫ В ОДНОМ МЕСТЕ",
+  12:     title: "Профессиональный инструмент",
+  13:     subtitle: "для поиска принудительных торгов в Германии",
+  14:   },
+  15:   en: {
+  16:     kicker: "ZVG-DE.COM · ALL JUDICIAL AUCTIONS IN ONE PLACE",
+  17:     title: "Professional tool",
+  18:     subtitle: "for finding forced auctions in Germany",
+  19:   },
+  20: };
+  21: 
+  22: function stage73Hero(locale: Stage73HeroLocale) {
+  23:   return stage73HeroText[locale] || stage73HeroText.de;
+  24: }
+  25: 
+  26: 
+  27: 
+  28: 
+  29: type Stage70Locale = "de" | "ru" | "en";
+  30: 
+  31: const stage70ListText = {
+  32:   de: {
+  33:     emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+  34:     emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+  35:     activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+  36:     clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+  37:     prev: "Zurück",
+  38:     next: "Weiter",
+  39:   },
+  40:   ru: {
+  41:     emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+  42:     emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+  43:     activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+  44:     clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+  45:     prev: "Назад",
+  46:     next: "Вперёд",
+  47:   },
+  48:   en: {
+  49:     emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+  50:     emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+  51:     activeFilters: "Active filters:",
+  52:     clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+  53:     prev: "Back",
+  54:     next: "Next",
+  55:   },
+  56: } as const;
+  57: 
+  58: function stage70T(locale: Stage70Locale) {
+  59:   return stage70ListText[locale] || stage70ListText.de;
+  60: }
+  61: 
+  62: 
+  63: type Stage69Locale = "de" | "ru" | "en";
+  64: 
+  65: const stage69TextDict = {
+  66:   de: {
+  67:     activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+  68:     clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+  69:     emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+  70:     emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+  71:     prev: "Zurück",
+  72:     next: "Weiter",
+  73:   },
+  74:   ru: {
+  75:     activeFilters: "{stage70T(locale as Stage70Locale).activeFilters}",
+  76:     clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+  77:     emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+  78:     emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+  79:     prev: "Назад",
+  80:     next: "Вперёд",
+  81:   },
+  82:   en: {
+  83:     activeFilters: "Active filters:",
+  84:     clearAll: "{stage70T(locale as Stage70Locale).clearAll}",
+  85:     emptyTitle: "{stage70T(locale as Stage70Locale).emptyTitle}",
+  86:     emptyText: "{stage70T(locale as Stage70Locale).emptyText}",
+  87:     prev: "Back",
+  88:     next: "Next",
+  89:   },
+  90: } as const;
+  91: 
+  92: function stage69Text(locale: Stage69Locale = "de") {
+  93:   return stage69TextDict[locale] || stage69TextDict.de;
+  94: }
+  95: 
+  96: import { Prisma, PropertyStatus } from "@prisma/client";
+  97: import { ActiveFilters } from "@/components/ActiveFilters";
+  98: import { EmptyState } from "@/components/EmptyState";
+  99: import { FilterBar } from "@/components/FilterBar";
+ 100: import { Pagination } from "@/components/Pagination";
+ 101: import { PropertyCard } from "@/components/PropertyCard";
+ 102: import { PropertyMap } from "@/components/PropertyMap";
+ 103: import { SaveSearchButton } from "@/components/SaveSearchButton";
+ 104: import { SortControls } from "@/components/SortControls";
+ 105: import { formatEuro, formatNumber } from "@/lib/format";
+ 106: import { distanceKm, findKnownLocation, type GeoPoint } from "@/lib/geo";
+ 107: import { resolvePostalCodeCenter } from "@/lib/postal-codes";
+ 108: import { getI18n } from "@/lib/i18n/server";
+ 109: import { getSiteText } from "@/lib/i18n/site-text";
+ 110: import { pickPropertyTranslation, translationInclude } from "@/lib/i18n/property-translations";
+ 111: import { getPaginationRange } from "@/lib/pagination";
+ 112: import { pointInPolygon } from "@/lib/polygon";
+ 113: import { prisma } from "@/lib/prisma";
+ 114: import {
+ 115:   asNumber,
+ 116:   asString,
+ 117:   buildActiveFilterChips,
+ 118:   buildPropertyOrderBy,
+ 119:   buildPropertyWhere,
+ 120:   parsePolygonParam,
+ 121:   type SearchParamRecord,
+ 122: } from "@/lib/search-params";
+ 123: import { getCurrentUser } from "@/lib/user-auth";
+ 124: 
+ 125: type PageMode = "objects" | "archive" | "map";
+ 126: 
+ 127: type RadiusFilter = {
+ 128:   center: GeoPoint;
+ 129:   radiusKm: number;
+ 130: };
+ 131: 
+ 132: type SiteText = ReturnType<typeof getSiteText>;
+ 133: 
+ 134: const localText = {
+ 135:   de: {
+ 136:     archiveKicker: "Archiv · vergangene Termine",
+ 137:     archiveTitle: "Archiv der Immobilienauktionen",
+ 138:     archiveText:
+ 139:       "Abgeschlossene oder archivierte Versteigerungen bleiben separat auffindbar, ohne die aktuelle Suche zu überladen.",
+ 140:     archiveListTitle: "Archivierte Immobilien",
+ 141:     archiveListText: "Vergangene Auktionstermine und archivierte Objekte.",
+ 142:     allObjects: "Alle Objekte",
+ 143:     radiusNoticePrefix: "Umkreissuche aktiv: Zentrum",
+ 144:     radiusNoticeMiddle: "Radius",
+ 145:     radiusNoticeSuffix: "Die Ergebnisse sind nach Entfernung sortiert.",
+ 146:     polygonNoticePrefix: "Polygon-Suche aktiv: Die Liste zeigt nur Objekte innerhalb der gezeichneten Kartenfläche.",
+ 147:     polygonPoints: "Polygonpunkte",
+ 148:   },
+ 149:   ru: {
+ 150:     archiveKicker: "Архив · прошедшие торги",
+ 151:     archiveTitle: "Архив аукционов недвижимости",
+ 152:     archiveText:
+ 153:       "Завершённые и архивные торги доступны отдельно, чтобы не перегружать актуальный поиск.",
+ 154:     archiveListTitle: "Архивные объекты",
+ 155:     archiveListText: "Прошедшие даты торгов и архивные объекты.",
+ 156:     allObjects: "Все объекты",
+ 157:     radiusNoticePrefix: "Активен поиск по радиусу: центр",
+ 158:     radiusNoticeMiddle: "радиус",
+ 159:     radiusNoticeSuffix: "Результаты отсортированы по расстоянию.",
+ 160:     polygonNoticePrefix: "Активен поиск по полигону: список показывает только объекты внутри выделенной области карты.",
+ 161:     polygonPoints: "Точек полигона",
+ 162:   },
+ 163:   en: {
+ 164:     archiveKicker: "Archive · past auction dates",
+ 165:     archiveTitle: "Property auction archive",
+ 166:     archiveText:
+ 167:       "Completed or archived auctions remain available separately without overloading the current search.",
+ 168:     archiveListTitle: "Archived properties",
+ 169:     archiveListText: "Past auction dates and archived properties.",
+ 170:     allObjects: "All properties",
+ 171:     radiusNoticePrefix: "Radius search active: center",
+ 172:     radiusNoticeMiddle: "radius",
+ 173:     radiusNoticeSuffix: "Results are sorted by distance.",
+ 174:     polygonNoticePrefix: "Polygon search active: the list shows only properties inside the drawn map area.",
+ 175:     polygonPoints: "Polygon points",
+ 176:   },
+ 177: } as const;
+ 178: 
+ 179: function pagePathForMode(mode: PageMode): string {
+ 180:   if (mode === "archive") return "/archive";
+ 181:   if (mode === "map") return "/map";
+ 182:   return "/";
+ 183: }
+ 184: 
+ 185: function buildCurrentFiltersUrl(params: SearchParamRecord, mode: PageMode): string {
+ 186:   const urlParams = new URLSearchParams();
+ 187: 
+ 188:   Object.entries(params).forEach(([key, value]) => {
+ 189:     if (Array.isArray(value)) {
+ 190:       value.forEach((item) => {
+ 191:         if (item) urlParams.append(key, item);
+ 192:       });
+ 193:       return;
+ 194:     }
+ 195: 
+ 196:     if (value) urlParams.set(key, value);
+ 197:   });
+ 198: 
+ 199:   const query = urlParams.toString();
+ 200:   const path = pagePathForMode(mode);
+ 201:   return query ? `${path}?${query}` : path;
+ 202: }
+ 203: 
+ 204: function todayStart(): Date {
+ 205:   const today = new Date();
+ 206:   today.setHours(0, 0, 0, 0);
+ 207:   return today;
+ 208: }
+ 209: 
+ 210: function withArchiveMode(where: Prisma.PropertyWhereInput, mode: PageMode): Prisma.PropertyWhereInput {
+ 211:   const today = todayStart();
+ 212: 
+ 213:   const archiveRule: Prisma.PropertyWhereInput = {
+ 214:     OR: [
+ 215:       { auctionDate: { lt: today } },
+ 216:       { status: { in: [PropertyStatus.ARCHIVED, PropertyStatus.SOLD] } },
+ 217:     ],
+ 218:   };
+ 219: 
+ 220:   const currentRule: Prisma.PropertyWhereInput = {
+
+
+===== app/cabinet/page.tsx =====
+
+   1: import Link from "next/link";
+   2: import { redirect } from "next/navigation";
+   3: import { AuctionCalendar } from "@/components/AuctionCalendar";
+   4: import { DeleteFavoriteButton } from "@/components/DeleteFavoriteButton";
+   5: import { DeleteSavedSearchButton } from "@/components/DeleteSavedSearchButton";
+   6: import { FavoriteNoteForm } from "@/components/FavoriteNoteForm";
+   7: import { SavedSearchNameForm } from "@/components/SavedSearchNameForm";
+   8: import { prisma } from "@/lib/prisma";
+   9: import { formatDateTime, formatEuro, shortAddress, translateStatus } from "@/lib/format";
+  10: import { getCurrentUser } from "@/lib/user-auth";
+  11: import { getI18n } from "@/lib/i18n/server";
+  12: import {
+  13:   getPropertyUi,
+  14:   pickPropertyTranslation,
+  15:   translationInclude,
+  16: } from "@/lib/i18n/property-translations";
+  17: 
+  18: export const dynamic = "force-dynamic";
+  19: 
+  20: export default async function CabinetPage() {
+  21: const user = await getCurrentUser();
+  22:   if (!user) redirect("/login?next=/cabinet");
+  23: 
+  24:   const { locale, t } = await getI18n();
+  25:   const ui = getPropertyUi(locale);
+  26: 
+  27:   const [favorites, savedSearches, favoriteCount, savedSearchCount] = await Promise.all([
+  28:     prisma.favorite.findMany({
+  29:       where: { userId: user.id },
+  30:       orderBy: { createdAt: "desc" },
+  31:       include: {
+  32:         property: {
+  33:           include: {
+  34:             ...translationInclude(locale),
+  35:             images: {
+  36:               orderBy: [{ isMain: "desc" }, { sortOrder: "asc" }],
+  37:               take: 1,
+  38:             },
+  39:           },
+  40:         },
+  41:       },
+  42:     }),
+  43:     prisma.savedSearch.findMany({
+  44:       where: { userId: user.id },
+  45:       orderBy: { createdAt: "desc" },
+  46:     }),
+  47:     prisma.favorite.count({ where: { userId: user.id } }),
+  48:     prisma.savedSearch.count({ where: { userId: user.id } }),
+  49:   ]);
+  50: 
+  51:   const sortedFavorites = [...favorites].sort((a, b) => {
+  52:     const dateA = a.property.auctionDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+  53:     const dateB = b.property.auctionDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+  54:     return dateA - dateB;
+  55:   });
+  56: 
+  57:   const calendarEvents = sortedFavorites
+  58:     .filter((favorite) => favorite.property.auctionDate)
+  59:     .map((favorite) => {
+  60:       const property = favorite.property;
+  61:       const translated = pickPropertyTranslation(property, locale);
+  62:       const image = property.images[0];
+  63: 
+  64:       return {
+  65:         id: property.id,
+  66:         title: translated.title,
+  67:         city: property.city,
+  68:         address: property.address,
+  69:         auctionDate: property.auctionDate?.toISOString() ?? "",
+  70:         auctionTime: property.auctionTime,
+  71:         marketValue: property.marketValue,
+  72:         imageUrl: image?.url ?? null,
+  73:         status: property.status,
+  74:       };
+  75:     });
+  76: 
+  77:   return (
+  78:     <main className="cabinet-page cabinet-page-v39">
+  79:       <div className="container page-section">
+  80:         <section className="panel cabinet-hero cabinet-hero-v39">
+  81:           <div>
+  82:             <p className="eyebrow">{t.nav.account}</p>
+  83:             <h1>{user.name || user.email}</h1>
+  84:             <p className="meta">
+  85:               {locale === "ru"
+  86:                 ? "Избранное, личные заметки, сохранённые поиски и календарь торгов."
+  87:                 : locale === "en"
+  88:                   ? "Favorites, personal notes, saved searches and auction calendar."
+  89:                   : "Favoriten, persönliche Notizen, gespeicherte Suchaufträge und Auktionstermine."}
+  90:             </p>
+  91:           </div>
+  92:           <div className="cabinet-stats">
+  93:             <a href="#favorites"><span>{favoriteCount}</span><b>{locale === "ru" ? "Избранное" : locale === "en" ? "Favorites" : "Favoriten"}</b></a>
+  94:             <a href="#searches"><span>{savedSearchCount}</span><b>{locale === "ru" ? "Поиски" : locale === "en" ? "Saved searches" : "Сохранённые поиски"}</b></a>
+  95:             <a href="#calendar"><span>{calendarEvents.length}</span><b>{locale === "ru" ? "Календарь" : locale === "en" ? "Calendar" : "Kalendertermine"}</b></a>
+  96:           </div>
+  97:         </section>
+  98: 
+  99:         <section id="favorites" className="panel cabinet-section cabinet-favorites-v39">
+ 100:           <div className="section-head">
+ 101:             <div>
+ 102:               <h2>{locale === "ru" ? "Моё избранное" : locale === "en" ? "My Favorites" : "Meine Favoriten"}</h2>
+ 103:               <p className="meta">
+ 104:                 {locale === "ru"
+ 105:                   ? "Ваши сохранённые объекты. Личные заметки видны только вам."
+ 106:                   : locale === "en"
+ 107:                     ? "Your saved properties. Personal notes are visible only to you."
+ 108:                     : "Ihre gespeicherten Immobilien. Persönliche Notizen sind nur für Sie sichtbar."}
+ 109:               </p>
+ 110:             </div>
+ 111:             <Link className="btn btn-soft" href="/">{t.nav.home}</Link>
+ 112:           </div>
+ 113: 
+ 114:           {sortedFavorites.length === 0 ? (
+ 115:             <div className="empty-state compact">
+ 116:               {locale === "ru" ? "У вас пока нет избранных объектов." : locale === "en" ? "You have no favorites yet." : "Sie haben noch keine Favoriten gespeichert."}
+ 117:             </div>
+ 118:           ) : (
+ 119:             <div className="favorite-grid-v39">
+ 120:               {sortedFavorites.map((favorite) => {
+ 121:                 const property = favorite.property;
+ 122:                 const translated = pickPropertyTranslation(property, locale);
+ 123:                 const image = property.images[0];
+ 124: 
+ 125:                 return (
+ 126:                   <article className="favorite-card-v39" key={favorite.id}>
+ 127:                     <Link className="favorite-thumb-v39" href={`/properties/${property.id}`}>
+ 128:                       {image ? <img src={image.url} alt={image.alt ?? translated.title} /> : <span>{ui.noPhoto}</span>}
+ 129:                     </Link>
+ 130: 
+ 131:                     <div className="favorite-content-v39">
+ 132:                       <div className="favorite-top-v39">
+ 133:                         <p className="eyebrow">{translated.propertyType || property.propertyType} · {property.city}</p>
+ 134:                         <span className="favorite-star-v39" aria-hidden="true">★</span>
+ 135:                       </div>
+ 136: 
+ 137:                       <h3><Link href={`/properties/${property.id}`}>{translated.title}</Link></h3>
+ 138:                       <p className="favorite-address-v39">{shortAddress(property.address)}</p>
+ 139: 
+ 140:                       <div className="favorite-tags-v39">
+ 141:                         <span>{formatEuro(property.marketValue)}</span>
+ 142:                         <span>{formatDateTime(property.auctionDate, property.auctionTime)}</span>
+ 143:                         <span>{property.court}</span>
+ 144:                       </div>
+ 145: 
+ 146:                       <FavoriteNoteForm propertyId={property.id} initialNote={favorite.note ?? ""} />
+ 147: 
+ 148:                       <div className="favorite-actions-v39">
+ 149:                         <Link className="btn btn-soft favorite-details-v39" href={`/properties/${property.id}`}>
+ 150:                           {ui.details}
+ 151:                         </Link>
+ 152:                         <DeleteFavoriteButton propertyId={property.id} />
+ 153:                       </div>
+ 154:                     </div>
+ 155:                   </article>
+ 156:                 );
+ 157:               })}
+ 158:             </div>
+ 159:           )}
+ 160:         </section>
+ 161: 
+ 162:         <section id="searches" className="panel cabinet-section">
+ 163:           <div className="section-head">
+ 164:             <div>
+ 165:               <h2>{locale === "ru" ? "Сохранённые поиски" : locale === "en" ? "Saved Searches" : "Сохранённые поиски"}</h2>
+ 166:               <p className="meta">
+ 167:                 {locale === "ru"
+ 168:                   ? "Переименуйте поиски, чтобы позже получать уведомления по понятным названиям."
+ 169:                   : locale === "en"
+ 170:                     ? "Name your searches so future email notifications are easy to understand."
+ 171:                     : "Переименуйте поиски, чтобы позже получать уведомления с понятными названиями."}
+ 172:               </p>
+ 173:             </div>
+ 174:           </div>
+ 175: 
+ 176:           {savedSearches.length === 0 ? (
+ 177:             <div className="empty-state compact">
+ 178:               {locale === "ru" ? "У вас пока нет сохранённых поисков." : locale === "en" ? "You have no saved searches yet." : "Sie haben noch keine Suchen gespeichert."}
+ 179:             </div>
+ 180:           ) : (
+ 181:             <div className="saved-search-list">
+ 182:               {savedSearches.map((savedSearch) => (
+ 183:                 <article className="saved-search-item saved-search-item-editable" key={savedSearch.id}>
+ 184:                   <div>
+ 185:                     <SavedSearchNameForm
+ 186:                       searchId={savedSearch.id}
+ 187:                       initialName={savedSearch.name || ""}
+ 188:                       fallbackName={savedSearch.humanReadableSummary}
+ 189:                     />
+ 190:                     <p>{savedSearch.humanReadableSummary}</p>
+ 191:                     <span className="meta">{savedSearch.createdAt.toLocaleDateString(locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "de-DE")}</span>
+ 192:                   </div>
+ 193:                   <div className="cabinet-actions">
+ 194:                     <Link className="btn btn-primary" href={savedSearch.filtersUrl}>{locale === "ru" ? "Открыть поиск" : locale === "en" ? "Open search" : "Открыть поиск"}</Link>
+ 195:                     <DeleteSavedSearchButton searchId={savedSearch.id} />
+ 196:                   </div>
+ 197:                 </article>
+ 198:               ))}
+ 199:             </div>
+ 200:           )}
+ 201:         </section>
+ 202: 
+ 203:         <section id="calendar" className="panel cabinet-section">
+ 204:           <div className="section-head">
+ 205:             <div>
+ 206:               <h2>{locale === "ru" ? "Календарь торгов" : locale === "en" ? "Auction Calendar" : "Auktionskalender"}</h2>
+ 207:               <p className="meta">
+ 208:                 {locale === "ru"
+ 209:                   ? "Избранные объекты по датам торгов."
+ 210:                   : locale === "en"
+ 211:                     ? "Your favorite properties by auction date."
+ 212:                     : "Ihre favorisierten Objekte nach Auktionstermin."}
+ 213:               </p>
+ 214:             </div>
+ 215:           </div>
+ 216: 
+ 217:           <AuctionCalendar events={calendarEvents} />
+ 218:         </section>
+ 219:       </div>
+ 220:     </main>
+
+
+===== prisma/schema.prisma =====
+
+   1: generator client {
+   2:   provider = "prisma-client-js"
+   3: }
+   4: 
+   5: datasource db {
+   6:   provider = "mysql"
+   7:   url      = env("DATABASE_URL")
+   8: }
+   9: 
+  10: enum PropertyStatus {
+  11:   ACTIVE
+  12:   CANCELLED
+  13:   ARCHIVED
+  14:   SOLD
+  15:   UNKNOWN
+  16: }
+  17: 
+  18: enum PropertyTypeGroup {
+  19:   WOHNHAEUSER
+  20:   WOHNUNGEN
+  21:   GEWERBE
+  22:   GRUNDSTUECKE
+  23:   LAND_WALD
+  24:   GARAGEN
+  25:   SONSTIGE
+  26: }
+  27: 
+  28: enum OccupancyStatus {
+  29:   VACANT
+  30:   RENTED
+  31:   OWNER_OCCUPIED
+  32:   UNKNOWN
+  33: }
+  34: 
+  35: enum DocumentType {
+  36:   GUTACHTEN
+  37:   BEKANNTMACHUNG
+  38:   EXPOSE
+  39:   FOTO
+  40:   OTHER
+  41: }
+  42: 
+  43: enum UserRole {
+  44:   USER
+  45:   ADMIN
+  46: }
+  47: 
+  48: enum Locale {
+  49:   DE
+  50:   RU
+  51:   EN
+  52: }
+  53: 
+  54: 
+  55: model Property {
+  56:   id                       String            @id @default(cuid())
+  57:   aktenzeichen             String
+  58:   normalizedAktenzeichen   String
+  59:   court                    String
+  60:   state                    String
+  61:   city                     String
+  62:   postalCode               String
+  63:   street                   String
+  64:   houseNumber              String?
+  65:   address                  String
+  66:   latitude                 Float?
+  67:   longitude                Float?
+  68: 
+  69:   title                    String
+  70:   propertyType             String
+  71:   propertyTypeGroup        PropertyTypeGroup
+  72:   status                   PropertyStatus    @default(ACTIVE)
+  73:   occupancyStatus          OccupancyStatus   @default(UNKNOWN)
+  74: 
+  75:   auctionDate              DateTime?
+  76:   auctionTime              String?
+  77:   auctionLocation          String?
+  78:   marketValue              Int?
+  79:   livingArea               Float?
+  80:   usableArea               Float?
+  81:   totalArea                Float?
+  82:   plotArea                 Float?
+  83:   yearBuilt                Int?
+  84:   hasDenkmalschutz         Boolean           @default(false)
+  85:   wertgrenzenWeggefallen   Boolean           @default(false)
+  86:   auctionAttempt           Int               @default(1)
+  87: 
+  88:   description              String            @db.Text
+  89:   locationDescription      String?           @db.Text
+  90:   cancellationText         String?           @db.Text
+  91:   source                   String            @default("TEST_SEED")
+  92:   sourceUrl                String?
+  93:   lastSourceUpdate         DateTime?
+  94: 
+  95:   images                   PropertyImage[]
+  96:   documents                PropertyDocument[]
+  97:   favorites                Favorite[]
+  98:   translations             PropertyTranslation[]
+  99: 
+ 100:   createdAt                DateTime          @default(now())
+ 101:   updatedAt                DateTime          @updatedAt
+ 102: 
+ 103:   @@index([state])
+ 104:   @@index([court])
+ 105:   @@index([city])
+ 106:   @@index([postalCode])
+ 107:   @@index([propertyTypeGroup])
+ 108:   @@index([status])
+ 109:   @@index([auctionDate])
+ 110:   @@index([marketValue])
+ 111: }
+ 112: 
+ 113: model PropertyImage {
+ 114:   id          String    @id @default(cuid())
+ 115:   propertyId  String
+ 116:   property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+ 117:   url         String    @db.VarChar(1000)
+ 118:   alt         String?
+ 119:   isMain      Boolean   @default(false)
+ 120:   sortOrder   Int       @default(0)
+ 121:   createdAt   DateTime  @default(now())
+ 122:   updatedAt   DateTime  @updatedAt
+ 123: 
+ 124:   @@index([propertyId])
+ 125: }
+ 126: 
+ 127: model PropertyDocument {
+ 128:   id            String        @id @default(cuid())
+ 129:   propertyId    String
+ 130:   property      Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+ 131:   url           String        @db.VarChar(1000)
+ 132:   filename      String
+ 133:   documentType  DocumentType  @default(OTHER)
+ 134:   sourceUrl     String?       @db.VarChar(1000)
+ 135:   createdAt     DateTime      @default(now())
+ 136:   updatedAt     DateTime      @updatedAt
+ 137: 
+ 138:   @@index([propertyId])
+ 139: }
+ 140: 
+ 141: model User {
+ 142:   id            String        @id @default(cuid())
+ 143:   email         String        @unique
+ 144:   name          String?
+ 145:   passwordHash  String
+ 146:   role          UserRole      @default(USER)
+ 147:   favorites     Favorite[]
+ 148:   savedSearches SavedSearch[]
+ 149:   sessions      Session[]
+ 150:   createdAt     DateTime      @default(now())
+ 151:   updatedAt     DateTime      @updatedAt
+ 152: }
+ 153: 
+ 154: model Session {
+ 155:   id            String   @id @default(cuid())
+ 156:   sessionToken  String   @unique @db.VarChar(191)
+ 157:   userId        String
+ 158:   expires       DateTime
+ 159:   createdAt     DateTime @default(now())
+ 160:   updatedAt     DateTime @updatedAt
+ 161: 
+ 162:   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 163: 
+ 164:   @@index([userId])
+ 165:   @@index([expires])
+ 166: }
+ 167: 
+ 168: model Favorite {
+ 169:   id          String    @id @default(cuid())
+ 170:   userId      String
+ 171:   propertyId  String
+ 172:   note        String?   @db.Text
+ 173:   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 174:   property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+ 175:   createdAt   DateTime  @default(now())
+ 176:   updatedAt   DateTime  @default(now()) @updatedAt
+ 177: 
+ 178:   @@unique([userId, propertyId])
+ 179:   @@index([userId])
+ 180:   @@index([propertyId])
+ 181: }
+ 182: 
+ 183: model SavedSearch {
+ 184:   id                    String    @id @default(cuid())
+ 185:   userId                String
+ 186:   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 187:   name                  String?
+ 188:   filtersUrl            String    @db.VarChar(2000)
+ 189:   filtersHash           String
+ 190:   humanReadableSummary  String    @db.VarChar(1000)
+ 191:   createdAt             DateTime  @default(now())
+ 192:   updatedAt             DateTime  @updatedAt
+ 193: 
+ 194:   @@unique([userId, filtersHash])
+ 195:   @@index([userId])
+ 196: }
+ 197: 
+ 198: model PropertyTranslation {
+ 199:   id                   String    @id @default(cuid())
+ 200:   propertyId           String
+ 201:   locale               Locale
+ 202: 
+ 203:   title                String
+ 204:   propertyType         String?
+ 205:   description          String    @db.Text
+ 206:   locationDescription  String?   @db.Text
+ 207: 
+ 208:   property             Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+ 209: 
+ 210:   createdAt            DateTime  @default(now())
+ 211:   updatedAt            DateTime  @default(now()) @updatedAt
+ 212: 
+ 213:   @@unique([propertyId, locale])
+ 214:   @@index([locale])
+ 215:   @@index([propertyId])
+ 216: }
+ 217: 
+ 218: 
+ 219: enum ImportStatus {
+ 220:   SUCCESS

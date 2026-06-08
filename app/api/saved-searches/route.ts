@@ -73,19 +73,32 @@ export async function POST(request: NextRequest) {
 
   const body = (await request.json().catch(() => null)) as {
     filtersUrl?: string;
+    url?: string;
+    query?: string;
     summary?: string;
+    humanReadableSummary?: string;
     name?: string;
   } | null;
 
-  const filtersUrl =
-    typeof body?.filtersUrl === "string" && body.filtersUrl.startsWith("/")
-      ? body.filtersUrl.slice(0, 2000)
-      : "/";
+  const rawFiltersUrl =
+    typeof body?.filtersUrl === "string"
+      ? body.filtersUrl
+      : typeof body?.url === "string"
+        ? body.url
+        : typeof body?.query === "string"
+          ? "/" + body.query.replace(/^\?/, "?")
+          : "/";
 
-  const humanReadableSummary =
-    typeof body?.summary === "string" && body.summary.trim()
-      ? body.summary.trim().slice(0, 1000)
-      : "Alle Objekte";
+  const filtersUrl = rawFiltersUrl.startsWith("/") ? rawFiltersUrl.slice(0, 2000) : "/";
+
+  const rawSummary =
+    typeof body?.summary === "string"
+      ? body.summary
+      : typeof body?.humanReadableSummary === "string"
+        ? body.humanReadableSummary
+        : "";
+
+  const humanReadableSummary = rawSummary.trim() ? rawSummary.trim().slice(0, 1000) : "Alle Objekte";
 
   const filtersHash = crypto.createHash("sha256").update(filtersUrl).digest("hex");
 

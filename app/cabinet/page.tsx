@@ -17,6 +17,15 @@ import {
 
 export const dynamic = "force-dynamic";
 
+function localizeSavedSearchUrl(filtersUrl: string, locale: "de" | "ru" | "en") {
+  if (!filtersUrl || !filtersUrl.startsWith("/")) return `/${locale}`;
+  if (/^\/(de|ru|en)(\/|\?|$)/.test(filtersUrl)) return filtersUrl;
+  if (filtersUrl === "/") return `/${locale}`;
+  if (filtersUrl.startsWith("/?")) return `/${locale}${filtersUrl.slice(1)}`;
+  if (filtersUrl.startsWith("/archive") || filtersUrl.startsWith("/map") || filtersUrl.startsWith("/properties")) return filtersUrl;
+  return `/${locale}${filtersUrl}`;
+}
+
 export default async function CabinetPage() {
 const user = await getCurrentUser();
   if (!user) redirect("/login?next=/cabinet");
@@ -91,7 +100,7 @@ const user = await getCurrentUser();
           </div>
           <div className="cabinet-stats">
             <a href="#favorites"><span>{favoriteCount}</span><b>{locale === "ru" ? "Избранное" : locale === "en" ? "Favorites" : "Favoriten"}</b></a>
-            <a href="#searches"><span>{savedSearchCount}</span><b>{locale === "ru" ? "Поиски" : locale === "en" ? "Saved searches" : "Сохранённые поиски"}</b></a>
+            <a href="#searches"><span>{savedSearchCount}</span><b>{locale === "ru" ? "Поиски" : locale === "en" ? "Saved searches" : "Gespeicherte Suchen"}</b></a>
             <a href="#calendar"><span>{calendarEvents.length}</span><b>{locale === "ru" ? "Календарь" : locale === "en" ? "Calendar" : "Kalendertermine"}</b></a>
           </div>
         </section>
@@ -162,13 +171,13 @@ const user = await getCurrentUser();
         <section id="searches" className="panel cabinet-section">
           <div className="section-head">
             <div>
-              <h2>{locale === "ru" ? "Сохранённые поиски" : locale === "en" ? "Saved Searches" : "Сохранённые поиски"}</h2>
+              <h2>{locale === "ru" ? "Сохранённые поиски" : locale === "en" ? "Saved searches" : "Gespeicherte Suchen"}</h2>
               <p className="meta">
                 {locale === "ru"
                   ? "Переименуйте поиски, чтобы позже получать уведомления по понятным названиям."
                   : locale === "en"
                     ? "Name your searches so future email notifications are easy to understand."
-                    : "Переименуйте поиски, чтобы позже получать уведомления с понятными названиями."}
+                    : "Benennen Sie Ihre Suchaufträge, damit spätere Benachrichtigungen verständliche Namen haben."}
               </p>
             </div>
           </div>
@@ -191,7 +200,7 @@ const user = await getCurrentUser();
                     <span className="meta">{savedSearch.createdAt.toLocaleDateString(locale === "ru" ? "ru-RU" : locale === "en" ? "en-US" : "de-DE")}</span>
                   </div>
                   <div className="cabinet-actions">
-                    <Link className="btn btn-primary" href={savedSearch.filtersUrl}>{locale === "ru" ? "Открыть поиск" : locale === "en" ? "Open search" : "Открыть поиск"}</Link>
+                    <Link className="btn btn-primary" href={localizeSavedSearchUrl(savedSearch.filtersUrl, locale)}>{locale === "ru" ? "Открыть поиск" : locale === "en" ? "Open search" : "Suche öffnen"}</Link>
                     <DeleteSavedSearchButton searchId={savedSearch.id} />
                   </div>
                 </article>
