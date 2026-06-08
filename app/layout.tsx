@@ -1,5 +1,3 @@
-import { RuntimeStage86 } from "@/components/RuntimeStage86";
-import { RuntimeUiEnhancementsStage82 } from "@/components/RuntimeUiEnhancementsStage82";
 import { RuntimeUiCleanup } from "@/components/RuntimeUiCleanup";
 import { FilterMiniApplyEnhancer } from "@/components/FilterMiniApplyEnhancer";
 import { BackToTopButton } from "@/components/BackToTopButton";
@@ -52,9 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
-        <RuntimeStage86 />
-        <RuntimeUiEnhancementsStage82 />
-        <RuntimeUiCleanup />
+<RuntimeUiCleanup />
         <Header />
         {children}
         <Footer />

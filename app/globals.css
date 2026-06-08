@@ -11604,15 +11604,10 @@ input[type="date"] {
 }
 
 
-/* Stage 82 gallery calendar filters save */
 
-/* 1. Card gallery arrows — cleaner and more compact */
-.main-card-gallery-v77,
-.main-card-gallery-v76,
-.main-card-gallery-v75b {
-  position: relative !important;
-}
+/* Stage 87 safe visual fixes only */
 
+/* gallery arrows: visual-only, no layout expansion */
 .main-card-gallery-nav-v77,
 .main-card-gallery-nav-v76,
 .main-card-gallery-nav-v75b,
@@ -11623,294 +11618,42 @@ input[type="date"] {
   min-height: 32px !important;
   padding: 0 !important;
   border-radius: 999px !important;
-  border: 1px solid rgba(255,255,255,0.82) !important;
-  background: rgba(15, 41, 31, 0.72) !important;
+  border: 1px solid rgba(255,255,255,.85) !important;
+  background: rgba(15,41,31,.74) !important;
   color: #fff !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  font-size: 24px !important;
-  font-weight: 600 !important;
+  font-size: 22px !important;
   line-height: 1 !important;
-  text-align: center !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.20) !important;
-  backdrop-filter: blur(5px) !important;
-  transform: translateY(-50%) !important;
-  opacity: 0.96 !important;
-}
-
-.main-card-gallery-prev-v77,
-.main-card-gallery-prev-v76,
-.main-card-gallery-prev-v75b,
-.gallery-prev-v74 {
-  left: 14px !important;
-}
-
-.main-card-gallery-next-v77,
-.main-card-gallery-next-v76,
-.main-card-gallery-next-v75b,
-.gallery-next-v74 {
-  right: 14px !important;
-}
-
-.main-card-gallery-nav-v77:hover,
-.main-card-gallery-nav-v76:hover,
-.main-card-gallery-nav-v75b:hover,
-.gallery-nav-v74:hover {
-  background: rgba(15, 41, 31, 0.88) !important;
-  transform: translateY(-50%) scale(1.04) !important;
+  box-shadow: 0 8px 18px rgba(0,0,0,.20) !important;
 }
 
 .main-card-gallery-count-v77,
 .main-card-gallery-count-v76,
 .main-card-gallery-count-v75b,
 .gallery-count-v74 {
-  right: 12px !important;
-  bottom: 12px !important;
   padding: 4px 8px !important;
   border-radius: 999px !important;
-  background: rgba(15, 41, 31, 0.78) !important;
+  background: rgba(15,41,31,.78) !important;
   color: #fff !important;
   font-size: 12px !important;
   font-weight: 800 !important;
-  line-height: 1 !important;
 }
 
-/* 2. Auction calendar time badges */
-.auction-calendar-day-with-time-v82 {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.auction-time-badge-v82 {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 22px !important;
-  min-width: 48px !important;
-  padding: 0 8px !important;
-  margin-left: 6px !important;
-  border-radius: 999px !important;
-  background: rgba(47, 97, 79, 0.14) !important;
-  color: #24604d !important;
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  line-height: 22px !important;
-  vertical-align: middle !important;
-  white-space: nowrap !important;
-  transform: translateY(-1px) !important;
-}
-
-/* If the date cell is flex-like, keep date and time centered together */
-.auction-calendar-day-with-time-v82 {
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* 3. Active filters row */
-.active-filter-row-v82 {
-  display: flex !important;
-  align-items: center !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-}
-
-.active-filter-row-v82 [class*="chip"],
-.active-filter-row-v82 span,
-.active-filter-row-v82 button,
-.active-filter-row-v82 a {
-  line-height: 1.1 !important;
-}
-
-.active-filter-save-search-v82 {
-  min-height: 34px !important;
-  height: 34px !important;
-  padding: 0 16px !important;
-  border: 1px solid rgba(47, 97, 79, 0.28) !important;
-  border-radius: 999px !important;
-  background: #2f654f !important;
-  color: #fff !important;
-  font-weight: 800 !important;
-  font-size: 13px !important;
-  cursor: pointer !important;
-  box-shadow: 0 8px 18px rgba(20, 55, 41, 0.14) !important;
-}
-
-.active-filter-save-search-v82:hover {
-  background: #255640 !important;
-}
-
-/* Make active filters less tall when many chips are selected */
-.active-filter-row-v82 {
-  margin-top: 12px !important;
-  margin-bottom: 12px !important;
-}
-
-/* Stage 86 actual runtime patch */
-
-.zvg-toast-v86 {
-  position: fixed !important;
-  right: 28px !important;
-  bottom: 28px !important;
-  z-index: 2147483647 !important;
-  padding: 13px 18px !important;
-  border-radius: 16px !important;
-  background: #173d2f !important;
-  color: #fff !important;
-  font-weight: 800 !important;
-  font-size: 14px !important;
-  box-shadow: 0 14px 32px rgba(0,0,0,.22) !important;
-  opacity: 0 !important;
-  transform: translateY(10px) !important;
-  pointer-events: none !important;
-  transition: opacity .18s ease, transform .18s ease !important;
-}
-.zvg-toast-v86.show {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
-}
-
-[data-stage82-save],
-[data-stage83-save],
-[data-stage84-save],
-[data-stage85-save] {
-  display: none !important;
-}
-
-.active-filters-v86 {
-  width: 100% !important;
-  max-width: none !important;
-  display: flex !important;
-  align-items: center !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-}
-.save-search-v86 {
-  height: 34px !important;
-  min-height: 34px !important;
-  padding: 0 16px !important;
-  border: 1px solid rgba(47,97,79,.24) !important;
-  border-radius: 999px !important;
-  background: #2f654f !important;
-  color: #fff !important;
-  font-weight: 800 !important;
-  font-size: 13px !important;
-  cursor: pointer !important;
-  box-shadow: 0 8px 18px rgba(20,55,41,.14) !important;
-}
-.save-search-v86:hover {
-  background: #255640 !important;
-}
-
-.filter-parent-full-v86,
-.stats-parent-full-v86 {
-  width: 100% !important;
-  max-width: none !important;
-}
-.filter-full-v86 {
-  width: 100% !important;
-  max-width: 1280px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-.stats-full-v86 {
-  width: 100% !important;
-  max-width: 1280px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  display: grid !important;
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-  align-items: stretch !important;
-}
-.stats-full-v86 > * {
-  min-width: 0 !important;
-}
-@media (max-width: 900px) {
-  .stats-full-v86 {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-
-.saved-search-section-v86 {
-  padding-top: 18px !important;
-  padding-bottom: 18px !important;
-}
-.saved-search-list-v86 {
-  margin-top: 14px !important;
-  display: grid !important;
-  gap: 10px !important;
-}
-.saved-search-item-v86 {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) auto !important;
-  gap: 14px !important;
-  align-items: center !important;
-  padding: 12px 14px !important;
-  border: 1px solid rgba(47,97,79,.16) !important;
-  border-radius: 16px !important;
-  background: rgba(255,255,255,.76) !important;
-}
-.saved-search-text-v86 {
-  min-width: 0 !important;
-}
-.saved-search-text-v86 strong {
-  display: block !important;
-  font-weight: 900 !important;
-}
-.saved-search-text-v86 p {
-  margin: 4px 0 !important;
-  color: #526381 !important;
-}
-.saved-search-text-v86 small {
-  color: #526381 !important;
-}
-.saved-search-actions-v86 {
-  display: flex !important;
-  gap: 8px !important;
-  align-items: center !important;
-}
-.saved-search-actions-v86 a,
-.saved-search-actions-v86 button {
-  height: 38px !important;
-  min-height: 38px !important;
-  padding: 0 14px !important;
-  border-radius: 13px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-weight: 800 !important;
-}
-.saved-search-actions-v86 a {
-  background: #2f654f !important;
-  color: #fff !important;
-  text-decoration: none !important;
-}
-.saved-search-actions-v86 button {
-  background: rgba(255,240,240,.85) !important;
-  border: 1px solid rgba(220,60,60,.25) !important;
-  color: #b91818 !important;
-}
-
-.auction-day-v86 {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-}
-.auction-time-v86 {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 19px !important;
-  min-width: 44px !important;
-  padding: 0 7px !important;
-  border-radius: 999px !important;
-  background: rgba(47,97,79,.14) !important;
-  color: #24604d !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  line-height: 19px !important;
-  white-space: nowrap !important;
-  margin-left: 4px !important;
+/* calendar time badge: visual-only */
+.auction-time-badge,
+.auction-time,
+[class*="auction-time"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  min-width: 44px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 20px;
+  white-space: nowrap;
 }
