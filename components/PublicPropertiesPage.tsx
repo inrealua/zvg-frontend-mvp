@@ -1,3 +1,4 @@
+import { stage111NormalizeProperty } from "@/lib/stage111Labels";
 
 type Stage73HeroLocale = "de" | "ru" | "en";
 

@@ -1,3 +1,4 @@
+import { Stage111LabelRuntime } from "@/components/Stage111LabelRuntime";
 import { HeaderMobileI18nStage92 } from "@/components/HeaderMobileI18nStage92";
 import { TargetedPolishStage90 } from "@/components/TargetedPolishStage90";
 import { TargetedSearchEnhancerStage89 } from "@/components/TargetedSearchEnhancerStage89";
@@ -53,6 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
+        <Stage111LabelRuntime />
 <HeaderMobileI18nStage92 />
         <TargetedPolishStage90 />
         <TargetedSearchEnhancerStage89 />

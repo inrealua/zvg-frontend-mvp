@@ -1,3 +1,4 @@
+import { stage111StatusLabel, stage111TermLabel, stage111WertgrenzenLabel } from "@/lib/stage111Labels";
 export function formatEuro(value: number | null | undefined): string {
   if (value === null || value === undefined) return "—";
   return new Intl.NumberFormat("de-DE", {
@@ -76,4 +77,13 @@ export function statusClass(status: string): string {
 
 export function shortAddress(address: string): string {
   return address.replace(/, Deutschland$/i, "");
+}
+
+
+export function translateWertgrenzen(value: unknown, locale?: string | null) {
+  return stage111WertgrenzenLabel(value, locale);
+}
+
+export function translateTerminNumber(property: Record<string, unknown>, locale?: string | null) {
+  return stage111TermLabel(property, locale);
 }

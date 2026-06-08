@@ -12682,3 +12682,16 @@ input[type="date"] {
   gap: 10px;
   flex-wrap: wrap;
 }
+
+
+/* Stage 111 labels */
+
+.stage111-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 12px;
+}
