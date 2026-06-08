@@ -12391,3 +12391,40 @@ input[type="date"] {
     flex-basis: 100% !important;
   }
 }
+
+
+/* Stage 103 reliable logout */
+
+.logout-button-stage103 {
+  height: 42px;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(47, 97, 79, .22);
+  border-radius: 999px;
+  background: rgba(255,255,255,.92);
+  color: #26483d;
+  font-weight: 800;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.logout-button-stage103:hover {
+  background: rgba(234, 245, 240, .95);
+}
+
+.logout-button-stage103:disabled {
+  opacity: .65;
+  cursor: default;
+}
+
+@media (max-width: 768px) {
+  .logout-button-stage103 {
+    height: 36px;
+    min-height: 36px;
+    padding: 0 11px;
+    font-size: 13px;
+  }
+}

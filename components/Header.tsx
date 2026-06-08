@@ -1,3 +1,4 @@
+import { LogoutButtonStage103 } from "@/components/LogoutButtonStage103";
 import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
