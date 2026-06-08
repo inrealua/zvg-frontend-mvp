@@ -164,6 +164,12 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
 
         {properties.length === 0 ? <div className="empty-box">По этому поиску объекты не найдены.</div> : null}
       </section>
+    
+      <Link href="/admin/users" className="admin-users-link-stage109">
+        <strong>Пользователи</strong>
+        <span>Просмотр зарегистрированных пользователей и ролей</span>
+      </Link>
+
     </main>
   );
 }

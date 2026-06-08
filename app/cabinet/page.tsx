@@ -17,6 +17,23 @@ import {
 
 export const dynamic = "force-dynamic";
 
+function stage109AdminCabinetLabels(locale: "de" | "ru" | "en") {
+  const labels = {
+    de: {
+      admin: "Adminbereich",
+    },
+    ru: {
+      admin: "Админка",
+    },
+    en: {
+      admin: "Admin panel",
+    },
+  } as const;
+
+  return labels[locale] || labels.de;
+}
+
+
 function localizeSavedSearchUrl(filtersUrl: string, locale: "de" | "ru" | "en") {
   if (!filtersUrl || !filtersUrl.startsWith("/")) return `/${locale}`;
   if (/^\/(de|ru|en)(\/|\?|$)/.test(filtersUrl)) return filtersUrl;
@@ -84,7 +101,15 @@ const user = await getCurrentUser();
     });
 
   return (
-    <main className="cabinet-page cabinet-page-v39">
+    <>
+      <div className="cabinet-admin-action-wrap-stage109">
+          {user.role === "ADMIN" ? (
+              <a className="cabinet-admin-button-stage109" href="/admin">
+                {stage109AdminCabinetLabels(locale).admin}
+              </a>
+            ) : null}
+        </div>
+      <main className="cabinet-page cabinet-page-v39">
       <div className="container page-section">
         <section className="panel cabinet-hero cabinet-hero-v39">
           <div>
@@ -227,5 +252,6 @@ const user = await getCurrentUser();
         </section>
       </div>
     </main>
+    </>
   );
 }

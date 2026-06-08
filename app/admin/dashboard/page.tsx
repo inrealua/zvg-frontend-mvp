@@ -296,6 +296,12 @@ export default async function AdminDashboardPage() {
           )}
         </section>
       </section>
+    
+      <Link href="/admin/users" className="admin-users-link-stage109">
+        <strong>Пользователи</strong>
+        <span>Просмотр зарегистрированных пользователей и ролей</span>
+      </Link>
+
     </main>
   );
 }
