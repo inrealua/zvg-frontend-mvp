@@ -11,7 +11,7 @@ function stage61ReadLocale(): Stage61Locale {
 const stage61MapLocaleText = {
   de: {
     houses: "Häuser",
-    apartments: "${escapeHtml(groupText)}",
+    apartments: "Wohnungen",
     land: "Grundstücke",
     commercial: "Gewerbe",
     landForest: "Land / Wald",
@@ -75,6 +75,46 @@ import { escapeHtml, loadLeaflet, type LatLngTuple, type LeafletLayer, type Leaf
 
 
 
+
+
+function stage89LegendLabel(key: "houses" | "apartments" | "plots" | "commercial" | "landForest" | "garages" | "other") {
+  const locale = typeof window !== "undefined"
+    ? window.location.pathname.split("/").filter(Boolean)[0]
+    : "de";
+
+  const dict = {
+    de: {
+      houses: "Häuser",
+      apartments: "Wohnungen",
+      plots: "Grundstücke",
+      commercial: "Gewerbe",
+      landForest: "Land / Wald",
+      garages: "Garagen / Parken",
+      other: "Sonstige",
+    },
+    ru: {
+      houses: "Дома",
+      apartments: "Квартиры",
+      plots: "Участки",
+      commercial: "Коммерция",
+      landForest: "Земля / лес",
+      garages: "Гаражи / парковки",
+      other: "Прочее",
+    },
+    en: {
+      houses: "Houses",
+      apartments: "Apartments",
+      plots: "Plots",
+      commercial: "Commercial",
+      landForest: "Land / forest",
+      garages: "Garages / parking",
+      other: "Other",
+    },
+  } as const;
+
+  const lang = locale === "ru" || locale === "en" || locale === "de" ? locale : "de";
+  return dict[lang][key];
+}
 
 function popupLocaleStage81() {
   if (typeof window === "undefined") return "de";
@@ -264,8 +304,8 @@ const stage75PopupText = {
     archive: "Archiv",
     unknown: "Unbekannt",
     propertyTypes: {
-      residential: "${escapeHtml(groupText)}",
-      apartments: "${escapeHtml(groupText)}",
+      residential: "Wohnhäuser",
+      apartments: "Wohnungen",
       commercial: "Gewerbe",
       land: "Grundstücke",
       landForest: "Land / Wald",

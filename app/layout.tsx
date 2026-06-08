@@ -1,3 +1,4 @@
+import { TargetedSearchEnhancerStage89 } from "@/components/TargetedSearchEnhancerStage89";
 import { RuntimeUiCleanup } from "@/components/RuntimeUiCleanup";
 import { FilterMiniApplyEnhancer } from "@/components/FilterMiniApplyEnhancer";
 import { BackToTopButton } from "@/components/BackToTopButton";
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
+        <TargetedSearchEnhancerStage89 />
 <RuntimeUiCleanup />
         <Header />
         {children}

@@ -11765,3 +11765,86 @@ input[type="date"] {
     justify-content: flex-start;
   }
 }
+
+
+/* Stage 89 targeted fixes */
+
+.active-filters-targeted-v89 {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.save-search-v89 {
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 16px !important;
+  border: 1px solid rgba(47, 97, 79, .24) !important;
+  border-radius: 999px !important;
+  background: #2f654f !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  box-shadow: 0 8px 18px rgba(20,55,41,.14) !important;
+}
+
+.save-search-v89:disabled {
+  opacity: .72 !important;
+  cursor: default !important;
+}
+
+/* Cabinet favorite thumbnails: larger but scoped to account/favorites-like blocks */
+[class*="favorite" i] img,
+[class*="favorit" i] img,
+[class*="cabinet" i] img,
+[href*="/properties/"] img {
+  object-fit: cover;
+}
+
+/* Only images in compact horizontal account cards */
+[class*="favorite" i] img,
+[class*="favorit" i] img {
+  width: 160px !important;
+  min-width: 160px !important;
+  height: 90px !important;
+  border-radius: 14px !important;
+}
+
+@media (max-width: 760px) {
+  [class*="favorite" i] img,
+  [class*="favorit" i] img {
+    width: 120px !important;
+    min-width: 120px !important;
+    height: 72px !important;
+  }
+}
+
+/* Auction calendar time: align inside the same cell without expanding the whole calendar */
+.auction-time-badge,
+.auction-time,
+[class*="auction-time"],
+[class*="calendar"] span[class*="time"],
+[class*="calendar"] small[class*="time"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 20px !important;
+  min-width: 44px !important;
+  padding: 0 7px !important;
+  margin-left: 6px !important;
+  border-radius: 999px !important;
+  background: rgba(47, 97, 79, .14) !important;
+  color: #24604d !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 20px !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+}
+
+/* Common day cell layouts */
+[class*="calendar"] [class*="day"] {
+  align-items: center;
+}
