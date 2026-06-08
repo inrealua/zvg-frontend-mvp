@@ -21,26 +21,50 @@ const text = {
 } as const;
 
 function clearClientCookies() {
-  const names = [
+  stage105HardClientCookieClear();
+}
+
+function stage105HardClientCookieClear() {
+  const rawNames = document.cookie
+    .split(";")
+    .map((part) => part.split("=")[0]?.trim())
+    .filter(Boolean);
+
+  const names = Array.from(new Set([
+    ...rawNames,
     "zvg_user_session",
     "zvg_admin_session",
+    "zvg_session",
+    "zvg_auth",
+    "zvg_token",
     "session",
+    "sessions",
+    "sid",
+    "connect.sid",
     "user_session",
     "auth_session",
+    "auth",
     "token",
     "access_token",
+    "refresh_token",
+    "jwt",
     "next-auth.session-token",
     "__Secure-next-auth.session-token",
-  ];
+  ]));
 
   const host = window.location.hostname;
-  const domains = ["", host, "." + host];
+  const parts = host.split(".");
+  const apex = parts.length > 2 ? parts.slice(-2).join(".") : host;
+  const domains = ["", host, "." + host, apex, "." + apex];
+  const paths = ["/", "/api", "/api/auth", "/cabinet", "/app"];
 
   for (const name of names) {
-    for (const domain of domains) {
-      const domainPart = domain ? "; domain=" + domain : "";
-      document.cookie = name + "=; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + domainPart + "; SameSite=Lax";
-      document.cookie = name + "=; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/" + domainPart + "; SameSite=None; Secure";
+    for (const path of paths) {
+      for (const domain of domains) {
+        const domainPart = domain ? "; domain=" + domain : "";
+        document.cookie = name + "=deleted; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=" + path + domainPart + "; SameSite=Lax";
+        document.cookie = name + "=deleted; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=" + path + domainPart + "; SameSite=None; Secure";
+      }
     }
   }
 }
