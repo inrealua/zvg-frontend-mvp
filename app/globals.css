@@ -12656,3 +12656,29 @@ input[type="date"] {
     width: 100%;
   }
 }
+
+
+/* Stage 110 admin users client */
+
+.admin-users-message-stage110 {
+  padding: 32px;
+  text-align: center;
+}
+
+.admin-users-message-stage110 h1 {
+  margin: 0 0 10px;
+  color: #143d31;
+}
+
+.admin-users-message-stage110 p {
+  margin: 0;
+  color: #657085;
+}
+
+.admin-users-actions-stage110 {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
