@@ -1,4 +1,3 @@
-import { MobileLayoutStage99 } from "@/components/MobileLayoutStage99";
 import { HeaderMobileI18nStage92 } from "@/components/HeaderMobileI18nStage92";
 import { TargetedPolishStage90 } from "@/components/TargetedPolishStage90";
 import { TargetedSearchEnhancerStage89 } from "@/components/TargetedSearchEnhancerStage89";
@@ -54,7 +53,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body>
-        <MobileLayoutStage99 />
 <HeaderMobileI18nStage92 />
         <TargetedPolishStage90 />
         <TargetedSearchEnhancerStage89 />

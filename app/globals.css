@@ -11937,9 +11937,9 @@ input[type="date"] {
 
 
 
-/* Stage 99 mobile layout rebuild */
+/* Stage 100 emergency mobile restore */
 
-/* Keep custom language dropdown styled on desktop/mobile */
+/* Styled language switcher */
 .language-switcher-v94 {
   position: relative;
   display: inline-flex;
@@ -11992,7 +11992,7 @@ input[type="date"] {
   background: rgba(234, 245, 240, .95);
 }
 
-/* Leaflet global protection only. Do not change panes/transforms. */
+/* Leaflet protection only. Do not style panes/transforms/parents. */
 .leaflet-container img,
 .leaflet-container .leaflet-tile {
   max-width: none !important;
@@ -12007,25 +12007,23 @@ input[type="date"] {
   max-width: none !important;
 }
 
+/* Safe mobile header only. No content-panel rewriting here. */
 @media (max-width: 768px) {
-  html,
+  html, body {
+    width: 100%;
+    max-width: 100%;
+  }
+
   body {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
+    overflow-x: auto;
   }
 
   main {
-    width: 100% !important;
-    max-width: 100vw !important;
-    min-width: 0 !important;
-    margin: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    overflow-x: hidden !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
-  /* Header: compact and scrolls away normally */
   header,
   .site-header,
   .public-header,
@@ -12126,160 +12124,13 @@ input[type="date"] {
     font-size: 13px !important;
   }
 
-  /* Hard reset only for direct main children. This fixes the right shift. */
-  main > * {
-    max-width: calc(100vw - 16px) !important;
-    width: calc(100vw - 16px) !important;
-    min-width: 0 !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    box-sizing: border-box !important;
-    transform: none !important;
-    left: auto !important;
-    right: auto !important;
-  }
-
-  /* Search/filter panel: class is added by Stage99 component */
-  .mobile-filter-panel-v99 {
-    width: calc(100vw - 56px) !important;
-    max-width: calc(100vw - 56px) !important;
-    min-width: 0 !important;
-    margin: 18px auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    overflow: hidden !important;
-    box-sizing: border-box !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 10px !important;
-  }
-
-  .mobile-filter-panel-v99 > * {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    grid-column: 1 / -1 !important;
-    box-sizing: border-box !important;
-  }
-
-  .mobile-filter-panel-v99 input,
-  .mobile-filter-panel-v99 select,
-  .mobile-filter-panel-v99 textarea,
-  .mobile-filter-panel-v99 button {
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  .mobile-filter-panel-v99 input[type="range"] {
-    width: calc(100% - 18px) !important;
-    margin-left: 9px !important;
-    margin-right: 9px !important;
-  }
-
-  /* Map panel: class is added by Stage99 component */
-  .mobile-map-panel-v99 {
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
-    min-width: 0 !important;
-    margin: 18px auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
-    transform: none !important;
-    left: auto !important;
-    right: auto !important;
-  }
-
-  .mobile-map-panel-v99 .leaflet-container {
-    width: 100% !important;
-    height: 390px !important;
-    min-height: 330px !important;
-    border-radius: 18px !important;
-    overflow: hidden !important;
-  }
-
-  .mobile-map-actions-v99 {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 10px 0 12px !important;
-  }
-
-  .mobile-map-actions-v99 button,
-  .mobile-map-actions-v99 a {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-height: 42px !important;
-    white-space: normal !important;
-    padding: 10px 12px !important;
-    line-height: 1.15 !important;
-    justify-content: center !important;
-  }
-
-  /* Hide accidental escaped range overlays inside map panel */
-  .mobile-map-panel-v99 input[type="range"] {
-    display: none !important;
-  }
-
-  .mobile-sort-row-v99 {
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
-
-  .mobile-property-grid-v99 {
-    width: calc(100vw - 24px) !important;
-    max-width: calc(100vw - 24px) !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 16px !important;
-  }
-
-  .mobile-property-grid-v99 > *,
-  .mobile-property-grid-v99 article,
-  .mobile-property-grid-v99 [href*="/properties/"] {
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-
   .language-switcher-menu-v94 {
     right: 50%;
     transform: translateX(50%);
     min-width: 150px;
   }
-}
 
-@media (max-width: 430px) {
-  main > * {
-    max-width: calc(100vw - 12px) !important;
-    width: calc(100vw - 12px) !important;
-  }
-
-  .mobile-filter-panel-v99 {
-    width: calc(100vw - 60px) !important;
-    max-width: calc(100vw - 60px) !important;
-  }
-
-  .mobile-map-panel-v99,
-  .mobile-sort-row-v99,
-  .mobile-property-grid-v99 {
-    width: calc(100vw - 22px) !important;
-    max-width: calc(100vw - 22px) !important;
-  }
-
-  .mobile-map-panel-v99 .leaflet-container {
-    height: 380px !important;
-    min-height: 320px !important;
+  .leaflet-container {
+    min-height: 330px;
   }
 }
