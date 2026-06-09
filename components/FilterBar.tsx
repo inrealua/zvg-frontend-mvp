@@ -57,7 +57,7 @@ const labels = {
     "Jeder Termin": "Любой термин",
     "Beliebig": "Любая",
     "Nein": "Нет",
-    "Ja": "Да", selected: "выбрано", any: "Любая", search: "Поиск", searchPlaceholder: "Город, индекс, адрес, номер дела, суд", city: "Город", allCities: "Все города", postalCode: "Индекс", postalPlaceholder: "например: 09111", radius: "Радиус", noRadius: "Без радиуса", court: "Суд", allCourts: "Все суды", status: "Статус", allCurrent: "Все актуальные", state: "Федеральная земля", allStates: "Все земли", propertyType: "Тип объекта", allTypes: "Все типы", usage: "Использование", anyUsage: "Любое использование", marketValue: "Оценочная стоимость", livingArea: "Жилая площадь", plotArea: "Участок", dateFrom: "Торги от", dateTo: "Торги до", datePlaceholder: "ГГГГ-ММ-ДД", heritage: "Памятник архитектуры", valueLimits: "Ценовые границы", attempt: "№ термина", submit: "Показать результаты", resetFilters: "Сбросить фильтр" },
+    "Ja": "Да", selected: "выбрано", any: "Любая", search: "Поиск", searchPlaceholder: "Город, индекс, адрес, номер дела, суд", city: "Город", allCities: "Все города", postalCode: "Индекс", postalPlaceholder: "например: 09111", radius: "Радиус", noRadius: "Без радиуса", court: "Суд", allCourts: "Все суды", status: "Статус", allCurrent: "Все актуальные", state: "Федеральная земля", allStates: "Все земли", propertyType: "Тип объекта", allTypes: "Все типы", usage: "Использование", anyUsage: "Любое использование", marketValue: "Оценочная стоимость", livingArea: "Жилая площадь", plotArea: "Участок", dateFrom: "Торги от", dateTo: "Торги до", datePlaceholder: "ГГГГ-ММ-ДД", heritage: "Памятник архитектуры", valueLimits: "Ограничения стоимости", attempt: "№ термина", submit: "Показать результаты", resetFilters: "Сбросить фильтр" },
   en: { selected: "selected", any: "Any", search: "Search", searchPlaceholder: "City, ZIP, address, case number, court", city: "City", allCities: "All cities", postalCode: "ZIP", postalPlaceholder: "e.g. 09111", radius: "Radius", noRadius: "No radius", court: "Court", allCourts: "All courts", status: "Status", allCurrent: "All current", state: "Federal state", allStates: "All states", propertyType: "Property type", allTypes: "All types", usage: "Use", anyUsage: "Any use", marketValue: "Market value", livingArea: "Living area", plotArea: "Plot size", dateFrom: "Auction from", dateTo: "Auction to", datePlaceholder: "YYYY-MM-DD", heritage: "Listed monument", valueLimits: "Value limits", attempt: "Auction no.", submit: "Show results", resetFilters: "Reset filters" },
 } as const;
 
@@ -252,6 +252,84 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
 
   const legacyDict = optionLabels[locale] as Record<string, string>;
   return { ...option, label: legacyDict[rawValue] || legacyDict[rawLabel] || option.label };
+}
+
+
+function localizeWertgrenzenOption(option: SelectOption, locale: Locale): SelectOption {
+  const rawValue = String(option.value || "");
+  const rawLabel = String(option.label || "");
+
+  if (!rawValue && !rawLabel) {
+    return { ...option, label: labels[locale].any };
+  }
+
+  const normalize = (text: string) =>
+    text
+      .trim()
+      .toLowerCase()
+      .replace(/ё/g, "е")
+      .replace(/[._\s/]+/g, "-");
+
+  const key = normalize(rawValue);
+  const labelKey = normalize(rawLabel);
+
+  const activeLabels: Record<Locale, string> = {
+    de: "Wertgrenzen gelten",
+    ru: "Ограничения действуют",
+    en: "Limits apply",
+  };
+
+  const removedLabels: Record<Locale, string> = {
+    de: "Wertgrenzen aufgehoben",
+    ru: "Ограничения сняты",
+    en: "Limits removed",
+  };
+
+  // Important:
+  // Some older UI options came from generic boolean labels: Ja/Nein, Да/Нет, Yes/No.
+  // For this filter the user-facing meaning is:
+  // Ja/Да/Yes => limits apply; Nein/Нет/No => limits removed.
+  const activeKeys = new Set([
+    "true",
+    "yes",
+    "ja",
+    "да",
+    "active",
+    "apply",
+    "applies",
+    "gelten",
+    "gilt",
+    "wertgrenzen-gelten",
+    "nicht-weggefallen",
+    "not-removed",
+    "notremoved",
+    "not_removed",
+  ]);
+
+  const removedKeys = new Set([
+    "false",
+    "no",
+    "nein",
+    "нет",
+    "removed",
+    "aufgehoben",
+    "weggefallen",
+    "entfallen",
+    "sняты",
+    "сняты",
+    "wertgrenzen-aufgehoben",
+    "wertgrenzen-weggefallen",
+  ]);
+
+  if (removedKeys.has(key) || removedKeys.has(labelKey)) {
+    return { ...option, label: removedLabels[locale] };
+  }
+
+  if (activeKeys.has(key) || activeKeys.has(labelKey)) {
+    return { ...option, label: activeLabels[locale] };
+  }
+
+  return localizeOption(option, locale);
 }
 
 function getInitialValue(params: URLSearchParams, key: string): string { return params.get(key) ?? ""; }
@@ -480,7 +558,7 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
           <label htmlFor="wertgrenzen">{t.valueLimits}</label>
           <select id="wertgrenzen" name="wertgrenzen" defaultValue={getInitialValue(searchParams, "wertgrenzen")}>
             {WERTGRENZEN_OPTIONS.map((option) => {
-              const localized = localizeOption(option, locale);
+              const localized = localizeWertgrenzenOption(option, locale);
               const label = localized.value ? localized.label : t.any;
               return <option key={localized.value} value={localized.value}>{label}</option>;
             })}

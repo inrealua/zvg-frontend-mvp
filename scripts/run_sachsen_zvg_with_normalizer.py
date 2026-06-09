@@ -1887,6 +1887,94 @@ def normalize_object_folder(obj_dir: Path, output_root: Path) -> dict[str, Any]:
     return n
 
 
+
+# STAGE133_WERTGRENZEN_DETECTION_PATCH
+# Better detection of whether value limits (Wertgrenzen / 5/10 and 7/10 limits) are removed.
+# Important distinction:
+# - A generic sentence like "Verkehrswert wurde gemäß §§ 74a Abs. 5, 85a Abs. 2 ZVG festgesetzt"
+#   only explains how the market value was set and does NOT mean the limits are removed.
+# - Removal is usually expressed with weggefallen / aufgehoben / entfallen / nicht mehr anwendbar
+#   near Wertgrenzen, 5/10, 7/10, § 74a or § 85a.
+def detect_wertgrenzen(text: str) -> str:
+    raw = str(text or "")
+    t = raw.lower()
+    t = t.replace("§§", "§")
+    t = re.sub(r"\s+", " ", t)
+
+    # Neutral legal formula. It mentions §74a/§85a but does not say that the limits are removed.
+    neutral_patterns = [
+        r"verkehrswert\s+wurde\s+gem(?:ä|ae|a)e?ß\s+§\s*74a\s*abs\.\s*5\s*,?\s*§?\s*85a\s*abs\.\s*2",
+        r"verkehrswertfestsetzung\s+gem(?:ä|ae|a)e?ß\s+§\s*74a\s*abs\.\s*5",
+        r"gem(?:ä|ae|a)e?ß\s+§\s*74a\s*abs\.\s*5\s*,?\s*§?\s*85a\s*abs\.\s*2",
+    ]
+
+    active_patterns = [
+        r"(?:wertgrenzen|versagungsgrenzen|5/10\s*-?\s*grenze|7/10\s*-?\s*grenze).{0,120}(?:gelten|gilt|bestehen|besteht|anwendbar|finden\s+anwendung|findet\s+anwendung)",
+        r"(?:§\s*74a|§\s*85a).{0,120}(?:findet\s+anwendung|finden\s+anwendung|anwendbar|gilt|gelten)",
+        r"(?:keine\s+angaben|unbekannt).{0,80}(?:wertgrenzen|versagungsgrenzen)",
+    ]
+
+    removed_patterns = [
+        r"(?:wertgrenzen|versagungsgrenzen).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung)",
+        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden).{0,160}(?:wertgrenzen|versagungsgrenzen)",
+        r"(?:5/10|5\s*/\s*10|fünf\s*/\s*zehn|fuenf\s*/\s*zehn).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden)",
+        r"(?:7/10|7\s*/\s*10|sieben\s*/\s*zehn).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden)",
+        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden).{0,160}(?:5/10|5\s*/\s*10|7/10|7\s*/\s*10)",
+        r"(?:§\s*74a|§\s*85a).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung)",
+        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden).{0,160}(?:§\s*74a|§\s*85a)",
+        r"(?:zweiter|2\.)\s+(?:termin|versteigerungstermin)",
+        r"(?:dritter|3\.)\s+(?:termin|versteigerungstermin)",
+        r"(?:erneuter|wiederholter)\s+(?:termin|versteigerungstermin)",
+    ]
+
+    if any(re.search(pattern, t, re.I) for pattern in removed_patterns):
+        return "REMOVED"
+
+    if any(re.search(pattern, t, re.I) for pattern in active_patterns):
+        return "ACTIVE"
+
+    # If only the neutral formula is present, keep limits active/unknown rather than removed.
+    if any(re.search(pattern, t, re.I) for pattern in neutral_patterns):
+        return "ACTIVE"
+
+    return "ACTIVE"
+
+
+_original_normalize_object_folder_stage133 = normalize_object_folder
+
+def normalize_object_folder(obj_dir: Path, output_root: Path) -> dict[str, Any]:
+    n = _original_normalize_object_folder_stage133(obj_dir, output_root)
+
+    # Re-check value limits using all raw text after all previous stages finished.
+    try:
+        raw_parts = []
+        raw_dir = output_root / obj_dir.name / "raw"
+        for file_name in ["detail.json", "status.txt"]:
+            p = raw_dir / file_name
+            if p.exists():
+                raw_parts.append(p.read_text(encoding="utf-8", errors="ignore"))
+        for p in sorted(raw_dir.glob("*_text.txt")):
+            raw_parts.append(p.read_text(encoding="utf-8", errors="ignore"))
+
+        status = detect_wertgrenzen("\n".join(raw_parts))
+        auction = n.setdefault("auction", {})
+        auction["wertgrenzenStatus"] = status
+        auction["wertgrenzenWeggefallen"] = (status == "REMOVED")
+        if status == "REMOVED":
+            try:
+                auction["termNumber"] = max(int(auction.get("termNumber") or 1), 2)
+            except Exception:
+                auction["termNumber"] = 2
+    except Exception as exc:
+        warnings = n.setdefault("quality", {}).setdefault("warnings", [])
+        warnings.append(f"Wertgrenzen-Erkennung konnte nicht nachgeprüft werden: {exc}")
+
+    out_dir = output_root / obj_dir.name
+    save_json(out_dir / "normalized.json", n)
+    save_json(out_dir / "quality_report.json", n.get("quality", {}))
+    return n
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--parser", default="Sachsen_zvg.py", help="Path to your existing parser")
