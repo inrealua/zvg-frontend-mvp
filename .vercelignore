@@ -42,8 +42,7 @@ raw.json
 network-jsons.json
 detail-links.json
 
-stage*
-stage*/**
+
 cumulative
 cumulative/**
 projlatest
