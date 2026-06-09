@@ -1,0 +1,46 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export function AdminDeletePropertyButton({ propertyId }: { propertyId: string }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  async function onDelete() {
+    if (loading) return;
+    const ok = window.confirm("Objekt wirklich löschen?");
+    if (!ok) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/properties/${propertyId}`, {
+        method: "DELETE",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Delete failed");
+      }
+
+      router.refresh();
+    } catch (e) {
+      console.error(e);
+      alert("Objekt konnte nicht gelöscht werden.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onDelete}
+      disabled={loading}
+      className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 font-semibold text-red-700 hover:bg-red-100 disabled:opacity-60"
+    >
+      {loading ? "Löschen..." : "Löschen"}
+    </button>
+  );
+}
