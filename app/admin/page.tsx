@@ -1,24 +1,16 @@
 import { getI18n } from "@/lib/i18n/server";
 import { getUiText } from "@/lib/i18n/ui-texts";
 import Link from "next/link";
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { PropertyStatus } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import { formatDate, formatEuro, formatNumber } from "@/lib/format";
+import { AdminDeletePropertyButton } from "@/components/admin/AdminDeletePropertyButton";
+import { getPropertyPlaceholder } from "@/lib/propertyPlaceholder";
 
 type AdminSearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 export const dynamic = "force-dynamic";
-
-async function deleteProperty(formData: FormData) {
-  "use server";
-  const id = formData.get("id");
-  if (typeof id !== "string" || !id) return;
-  await prisma.property.delete({ where: { id } });
-  revalidatePath("/admin");
-  revalidatePath("/");
-}
 
 export default async function AdminPage({ searchParams }: { searchParams: AdminSearchParams }) {
   const { locale } = await getI18n();
@@ -122,7 +114,13 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
                 <tr key={property.id}>
                   <td>
                     <div className="admin-thumb">
-                      {property.images[0] ? <img src={property.images[0].url} alt="" /> : <span>Нет фото</span>}
+                      <img
+                        src={
+                          property.images[0]?.url ||
+                          getPropertyPlaceholder(property.propertyType, property.propertyTypeGroup)
+                        }
+                        alt={property.title}
+                      />
                     </div>
                   </td>
                   <td>
@@ -150,10 +148,7 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
                     <div className="admin-row-actions">
                       <Link className="btn btn-soft" href={`/properties/${property.id}`}>Открыть</Link>
                       <Link className="btn" href={`/admin/properties/${property.id}/edit`}>Редактировать</Link>
-                      <form action={deleteProperty}>
-                        <input type="hidden" name="id" value={property.id} />
-                        <button className="btn btn-danger" type="submit">Удалить</button>
-                      </form>
+                      <AdminDeletePropertyButton propertyId={property.id} className="btn btn-danger" />
                     </div>
                   </td>
                 </tr>
