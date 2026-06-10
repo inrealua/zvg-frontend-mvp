@@ -25,6 +25,20 @@ const allowedTypeGroups = new Set(Object.values(PropertyTypeGroup));
 const allowedStatuses = new Set(Object.values(PropertyStatus));
 const allowedOccupancy = new Set(Object.values(OccupancyStatus));
 
+function stage141IsWertgrenzenRemovedFilter(value: string | undefined): boolean {
+  return ["yes", "true", "1", "weggefallen", "removed", "aufgehoben", "entfallen"].includes(String(value || "").toLowerCase());
+}
+
+function stage141IsWertgrenzenActiveFilter(value: string | undefined): boolean {
+  return ["no", "false", "0", "nicht_weggefallen", "not_removed", "notremoved", "active", "gelten"].includes(String(value || "").toLowerCase());
+}
+
+function stage141WertgrenzenChipLabel(value: string): string {
+  if (stage141IsWertgrenzenRemovedFilter(value)) return "Wertgrenzen: aufgehoben";
+  if (stage141IsWertgrenzenActiveFilter(value)) return "Wertgrenzen: gelten";
+  return `Wertgrenzen: ${value}`;
+}
+
 export function asString(value: string | string[] | undefined): string {
   if (Array.isArray(value)) return value[0] ?? "";
   return value ?? "";
@@ -189,8 +203,8 @@ export function buildPropertyWhere(params: SearchParamRecord): Prisma.PropertyWh
 
   if (denkmalschutz === "yes") where.hasDenkmalschutz = true;
   if (denkmalschutz === "no") where.hasDenkmalschutz = false;
-  if (wertgrenzen === "yes") where.wertgrenzenWeggefallen = true;
-  if (wertgrenzen === "no") where.wertgrenzenWeggefallen = false;
+  if (stage141IsWertgrenzenRemovedFilter(wertgrenzen)) where.wertgrenzenWeggefallen = true;
+  if (stage141IsWertgrenzenActiveFilter(wertgrenzen)) where.wertgrenzenWeggefallen = false;
   if (auctionAttempt === 1 || auctionAttempt === 2) where.auctionAttempt = auctionAttempt;
   if (auctionAttempt !== undefined && auctionAttempt >= 3) where.auctionAttempt = { gte: 3 };
 

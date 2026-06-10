@@ -35,8 +35,8 @@ export const BOOLEAN_OPTIONS: SelectOption[] = [
 
 export const WERTGRENZEN_OPTIONS: SelectOption[] = [
   { value: "", label: "Не важно" },
-  { value: "yes", label: "Сняты" },
-  { value: "no", label: "Не сняты / неизвестно" }
+  { value: "nicht_weggefallen", label: "Ограничения действуют" },
+  { value: "weggefallen", label: "Ограничения сняты" },
 ];
 
 export const AUCTION_ATTEMPT_OPTIONS: SelectOption[] = [
