@@ -1888,43 +1888,40 @@ def normalize_object_folder(obj_dir: Path, output_root: Path) -> dict[str, Any]:
 
 
 
-# STAGE133_WERTGRENZEN_DETECTION_PATCH
-# Better detection of whether value limits (Wertgrenzen / 5/10 and 7/10 limits) are removed.
-# Important distinction:
-# - A generic sentence like "Verkehrswert wurde gemäß §§ 74a Abs. 5, 85a Abs. 2 ZVG festgesetzt"
-#   only explains how the market value was set and does NOT mean the limits are removed.
-# - Removal is usually expressed with weggefallen / aufgehoben / entfallen / nicht mehr anwendbar
-#   near Wertgrenzen, 5/10, 7/10, § 74a or § 85a.
+# STAGE134_MEDIA_AND_WERTGRENZEN_PATCH
+# This block intentionally overrides older functions above.
+
 def detect_wertgrenzen(text: str) -> str:
     raw = str(text or "")
     t = raw.lower()
+    t = t.replace("\xa0", " ")
     t = t.replace("§§", "§")
     t = re.sub(r"\s+", " ", t)
 
-    # Neutral legal formula. It mentions §74a/§85a but does not say that the limits are removed.
+    # Strong explicit signals for removed value limits.
+    removed_patterns = [
+        r"(?:wertgrenzen|versagungsgrenzen|wertgrenze).{0,220}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung|finden\s+keine\s+anwendung)",
+        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung).{0,220}(?:wertgrenzen|versagungsgrenzen|wertgrenze)",
+        r"(?:5\s*/\s*10|5/10|fünf\s*/\s*zehn|fuenf\s*/\s*zehn|7\s*/\s*10|7/10|sieben\s*/\s*zehn).{0,220}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung)",
+        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung).{0,220}(?:5\s*/\s*10|5/10|7\s*/\s*10|7/10)",
+        r"(?:§\s*74a|§\s*85a).{0,220}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung|findet\s+keine\s+anwendung|finden\s+keine\s+anwendung)",
+        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung).{0,220}(?:§\s*74a|§\s*85a)",
+        r"(?:zweiter|2\.)\s+(?:versteigerungstermin|termin)",
+        r"(?:dritter|3\.)\s+(?:versteigerungstermin|termin)",
+        r"(?:erneuter|wiederholter)\s+(?:versteigerungstermin|termin)",
+        r"(?:termin).{0,120}(?:wiederholung|erneut)",
+    ]
+
+    # Active/unknown signals. These are weaker and only used if no removed pattern is found.
+    active_patterns = [
+        r"(?:wertgrenzen|versagungsgrenzen|wertgrenze).{0,160}(?:gelten|gilt|bestehen|besteht|anwendbar|finden\s+anwendung|findet\s+anwendung)",
+        r"(?:§\s*74a|§\s*85a).{0,160}(?:findet\s+anwendung|finden\s+anwendung|anwendbar|gilt|gelten)",
+    ]
+
+    # Neutral legal formula: it does not mean removed.
     neutral_patterns = [
         r"verkehrswert\s+wurde\s+gem(?:ä|ae|a)e?ß\s+§\s*74a\s*abs\.\s*5\s*,?\s*§?\s*85a\s*abs\.\s*2",
-        r"verkehrswertfestsetzung\s+gem(?:ä|ae|a)e?ß\s+§\s*74a\s*abs\.\s*5",
         r"gem(?:ä|ae|a)e?ß\s+§\s*74a\s*abs\.\s*5\s*,?\s*§?\s*85a\s*abs\.\s*2",
-    ]
-
-    active_patterns = [
-        r"(?:wertgrenzen|versagungsgrenzen|5/10\s*-?\s*grenze|7/10\s*-?\s*grenze).{0,120}(?:gelten|gilt|bestehen|besteht|anwendbar|finden\s+anwendung|findet\s+anwendung)",
-        r"(?:§\s*74a|§\s*85a).{0,120}(?:findet\s+anwendung|finden\s+anwendung|anwendbar|gilt|gelten)",
-        r"(?:keine\s+angaben|unbekannt).{0,80}(?:wertgrenzen|versagungsgrenzen)",
-    ]
-
-    removed_patterns = [
-        r"(?:wertgrenzen|versagungsgrenzen).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung)",
-        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden).{0,160}(?:wertgrenzen|versagungsgrenzen)",
-        r"(?:5/10|5\s*/\s*10|fünf\s*/\s*zehn|fuenf\s*/\s*zehn).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden)",
-        r"(?:7/10|7\s*/\s*10|sieben\s*/\s*zehn).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden)",
-        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden).{0,160}(?:5/10|5\s*/\s*10|7/10|7\s*/\s*10)",
-        r"(?:§\s*74a|§\s*85a).{0,160}(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden|keine\s+anwendung)",
-        r"(?:weggefallen|aufgehoben|entfallen|nicht\s+mehr\s+anwendbar|nicht\s+anzuwenden).{0,160}(?:§\s*74a|§\s*85a)",
-        r"(?:zweiter|2\.)\s+(?:termin|versteigerungstermin)",
-        r"(?:dritter|3\.)\s+(?:termin|versteigerungstermin)",
-        r"(?:erneuter|wiederholter)\s+(?:termin|versteigerungstermin)",
     ]
 
     if any(re.search(pattern, t, re.I) for pattern in removed_patterns):
@@ -1933,26 +1930,175 @@ def detect_wertgrenzen(text: str) -> str:
     if any(re.search(pattern, t, re.I) for pattern in active_patterns):
         return "ACTIVE"
 
-    # If only the neutral formula is present, keep limits active/unknown rather than removed.
     if any(re.search(pattern, t, re.I) for pattern in neutral_patterns):
         return "ACTIVE"
 
     return "ACTIVE"
 
 
-_original_normalize_object_folder_stage133 = normalize_object_folder
+def _stage134_render_page_image(page: Any, target: Path, zoom: float = 2.0) -> tuple[int, int] | None:
+    try:
+        mat = fitz.Matrix(zoom, zoom)
+        pix = page.get_pixmap(matrix=mat, alpha=False)
+        pix.save(str(target))
+        return int(pix.width), int(pix.height)
+    except Exception:
+        return None
+
+
+def _stage134_is_photo_pdf(pdf: Path, text: str = "") -> bool:
+    name = pdf.name.lower()
+    combined = (name + "\n" + (text or "")[:3000]).lower()
+    return bool(re.search(r"foto|bild|photo|anlage\s*fot|lichtbild|objektfoto|fotodokument", combined))
+
+
+def extract_images(input_dir: Path, out_dir: Path, pdf_texts: dict[str, str]) -> list[dict[str, Any]]:
+    """
+    Stage134 extraction:
+    1. First tries embedded images as before.
+    2. If a photo PDF has too few embedded images, renders whole pages to JPG.
+       This catches PDF files where photos are flattened/scanned into pages.
+    """
+    if fitz is None:
+        return []
+
+    images_dir = out_dir / "import_files" / "images"
+    images_dir.mkdir(parents=True, exist_ok=True)
+
+    all_pdfs = sorted(input_dir.glob("*.pdf"))
+    photo_pdfs = [p for p in all_pdfs if _stage134_is_photo_pdf(p, pdf_texts.get(p.name, ""))]
+    if not photo_pdfs:
+        photo_pdfs = [p for p in all_pdfs if classify_pdf(p, {}) == "FOTO"]
+
+    # If no explicit Foto PDF is present, still inspect PDFs that may contain visual material.
+    if not photo_pdfs:
+        photo_pdfs = [p for p in all_pdfs if not re.search(r"bekanntmachung|index\.php", p.name.lower())]
+
+    images: list[dict[str, Any]] = []
+    seen_hashes: set[str] = set()
+    index = 0
+
+    def add_image_bytes(image_bytes: bytes, ext: str, caption: str | None, source_file: str, page_no: int, width: int | None = None, height: int | None = None) -> None:
+        nonlocal index
+        if not image_bytes:
+            return
+        h = sha1_bytes(image_bytes)
+        if h in seen_hashes:
+            return
+        seen_hashes.add(h)
+        index += 1
+        safe_ext = (ext or "jpg").lower()
+        if safe_ext == "jpeg":
+            safe_ext = "jpg"
+        filename = f"{index:03d}.{safe_ext}"
+        target = images_dir / filename
+        target.write_bytes(image_bytes)
+        images.append({
+            "localPath": str(Path("import_files") / "images" / filename).replace("\\", "/"),
+            "type": image_type_from_caption(caption),
+            "caption": caption,
+            "isMain": False,
+            "sortOrder": index - 1,
+            "sourceFile": source_file,
+            "sourcePage": page_no,
+            "width": width,
+            "height": height,
+            "sha1": h,
+        })
+
+    for pdf in photo_pdfs:
+        captions = extract_captions(pdf_texts.get(pdf.name, ""))
+        caption_idx = 0
+        embedded_count_before = len(images)
+
+        try:
+            doc = fitz.open(pdf)
+        except Exception:
+            continue
+
+        # Embedded images.
+        for page_no, page in enumerate(doc, start=1):
+            for info in page.get_images(full=True):
+                xref = info[0]
+                try:
+                    extracted = doc.extract_image(xref)
+                except Exception:
+                    continue
+
+                image_bytes = extracted.get("image", b"")
+                width = int(extracted.get("width") or 0)
+                height = int(extracted.get("height") or 0)
+                ext = (extracted.get("ext") or "jpg").lower()
+
+                if is_likely_logo(width, height, image_bytes):
+                    continue
+
+                caption = captions[caption_idx] if caption_idx < len(captions) else None
+                caption_idx += 1
+                add_image_bytes(image_bytes, ext, caption, pdf.name, page_no, width, height)
+
+        embedded_added = len(images) - embedded_count_before
+
+        # Fallback: render full pages for photo PDFs if embedded extraction is weak.
+        # Many court photo PDFs contain flattened pages, so get_images() returns little or nothing.
+        render_pages = os.environ.get("ZVG_RENDER_PHOTO_PAGES", "1").strip().lower() not in {"0", "false", "no", "off"}
+        if render_pages and embedded_added < 3:
+            for page_no, page in enumerate(doc, start=1):
+                # Avoid rendering extremely text-only pages where possible.
+                text = clean_text(page.get_text("text") or "")
+                if len(text) > 1800 and not _stage134_is_photo_pdf(pdf, text):
+                    continue
+
+                tmp_name = f"_render_{sha1_text(str(pdf) + str(page_no))[:10]}.jpg"
+                tmp_target = images_dir / tmp_name
+                dims = _stage134_render_page_image(page, tmp_target, zoom=2.0)
+                if not dims or not tmp_target.exists():
+                    continue
+
+                data = tmp_target.read_bytes()
+                tmp_target.unlink(missing_ok=True)
+
+                # Skip very tiny pages.
+                if len(data) < 20000:
+                    continue
+
+                caption = captions[caption_idx] if caption_idx < len(captions) else None
+                caption_idx += 1
+                add_image_bytes(data, "jpg", caption, pdf.name, page_no, dims[0], dims[1])
+
+        doc.close()
+
+    # Select main image.
+    main_idx = None
+    for i, img in enumerate(images):
+        c = (img.get("caption") or "").lower()
+        if img["type"] == "EXTERIOR" and not any(x in c for x in ["straße", "strasse", "blick in die", "lageplan", "karte"]):
+            main_idx = i
+            break
+    if main_idx is None and images:
+        main_idx = 0
+
+    if main_idx is not None:
+        images[main_idx]["isMain"] = True
+        images.sort(key=lambda x: (not x.get("isMain", False), x.get("sortOrder", 0)))
+        for i, img in enumerate(images):
+            img["sortOrder"] = i
+
+    return images
+
+
+_original_normalize_object_folder_stage134 = normalize_object_folder
 
 def normalize_object_folder(obj_dir: Path, output_root: Path) -> dict[str, Any]:
-    n = _original_normalize_object_folder_stage133(obj_dir, output_root)
+    n = _original_normalize_object_folder_stage134(obj_dir, output_root)
 
-    # Re-check value limits using all raw text after all previous stages finished.
     try:
         raw_parts = []
         raw_dir = output_root / obj_dir.name / "raw"
-        for file_name in ["detail.json", "status.txt"]:
-            p = raw_dir / file_name
-            if p.exists():
-                raw_parts.append(p.read_text(encoding="utf-8", errors="ignore"))
+        if (obj_dir / "detail.json").exists():
+            raw_parts.append((obj_dir / "detail.json").read_text(encoding="utf-8", errors="ignore"))
+        if (obj_dir / "status.txt").exists():
+            raw_parts.append((obj_dir / "status.txt").read_text(encoding="utf-8", errors="ignore"))
         for p in sorted(raw_dir.glob("*_text.txt")):
             raw_parts.append(p.read_text(encoding="utf-8", errors="ignore"))
 
@@ -1960,14 +2106,22 @@ def normalize_object_folder(obj_dir: Path, output_root: Path) -> dict[str, Any]:
         auction = n.setdefault("auction", {})
         auction["wertgrenzenStatus"] = status
         auction["wertgrenzenWeggefallen"] = (status == "REMOVED")
+
         if status == "REMOVED":
             try:
                 auction["termNumber"] = max(int(auction.get("termNumber") or 1), 2)
             except Exception:
                 auction["termNumber"] = 2
+
+        # Make quality warning clearer.
+        if not n.get("images"):
+            n.setdefault("quality", {}).setdefault("warnings", []).append(
+                "Keine Fotos extrahiert: im PDF möglicherweise keine eingebetteten Fotos oder kein Foto-PDF vorhanden."
+            )
     except Exception as exc:
-        warnings = n.setdefault("quality", {}).setdefault("warnings", [])
-        warnings.append(f"Wertgrenzen-Erkennung konnte nicht nachgeprüft werden: {exc}")
+        n.setdefault("quality", {}).setdefault("warnings", []).append(
+            f"Stage134 Wertgrenzen/Foto Nachprüfung fehlgeschlagen: {exc}"
+        )
 
     out_dir = output_root / obj_dir.name
     save_json(out_dir / "normalized.json", n)

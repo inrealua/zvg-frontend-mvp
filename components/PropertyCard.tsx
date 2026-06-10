@@ -1,4 +1,3 @@
-import { MainCardGallery } from "@/components/MainCardGallery";
 import Link from "next/link";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import {
@@ -10,6 +9,7 @@ import {
 } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/config";
 import { defaultLocale } from "@/lib/i18n/config";
+import { getPropertyPlaceholder } from "@/lib/propertyPlaceholder";
 import {
   pickPropertyTranslation,
   type PropertyTranslationLike,
@@ -76,6 +76,8 @@ export function PropertyCard({
   locale?: Locale;
 }) {
   const mainImage = property.images[0];
+  const placeholderImage = getPropertyPlaceholder(property.propertyType, property.propertyTypeGroup);
+  const imageUrl = mainImage?.url || placeholderImage;
   const translated = pickPropertyTranslation(property, locale);
   const ui = getPublicUi(locale);
   const cardUi = cardLabels[locale];
@@ -87,15 +89,11 @@ export function PropertyCard({
         href={`/properties/${property.id}`}
         aria-label={`${ui.details}: ${translated.title}`}
       >
-        {mainImage ? (
-          <MainCardGallery
-              images={(property as any).images || (property as any).photos}
-              fallbackSrc={(property as any).imageUrl || (property as any).mainImage || (property as any).coverImage || (property as any).photoUrl || (property as any).images?.[0]?.url || (property as any).images?.[0]?.src || (property as any).images?.[0]?.imageUrl}
-              alt={(property as any).title || (property as any).headline || (property as any).address || ""}
-            />
-        ) : (
-          <div className="image-placeholder">{ui.noPhoto}</div>
-        )}
+        <img
+          src={imageUrl}
+          alt={mainImage?.alt ?? translated.title}
+          loading="lazy"
+        />
         <span className={`status-badge image-badge ${statusClass(property.status)}`}>
           {labelStatus(property.status, locale)}
         </span>

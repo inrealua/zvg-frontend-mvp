@@ -67,6 +67,33 @@ const optionLabels: Record<Locale, Record<string, string>> = {
   en: { ACTIVE: "Active", CANCELLED: "Cancelled", ARCHIVED: "Archive", SOLD: "Sold", WOHNHAEUSER: "Residential houses", WOHNUNGEN: "Apartments", GEWERBE: "Commercial", GRUNDSTUECKE: "Land plots", LAND_WALD: "Land / forest", GARAGEN: "Garages / parking", SONSTIGE: "Other", VACANT: "Vacant", RENTED: "Rented", OWNER_OCCUPIED: "Owner-occupied", UNKNOWN: "Unknown", true: "Yes", false: "No", weggefallen: "Removed", nicht_weggefallen: "Not removed / unknown" },
 };
 
+
+function getWertgrenzenOptions(locale: Locale): SelectOption[] {
+  const text = {
+    de: {
+      any: "Beliebig",
+      active: "Wertgrenzen gelten",
+      removed: "Wertgrenzen aufgehoben",
+    },
+    ru: {
+      any: "Любая",
+      active: "Ограничения действуют",
+      removed: "Ограничения сняты",
+    },
+    en: {
+      any: "Any",
+      active: "Limits apply",
+      removed: "Limits removed",
+    },
+  } as const;
+
+  return [
+    { value: "", label: text[locale].any },
+    { value: "nicht_weggefallen", label: text[locale].active },
+    { value: "weggefallen", label: text[locale].removed },
+  ];
+}
+
 function readLocaleFromCookie(): Locale {
   if (typeof document === "undefined") return "de";
   const match = document.cookie.match(/(?:^|;\s*)zvg_locale=(de|ru|en)(?:;|$)/);
@@ -252,84 +279,6 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
 
   const legacyDict = optionLabels[locale] as Record<string, string>;
   return { ...option, label: legacyDict[rawValue] || legacyDict[rawLabel] || option.label };
-}
-
-
-function localizeWertgrenzenOption(option: SelectOption, locale: Locale): SelectOption {
-  const rawValue = String(option.value || "");
-  const rawLabel = String(option.label || "");
-
-  if (!rawValue && !rawLabel) {
-    return { ...option, label: labels[locale].any };
-  }
-
-  const normalize = (text: string) =>
-    text
-      .trim()
-      .toLowerCase()
-      .replace(/ё/g, "е")
-      .replace(/[._\s/]+/g, "-");
-
-  const key = normalize(rawValue);
-  const labelKey = normalize(rawLabel);
-
-  const activeLabels: Record<Locale, string> = {
-    de: "Wertgrenzen gelten",
-    ru: "Ограничения действуют",
-    en: "Limits apply",
-  };
-
-  const removedLabels: Record<Locale, string> = {
-    de: "Wertgrenzen aufgehoben",
-    ru: "Ограничения сняты",
-    en: "Limits removed",
-  };
-
-  // Important:
-  // Some older UI options came from generic boolean labels: Ja/Nein, Да/Нет, Yes/No.
-  // For this filter the user-facing meaning is:
-  // Ja/Да/Yes => limits apply; Nein/Нет/No => limits removed.
-  const activeKeys = new Set([
-    "true",
-    "yes",
-    "ja",
-    "да",
-    "active",
-    "apply",
-    "applies",
-    "gelten",
-    "gilt",
-    "wertgrenzen-gelten",
-    "nicht-weggefallen",
-    "not-removed",
-    "notremoved",
-    "not_removed",
-  ]);
-
-  const removedKeys = new Set([
-    "false",
-    "no",
-    "nein",
-    "нет",
-    "removed",
-    "aufgehoben",
-    "weggefallen",
-    "entfallen",
-    "sняты",
-    "сняты",
-    "wertgrenzen-aufgehoben",
-    "wertgrenzen-weggefallen",
-  ]);
-
-  if (removedKeys.has(key) || removedKeys.has(labelKey)) {
-    return { ...option, label: removedLabels[locale] };
-  }
-
-  if (activeKeys.has(key) || activeKeys.has(labelKey)) {
-    return { ...option, label: activeLabels[locale] };
-  }
-
-  return localizeOption(option, locale);
 }
 
 function getInitialValue(params: URLSearchParams, key: string): string { return params.get(key) ?? ""; }
@@ -557,11 +506,9 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
         <div className="field span-1">
           <label htmlFor="wertgrenzen">{t.valueLimits}</label>
           <select id="wertgrenzen" name="wertgrenzen" defaultValue={getInitialValue(searchParams, "wertgrenzen")}>
-            {WERTGRENZEN_OPTIONS.map((option) => {
-              const localized = localizeWertgrenzenOption(option, locale);
-              const label = localized.value ? localized.label : t.any;
-              return <option key={localized.value} value={localized.value}>{label}</option>;
-            })}
+            {getWertgrenzenOptions(locale).map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
           </select>
         </div>
 
