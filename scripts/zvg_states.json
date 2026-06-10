@@ -1,0 +1,7 @@
+{
+  "sachsen": { "name": "Sachsen", "land_abk": "sn", "enabled": true },
+  "thueringen": { "name": "Thüringen", "land_abk": "th", "enabled": true },
+  "sachsen-anhalt": { "name": "Sachsen-Anhalt", "land_abk": "st", "enabled": true },
+  "brandenburg": { "name": "Brandenburg", "land_abk": "bb", "enabled": true },
+  "bayern": { "name": "Bayern", "land_abk": "by", "enabled": true }
+}
