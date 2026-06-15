@@ -11,6 +11,7 @@ import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
+import { Stage170aDetailsNewTabFix } from "@/components/Stage170aDetailsNewTabFix";
 import { Stage168iCalendarTermCountFix } from "@/components/Stage168iCalendarTermCountFix";
 import { Stage168gGermanObjectTextFix } from "@/components/Stage168gGermanObjectTextFix";
 
@@ -63,6 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 <RuntimeUiCleanup />
         <Header />
         {children}
+        <Stage170aDetailsNewTabFix />
         <Stage168iCalendarTermCountFix />
         <Stage168gGermanObjectTextFix />
         <Footer />
