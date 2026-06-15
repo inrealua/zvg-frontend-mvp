@@ -11,6 +11,8 @@ import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
+import { Stage168iCalendarTermCountFix } from "@/components/Stage168iCalendarTermCountFix";
+import { Stage168gGermanObjectTextFix } from "@/components/Stage168gGermanObjectTextFix";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -61,11 +63,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 <RuntimeUiCleanup />
         <Header />
         {children}
+        <Stage168iCalendarTermCountFix />
+        <Stage168gGermanObjectTextFix />
         <Footer />
               <LanguageRuntimeFix />
               <BackToTopButton />
               <FilterMiniApplyEnhancer />
-      </body>
+            </body>
     </html>
   );
 }

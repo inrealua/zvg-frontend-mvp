@@ -331,18 +331,68 @@ function StateMultiSelect({ states, selected, locale }: { states: string[]; sele
 
 function CityMultiSelect({ cities, selected, locale }: { cities: string[]; selected: string[]; locale: Locale }) {
   const [values, setValues] = useState<string[]>(selected);
+  const [query, setQuery] = useState("");
   const selectedSet = useMemo(() => new Set(values), [values]);
-  function toggle(value: string, checked: boolean) { setValues((current) => (checked ? [...current, value] : current.filter((item) => item !== value))); }
+
+  const filteredCities = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const base = q ? cities.filter((city) => city.toLowerCase().includes(q)) : cities;
+    const pinned = values.filter((city) => !base.includes(city));
+    return [...pinned, ...base].slice(0, q ? 80 : 160);
+  }, [cities, query, values]);
+
+  function toggle(value: string, checked: boolean) {
+    setValues((current) => {
+      if (checked) return current.includes(value) ? current : [...current, value];
+      return current.filter((item) => item !== value);
+    });
+  }
+
+  function addFirstMatch() {
+    const first = filteredCities.find((city) => !selectedSet.has(city));
+    if (first) toggle(first, true);
+  }
+
   return (
-    <details className="multi-filter-v60">
-      <summary><span>{labels[locale].city}</span><b>{values.length === 0 ? labels[locale].allCities : values.length === 1 ? values[0] : `${values.length} ${labels[locale].selected}`}</b></summary>
-      <div className="multi-filter-panel-v60 multi-filter-panel-scroll-v60">
-        {cities.map((city) => (
-          <label key={city} className={selectedSet.has(city) ? "multi-option-v60 is-selected" : "multi-option-v60"}>
-            <input name="city" type="checkbox" value={city} checked={selectedSet.has(city)} onChange={(event) => toggle(city, event.target.checked)} />
-            <span>{city}</span>
-          </label>
-        ))}
+    <details className="multi-filter-v60 city-autocomplete-filter-v168a">
+      <summary>
+        <span>{labels[locale].city}</span>
+        <b>{values.length === 0 ? labels[locale].allCities : values.length === 1 ? values[0] : `${values.length} ${labels[locale].selected}`}</b>
+      </summary>
+
+      <div className="multi-filter-panel-v60 multi-filter-panel-scroll-v60 city-autocomplete-panel-v168a">
+        <input
+          className="city-autocomplete-input-v168a"
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              addFirstMatch();
+            }
+          }}
+          placeholder={locale === "de" ? "Stadt suchen..." : locale === "en" ? "Search city..." : "Найти город..."}
+        />
+
+        {values.length > 0 ? (
+          <div className="city-selected-pills-v168a">
+            {values.map((city) => (
+              <button key={city} type="button" onClick={() => toggle(city, false)}>
+                {city} ×
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="city-options-v168a">
+          {filteredCities.map((city) => (
+            <label key={city} className={selectedSet.has(city) ? "multi-option-v60 is-selected" : "multi-option-v60"}>
+              <input name="city" type="checkbox" value={city} checked={selectedSet.has(city)} onChange={(event) => toggle(city, event.target.checked)} />
+              <span>{city}</span>
+            </label>
+          ))}
+        </div>
       </div>
     </details>
   );

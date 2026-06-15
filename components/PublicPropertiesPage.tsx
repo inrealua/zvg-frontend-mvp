@@ -346,7 +346,7 @@ export async function PublicPropertiesPage({
   const t = localText[locale];
 
   const radiusFilter = await resolveRadiusFilter(params);
-  const paramsForWhere = radiusFilter ? { ...params, postalCode: undefined } : params;
+  const paramsForWhere = radiusFilter ? { ...params, postalCode: undefined, city: undefined } : params;
   const baseWhere = buildPropertyWhere(paramsForWhere);
   const where = withArchiveMode(baseWhere, mode);
   const orderBy = buildPropertyOrderBy(params);

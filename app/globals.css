@@ -12695,3 +12695,830 @@ input[type="date"] {
   font-weight: 800;
   font-size: 12px;
 }
+
+/* Stage167b calendar and cards layout fix */
+.auction-calendar .calendar-day,
+.auction-calendar-day,
+.auction-calendar .day-cell,
+.auction-calendar [class*="calendar-day"],
+.auction-calendar [class*="day-cell"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.auction-calendar .calendar-day .day-events,
+.auction-calendar [class*="day-events"],
+.auction-calendar [class*="event-count"],
+.auction-calendar [class*="termin"] {
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.auction-calendar a,
+.auction-calendar button {
+  max-width: 100%;
+}
+
+.auction-calendar .calendar-event-card,
+.auction-calendar .auction-event-card,
+.auction-calendar [class*="event-card"],
+.auction-calendar [class*="calendar-card"] {
+  display: grid !important;
+  grid-template-columns: 104px minmax(0, 1fr) !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+  overflow: hidden !important;
+}
+
+.auction-calendar .calendar-event-card img,
+.auction-calendar .auction-event-card img,
+.auction-calendar [class*="event-card"] img,
+.auction-calendar [class*="calendar-card"] img {
+  width: 104px !important;
+  height: 86px !important;
+  object-fit: cover !important;
+  border-radius: 14px !important;
+  flex: 0 0 auto !important;
+}
+
+.auction-calendar .calendar-event-card *,
+.auction-calendar .auction-event-card *,
+.auction-calendar [class*="event-card"] *,
+.auction-calendar [class*="calendar-card"] * {
+  min-width: 0;
+}
+
+.auction-calendar .calendar-event-card p,
+.auction-calendar .auction-event-card p,
+.auction-calendar [class*="event-card"] p,
+.auction-calendar [class*="calendar-card"] p {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.auction-calendar .calendar-event-card h3,
+.auction-calendar .auction-event-card h3,
+.auction-calendar [class*="event-card"] h3,
+.auction-calendar [class*="calendar-card"] h3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.auction-calendar .calendar-grid,
+.auction-calendar [class*="calendar-grid"] {
+  align-items: stretch;
+}
+
+.auction-calendar .calendar-day-badge,
+.auction-calendar [class*="calendar-badge"],
+.auction-calendar [class*="auction-count"] {
+  display: inline-flex;
+  max-width: calc(100% - 12px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Stage167d fixes: active filters, city autocomplete, auction calendar */
+.city-autocomplete-panel-v167d { padding-top: 10px !important; }
+.city-autocomplete-input-v167d {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(91, 117, 105, .22);
+  border-radius: 14px;
+  background: #fff;
+  font-weight: 800;
+  color: var(--text);
+  outline: none;
+}
+.city-autocomplete-input-v167d:focus {
+  border-color: rgba(47, 94, 78, .55);
+  box-shadow: 0 0 0 3px rgba(47, 94, 78, .10);
+}
+.city-selected-pills-v167d {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.city-selected-pills-v167d button {
+  border: 1px solid rgba(47, 94, 78, .22);
+  background: rgba(47, 94, 78, .08);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.city-options-v167d { display: grid; gap: 6px; }
+
+.filter-chip { white-space: nowrap; }
+
+.auction-calendar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(360px, .9fr);
+  gap: 22px;
+  align-items: start;
+}
+.auction-calendar-toolbar,
+.auction-calendar-grid { grid-column: 1; }
+.auction-calendar-details {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-width: 0;
+}
+.auction-calendar-day {
+  min-height: 38px !important;
+  height: auto !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 5px;
+  padding: 6px 8px !important;
+  overflow: hidden !important;
+}
+.auction-calendar-day .day-number {
+  line-height: 1;
+  min-width: 18px;
+}
+.auction-calendar-day .day-event-single,
+.auction-calendar-day .day-event-count {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  font-size: 10px;
+  line-height: 1.05;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.auction-calendar-event-list { display: grid; gap: 12px; }
+.auction-calendar-event {
+  display: grid !important;
+  grid-template-columns: 104px minmax(0, 1fr) !important;
+  gap: 14px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  padding: 12px !important;
+}
+.calendar-event-thumb {
+  width: 104px !important;
+  height: 86px !important;
+  min-width: 104px !important;
+  max-width: 104px !important;
+  overflow: hidden !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: rgba(47, 94, 78, .08);
+  text-decoration: none;
+}
+.calendar-event-thumb img {
+  width: 104px !important;
+  height: 86px !important;
+  display: block !important;
+  object-fit: cover !important;
+  border-radius: 14px !important;
+}
+.auction-calendar-event > div {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.auction-calendar-event .eyebrow,
+.auction-calendar-event p {
+  max-width: 100%;
+  margin-top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.auction-calendar-event h4 {
+  max-width: 100%;
+  margin: 3px 0 6px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.auction-calendar-event h4 a { overflow-wrap: anywhere; }
+@media (max-width: 980px) {
+  .auction-calendar { grid-template-columns: 1fr; }
+  .auction-calendar-toolbar,
+  .auction-calendar-grid,
+  .auction-calendar-details {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* Stage168a core frontend fixes */
+.city-autocomplete-panel-v168a { padding-top: 10px !important; }
+.city-autocomplete-input-v168a {
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(91, 117, 105, .22);
+  border-radius: 14px;
+  background: #fff;
+  font-weight: 800;
+  color: var(--text);
+  outline: none;
+}
+.city-autocomplete-input-v168a:focus {
+  border-color: rgba(47, 94, 78, .55);
+  box-shadow: 0 0 0 3px rgba(47, 94, 78, .10);
+}
+.city-selected-pills-v168a {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.city-selected-pills-v168a button {
+  border: 1px solid rgba(47, 94, 78, .22);
+  background: rgba(47, 94, 78, .08);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.city-options-v168a { display: grid; gap: 6px; }
+
+.auction-calendar-event {
+  display: grid !important;
+  grid-template-columns: 104px minmax(0, 1fr) !important;
+  gap: 14px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+}
+.calendar-event-thumb {
+  width: 104px !important;
+  height: 86px !important;
+  min-width: 104px !important;
+  max-width: 104px !important;
+  overflow: hidden !important;
+  border-radius: 14px !important;
+}
+.calendar-event-thumb img {
+  width: 104px !important;
+  height: 86px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+.auction-calendar-event > div {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.auction-calendar-event .eyebrow,
+.auction-calendar-event p {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+.auction-calendar-event h4 {
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+.auction-calendar-day .day-event-single,
+.auction-calendar-day .day-event-count {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+  font-size: 10px !important;
+  line-height: 1.05 !important;
+}
+
+/* Stage168d final cabinet calendar fix */
+.cabinet-page .auction-calendar,
+.cabinet .auction-calendar,
+main .auction-calendar {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 0.72fr) !important;
+  gap: 22px !important;
+  align-items: start !important;
+}
+
+.cabinet-page .auction-calendar-toolbar,
+.cabinet .auction-calendar-toolbar,
+main .auction-calendar-toolbar {
+  grid-column: 1 / -1 !important;
+}
+
+.cabinet-page .auction-calendar-grid,
+.cabinet .auction-calendar-grid,
+main .auction-calendar-grid {
+  grid-column: 1 !important;
+  min-width: 0 !important;
+}
+
+.cabinet-page .auction-calendar-details,
+.cabinet .auction-calendar-details,
+main .auction-calendar-details {
+  grid-column: 2 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.cabinet-page .auction-calendar-day,
+.cabinet .auction-calendar-day,
+main .auction-calendar-day {
+  min-height: 46px !important;
+  height: auto !important;
+  padding: 6px 7px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  gap: 3px !important;
+  overflow: hidden !important;
+}
+
+.cabinet-page .auction-calendar-day .day-number,
+.cabinet .auction-calendar-day .day-number,
+main .auction-calendar-day .day-number {
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  flex: 0 0 auto !important;
+}
+
+.cabinet-page .auction-calendar-day .day-event-single,
+.cabinet-page .auction-calendar-day .day-event-count,
+.cabinet .auction-calendar-day .day-event-single,
+.cabinet .auction-calendar-day .day-event-count,
+main .auction-calendar-day .day-event-single,
+main .auction-calendar-day .day-event-count {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 9px !important;
+  line-height: 1.05 !important;
+  text-align: left !important;
+  padding: 2px 4px !important;
+  border-radius: 999px !important;
+}
+
+.cabinet-page .auction-calendar-event-list,
+.cabinet .auction-calendar-event-list,
+main .auction-calendar-event-list {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+.cabinet-page .auction-calendar-event,
+.cabinet .auction-calendar-event,
+main .auction-calendar-event {
+  display: grid !important;
+  grid-template-columns: 96px minmax(0, 1fr) !important;
+  gap: 12px !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  padding: 12px !important;
+}
+
+.cabinet-page .calendar-event-thumb,
+.cabinet .calendar-event-thumb,
+main .calendar-event-thumb,
+.cabinet-page .auction-calendar-event > a:first-child,
+.cabinet .auction-calendar-event > a:first-child,
+main .auction-calendar-event > a:first-child {
+  width: 96px !important;
+  height: 78px !important;
+  min-width: 96px !important;
+  max-width: 96px !important;
+  overflow: hidden !important;
+  border-radius: 14px !important;
+  display: block !important;
+}
+
+.cabinet-page .calendar-event-thumb img,
+.cabinet .calendar-event-thumb img,
+main .calendar-event-thumb img,
+.cabinet-page .auction-calendar-event img,
+.cabinet .auction-calendar-event img,
+main .auction-calendar-event img {
+  width: 96px !important;
+  height: 78px !important;
+  object-fit: cover !important;
+  display: block !important;
+  border-radius: 14px !important;
+}
+
+.cabinet-page .auction-calendar-event > div,
+.cabinet .auction-calendar-event > div,
+main .auction-calendar-event > div {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.cabinet-page .auction-calendar-event h4,
+.cabinet .auction-calendar-event h4,
+main .auction-calendar-event h4 {
+  margin: 2px 0 5px !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  font-size: 14px !important;
+  line-height: 1.18 !important;
+}
+
+.cabinet-page .auction-calendar-event p,
+.cabinet-page .auction-calendar-event .eyebrow,
+.cabinet .auction-calendar-event p,
+.cabinet .auction-calendar-event .eyebrow,
+main .auction-calendar-event p,
+main .auction-calendar-event .eyebrow {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+}
+
+@media (max-width: 1100px) {
+  .cabinet-page .auction-calendar,
+  .cabinet .auction-calendar,
+  main .auction-calendar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cabinet-page .auction-calendar-toolbar,
+  .cabinet-page .auction-calendar-grid,
+  .cabinet-page .auction-calendar-details,
+  .cabinet .auction-calendar-toolbar,
+  .cabinet .auction-calendar-grid,
+  .cabinet .auction-calendar-details,
+  main .auction-calendar-toolbar,
+  main .auction-calendar-grid,
+  main .auction-calendar-details {
+    grid-column: 1 !important;
+  }
+}
+
+/* Stage168g rational cabinet auction calendar layout */
+.account-card .auction-calendar,
+.cabinet-page .auction-calendar,
+.cabinet .auction-calendar,
+.dashboard-card .auction-calendar,
+main .auction-calendar {
+  display: grid !important;
+  grid-template-columns: minmax(520px, 1fr) minmax(360px, 470px) !important;
+  grid-template-areas:
+    "toolbar details"
+    "grid details" !important;
+  column-gap: 22px !important;
+  row-gap: 12px !important;
+  align-items: start !important;
+  width: 100% !important;
+}
+
+.account-card .auction-calendar-toolbar,
+.cabinet-page .auction-calendar-toolbar,
+.cabinet .auction-calendar-toolbar,
+.dashboard-card .auction-calendar-toolbar,
+main .auction-calendar-toolbar {
+  grid-area: toolbar !important;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 !important;
+}
+
+.account-card .auction-calendar-toolbar h3,
+.account-card .auction-calendar-toolbar h4,
+.cabinet-page .auction-calendar-toolbar h3,
+.cabinet-page .auction-calendar-toolbar h4,
+.cabinet .auction-calendar-toolbar h3,
+.cabinet .auction-calendar-toolbar h4,
+.dashboard-card .auction-calendar-toolbar h3,
+.dashboard-card .auction-calendar-toolbar h4,
+main .auction-calendar-toolbar h3,
+main .auction-calendar-toolbar h4 {
+  text-align: center !important;
+  margin: 0 !important;
+}
+
+.account-card .auction-calendar-grid,
+.cabinet-page .auction-calendar-grid,
+.cabinet .auction-calendar-grid,
+.dashboard-card .auction-calendar-grid,
+main .auction-calendar-grid {
+  grid-area: grid !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  align-self: start !important;
+}
+
+.account-card .auction-calendar-details,
+.cabinet-page .auction-calendar-details,
+.cabinet .auction-calendar-details,
+.dashboard-card .auction-calendar-details,
+main .auction-calendar-details {
+  grid-area: details !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  align-self: start !important;
+  margin: 0 !important;
+}
+
+.account-card .auction-calendar-weekdays,
+.cabinet-page .auction-calendar-weekdays,
+.cabinet .auction-calendar-weekdays,
+.dashboard-card .auction-calendar-weekdays,
+main .auction-calendar-weekdays {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.account-card .auction-calendar-days,
+.cabinet-page .auction-calendar-days,
+.cabinet .auction-calendar-days,
+.dashboard-card .auction-calendar-days,
+main .auction-calendar-days,
+.account-card .auction-calendar-month,
+.cabinet-page .auction-calendar-month,
+.cabinet .auction-calendar-month,
+.dashboard-card .auction-calendar-month,
+main .auction-calendar-month {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.account-card .auction-calendar-day,
+.cabinet-page .auction-calendar-day,
+.cabinet .auction-calendar-day,
+.dashboard-card .auction-calendar-day,
+main .auction-calendar-day {
+  min-height: 42px !important;
+  height: 42px !important;
+  padding: 6px 7px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  overflow: hidden !important;
+}
+
+.account-card .auction-calendar-day .day-number,
+.cabinet-page .auction-calendar-day .day-number,
+.cabinet .auction-calendar-day .day-number,
+.dashboard-card .auction-calendar-day .day-number,
+main .auction-calendar-day .day-number {
+  font-size: 12px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+}
+
+.account-card .auction-calendar-day .day-event-single,
+.account-card .auction-calendar-day .day-event-count,
+.cabinet-page .auction-calendar-day .day-event-single,
+.cabinet-page .auction-calendar-day .day-event-count,
+.cabinet .auction-calendar-day .day-event-single,
+.cabinet .auction-calendar-day .day-event-count,
+.dashboard-card .auction-calendar-day .day-event-single,
+.dashboard-card .auction-calendar-day .day-event-count,
+main .auction-calendar-day .day-event-single,
+main .auction-calendar-day .day-event-count {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 9px !important;
+  line-height: 1.05 !important;
+  padding: 1px 3px !important;
+  border-radius: 999px !important;
+}
+
+.account-card .auction-calendar-event-list,
+.cabinet-page .auction-calendar-event-list,
+.cabinet .auction-calendar-event-list,
+.dashboard-card .auction-calendar-event-list,
+main .auction-calendar-event-list {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+.account-card .auction-calendar-event,
+.cabinet-page .auction-calendar-event,
+.cabinet .auction-calendar-event,
+.dashboard-card .auction-calendar-event,
+main .auction-calendar-event {
+  display: grid !important;
+  grid-template-columns: 82px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  align-items: center !important;
+  padding: 10px !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.account-card .calendar-event-thumb,
+.cabinet-page .calendar-event-thumb,
+.cabinet .calendar-event-thumb,
+.dashboard-card .calendar-event-thumb,
+main .calendar-event-thumb,
+.account-card .auction-calendar-event > a:first-child,
+.cabinet-page .auction-calendar-event > a:first-child,
+.cabinet .auction-calendar-event > a:first-child,
+.dashboard-card .auction-calendar-event > a:first-child,
+main .auction-calendar-event > a:first-child {
+  width: 82px !important;
+  height: 66px !important;
+  min-width: 82px !important;
+  max-width: 82px !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  display: block !important;
+}
+
+.account-card .calendar-event-thumb img,
+.cabinet-page .calendar-event-thumb img,
+.cabinet .calendar-event-thumb img,
+.dashboard-card .calendar-event-thumb img,
+main .calendar-event-thumb img,
+.account-card .auction-calendar-event img,
+.cabinet-page .auction-calendar-event img,
+.cabinet .auction-calendar-event img,
+.dashboard-card .auction-calendar-event img,
+main .auction-calendar-event img {
+  width: 82px !important;
+  height: 66px !important;
+  object-fit: cover !important;
+  display: block !important;
+  border-radius: 12px !important;
+}
+
+.account-card .auction-calendar-event > div,
+.cabinet-page .auction-calendar-event > div,
+.cabinet .auction-calendar-event > div,
+.dashboard-card .auction-calendar-event > div,
+main .auction-calendar-event > div {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.account-card .auction-calendar-event h4,
+.cabinet-page .auction-calendar-event h4,
+.cabinet .auction-calendar-event h4,
+.dashboard-card .auction-calendar-event h4,
+main .auction-calendar-event h4 {
+  margin: 2px 0 4px !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  font-size: 13px !important;
+  line-height: 1.16 !important;
+}
+
+.account-card .auction-calendar-event p,
+.account-card .auction-calendar-event .eyebrow,
+.cabinet-page .auction-calendar-event p,
+.cabinet-page .auction-calendar-event .eyebrow,
+.cabinet .auction-calendar-event p,
+.cabinet .auction-calendar-event .eyebrow,
+.dashboard-card .auction-calendar-event p,
+.dashboard-card .auction-calendar-event .eyebrow,
+main .auction-calendar-event p,
+main .auction-calendar-event .eyebrow {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 11px !important;
+  line-height: 1.18 !important;
+}
+
+@media (max-width: 1050px) {
+  .account-card .auction-calendar,
+  .cabinet-page .auction-calendar,
+  .cabinet .auction-calendar,
+  .dashboard-card .auction-calendar,
+  main .auction-calendar {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "toolbar"
+      "grid"
+      "details" !important;
+  }
+}
+
+/* Stage168i: explicit number of auction terms inside calendar cells */
+.account-card .auction-calendar-day[data-stage168i-has-events="true"],
+.cabinet-page .auction-calendar-day[data-stage168i-has-events="true"],
+.cabinet .auction-calendar-day[data-stage168i-has-events="true"],
+.dashboard-card .auction-calendar-day[data-stage168i-has-events="true"],
+main .auction-calendar-day[data-stage168i-has-events="true"] {
+  border-color: #2f5e4e !important;
+  background: rgba(47, 94, 78, .07) !important;
+  box-shadow: inset 0 0 0 1px rgba(47, 94, 78, .22) !important;
+}
+
+.account-card .auction-calendar-day .stage168i-calendar-marker,
+.cabinet-page .auction-calendar-day .stage168i-calendar-marker,
+.cabinet .auction-calendar-day .stage168i-calendar-marker,
+.dashboard-card .auction-calendar-day .stage168i-calendar-marker,
+main .auction-calendar-day .stage168i-calendar-marker,
+.account-card .auction-calendar-day .day-event-single,
+.account-card .auction-calendar-day .day-event-count,
+.cabinet-page .auction-calendar-day .day-event-single,
+.cabinet-page .auction-calendar-day .day-event-count,
+.cabinet .auction-calendar-day .day-event-single,
+.cabinet .auction-calendar-day .day-event-count,
+.dashboard-card .auction-calendar-day .day-event-single,
+.dashboard-card .auction-calendar-day .day-event-count,
+main .auction-calendar-day .day-event-single,
+main .auction-calendar-day .day-event-count {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  max-width: calc(100% - 2px) !important;
+  min-width: 48px !important;
+  height: 17px !important;
+  margin-top: 3px !important;
+  padding: 1px 7px !important;
+  border-radius: 999px !important;
+  background: #2f5e4e !important;
+  color: #fff !important;
+  border: 1px solid rgba(47, 94, 78, .45) !important;
+  font-size: 9px !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  letter-spacing: -.02em !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+.account-card .auction-calendar-day[data-stage168i-has-events="true"] .day-number,
+.cabinet-page .auction-calendar-day[data-stage168i-has-events="true"] .day-number,
+.cabinet .auction-calendar-day[data-stage168i-has-events="true"] .day-number,
+.dashboard-card .auction-calendar-day[data-stage168i-has-events="true"] .day-number,
+main .auction-calendar-day[data-stage168i-has-events="true"] .day-number {
+  color: #103f34 !important;
+  font-weight: 950 !important;
+}
+
+/* keep selected event day obvious */
+.account-card .auction-calendar-day[data-stage168i-has-events="true"].active,
+.account-card .auction-calendar-day[data-stage168i-has-events="true"].selected,
+.account-card .auction-calendar-day[data-stage168i-has-events="true"].is-selected,
+.cabinet-page .auction-calendar-day[data-stage168i-has-events="true"].active,
+.cabinet-page .auction-calendar-day[data-stage168i-has-events="true"].selected,
+.cabinet-page .auction-calendar-day[data-stage168i-has-events="true"].is-selected,
+.cabinet .auction-calendar-day[data-stage168i-has-events="true"].active,
+.cabinet .auction-calendar-day[data-stage168i-has-events="true"].selected,
+.cabinet .auction-calendar-day[data-stage168i-has-events="true"].is-selected,
+.dashboard-card .auction-calendar-day[data-stage168i-has-events="true"].active,
+.dashboard-card .auction-calendar-day[data-stage168i-has-events="true"].selected,
+.dashboard-card .auction-calendar-day[data-stage168i-has-events="true"].is-selected,
+main .auction-calendar-day[data-stage168i-has-events="true"].active,
+main .auction-calendar-day[data-stage168i-has-events="true"].selected,
+main .auction-calendar-day[data-stage168i-has-events="true"].is-selected {
+  background: rgba(47, 94, 78, .12) !important;
+  box-shadow: inset 0 0 0 2px rgba(47, 94, 78, .45) !important;
+}

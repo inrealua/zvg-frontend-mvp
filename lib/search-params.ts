@@ -19,6 +19,7 @@ export type ActiveFilterChip = {
   label: string;
   value?: string;
   removeKeys?: string[];
+  removeHref?: string;
 };
 
 const allowedTypeGroups = new Set(Object.values(PropertyTypeGroup));
@@ -126,7 +127,8 @@ function validValues<T extends string>(values: string[], allowed: Set<T>): T[] {
 export function buildPropertyWhere(params: SearchParamRecord): Prisma.PropertyWhereInput {
   const q = asString(params.q);
   const states = asStringArray(params.state);
-  const city = asString(params.city);
+  const cities = asStringArray(params.city);
+  const city = cities[0] || "";
   const postalCode = asString(params.postalCode);
   const court = asString(params.court);
   const typeGroups = validValues(asStringArray(params.typeGroup), allowedTypeGroups as Set<PropertyTypeGroup>);
@@ -234,59 +236,129 @@ function addMultiChips(chips: ActiveFilterChip[], key: string, prefix: string, v
 
 export function buildActiveFilterChips(params: SearchParamRecord): ActiveFilterChip[] {
   const chips: ActiveFilterChip[] = [];
-  const addText = (key: string, prefix: string) => {
+
+  function makeRemoveHref(key: string, valueToRemove?: string): string {
+    const next = new URLSearchParams();
+
+    Object.entries(params).forEach(([paramKey, raw]) => {
+      if (paramKey === "page") return;
+
+      const values = Array.isArray(raw) ? raw : raw ? [raw] : [];
+      for (const value of values) {
+        const text = String(value || "").trim();
+        if (!text) continue;
+
+        if (paramKey === key) {
+          if (valueToRemove === undefined) continue;
+          if (text === valueToRemove) continue;
+        }
+
+        next.append(paramKey, text);
+      }
+    });
+
+    const query = next.toString();
+    return query ? `?${query}` : "?";
+  }
+
+  function addText(key: string, label: string) {
     const value = asString(params[key]);
-    if (value) chips.push({ key, label: `${prefix}: ${value}` });
-  };
-  const addNumber = (key: string, label: string, formatter = (value: number) => String(value)) => {
+    if (value) chips.push({ key, label, value, removeHref: makeRemoveHref(key) });
+  }
+
+  function addNumber(key: string, label: string, formatter = (value: number) => String(value)) {
     const value = asNumber(params[key]);
-    if (value !== undefined) chips.push({ key, label: `${label}: ${formatter(value)}` });
+    if (typeof value === "number") chips.push({ key, label, value: formatter(value), removeHref: makeRemoveHref(key) });
+  }
+
+  function addMulti(key: string, label: string, values: string[], labeler = (value: string) => value) {
+    values.forEach((value) => {
+      chips.push({
+        key,
+        label,
+        value: labeler(value),
+        removeHref: makeRemoveHref(key, value),
+      });
+    });
+  }
+
+  const yesNo = (value: string) => {
+    if (value === "true") return "Ja";
+    if (value === "false") return "Nein";
+    return value;
   };
 
-  addText("q", "Поиск");
-  addMultiChips(chips, "state", "Земля", asStringArray(params.state));
-  addText("city", "Город");
+  const statusLabel = (value: string) => {
+    const labels: Record<string, string> = {
+      ACTIVE: "Aktiv",
+      CANCELLED: "Aufgehoben",
+      ARCHIVED: "Archiv",
+      SOLD: "Verkauft",
+      UNKNOWN: "Unbekannt",
+    };
+    return labels[value] || optionLabel(STATUS_OPTIONS, value);
+  };
+
+  const occupancyLabel = (value: string) => {
+    const normalized = String(value || "").trim().toLowerCase();
+
+    const labels: Record<string, string> = {
+      vacant: "Frei",
+      free: "Frei",
+      frei: "Frei",
+      rented: "Vermietet",
+      vermietet: "Vermietet",
+      owner_occupied: "Eigennutzung",
+      owneroccupied: "Eigennutzung",
+      eigennutzung: "Eigennutzung",
+      unknown: "Unbekannt",
+      unbekannt: "Unbekannt",
+      "неизвестно": "Unbekannt",
+      "невідомо": "Unbekannt",
+      "рќрµрёр·рірµсѓс‚рѕ": "Unbekannt",
+      "рќрµрё": "Unbekannt",
+    };
+
+    return labels[normalized] || labels[value] || optionLabel(OCCUPANCY_OPTIONS, value) || "Unbekannt";
+  }
+
+  const wertgrenzenLabel = (value: string) => {
+    if (value === "weggefallen") return "weggefallen";
+    if (value === "nicht_weggefallen") return "gelten";
+    return optionLabel(WERTGRENZEN_OPTIONS, value);
+  };
+
+  addText("q", "Suche");
+  addMulti("state", "Bundesland", asStringArray(params.state));
+  addMulti("city", "Ort", asStringArray(params.city));
   addText("postalCode", "PLZ");
-  addNumber("radiusKm", "Radius", (value) => `${value} км`);
-  addText("court", "Суд");
+  addNumber("radiusKm", "Umkreis", (value) => `${value} km`);
+  addText("court", "Amtsgericht");
 
-  addMultiChips(chips, "typeGroup", "Тип", asStringArray(params.typeGroup), (value) => optionLabel(PROPERTY_GROUP_OPTIONS, value));
-  addMultiChips(chips, "status", "Статус", asStringArray(params.status), (value) => optionLabel(STATUS_OPTIONS, value));
-  addMultiChips(chips, "occupancy", "Использование", asStringArray(params.occupancy), (value) => optionLabel(OCCUPANCY_OPTIONS, value));
+  addMulti("typeGroup", "Objektart", asStringArray(params.typeGroup), (value) => optionLabel(PROPERTY_GROUP_OPTIONS, value));
+  addMulti("occupancy", "Nutzung", asStringArray(params.occupancy), occupancyLabel);
 
-  addNumber("minPrice", "Цена от", formatEuro);
-  addNumber("maxPrice", "Цена до", formatEuro);
-  addNumber("minLivingArea", "Жилая от", formatArea);
-  addNumber("maxLivingArea", "Жилая до", formatArea);
-  addNumber("minPlotArea", "Участок от", formatArea);
-  addNumber("maxPlotArea", "Участок до", formatArea);
-  addText("dateFrom", "Торги от");
-  addText("dateTo", "Торги до");
+  addNumber("minPrice", "Verkehrswert ab", (value) => `${value.toLocaleString("de-DE")} €`);
+  addNumber("maxPrice", "Verkehrswert bis", (value) => `${value.toLocaleString("de-DE")} €`);
+  addNumber("minLivingArea", "Wohnfläche ab", (value) => `${value} m²`);
+  addNumber("maxLivingArea", "Wohnfläche bis", (value) => `${value} m²`);
+  addNumber("minPlotArea", "Grundstück ab", (value) => `${value} m²`);
+  addNumber("maxPlotArea", "Grundstück bis", (value) => `${value} m²`);
+
+  addText("dateFrom", "Termin ab");
+  addText("dateTo", "Termin bis");
+  addMulti("status", "Status", asStringArray(params.status), statusLabel);
 
   const denkmalschutz = asString(params.denkmalschutz);
-  if (denkmalschutz) chips.push({ key: "denkmalschutz", label: `Denkmalschutz: ${optionLabel(BOOLEAN_OPTIONS, denkmalschutz)}` });
+  if (denkmalschutz) chips.push({ key: "denkmalschutz", label: "Denkmalschutz", value: yesNo(denkmalschutz), removeHref: makeRemoveHref("denkmalschutz") });
 
   const wertgrenzen = asString(params.wertgrenzen);
-  if (wertgrenzen) chips.push({ key: "wertgrenzen", label: `Wertgrenzen: ${optionLabel(WERTGRENZEN_OPTIONS, wertgrenzen)}` });
+  if (wertgrenzen) chips.push({ key: "wertgrenzen", label: "Wertgrenzen", value: wertgrenzenLabel(wertgrenzen), removeHref: makeRemoveHref("wertgrenzen") });
 
-  const attempt = asString(params.auctionAttempt);
-  if (attempt) chips.push({ key: "auctionAttempt", label: optionLabel(AUCTION_ATTEMPT_OPTIONS, attempt) });
+  addNumber("auctionAttempt", "Termin-Nr.", (value) => value >= 3 ? "3. und weitere" : `${value}. Termin`);
 
-  const sort = asString(params.sort);
-  if (sort && sort !== "auctionDateAsc") chips.push({ key: "sort", label: `Сортировка: ${optionLabel(SORT_OPTIONS, sort)}` });
-
-  const perPage = asString(params.perPage);
-  if (perPage && perPage !== "20") chips.push({ key: "perPage", label: `На странице: ${optionLabel(PAGE_SIZE_OPTIONS, perPage)}` });
-
-  const mapBounds = getMapBounds(params);
-  if (mapBounds) {
-    chips.push({ key: "mapBounds", label: "Область карты", removeKeys: ["minLat", "maxLat", "minLng", "maxLng"] });
-  }
-
-  const polygonPoints = parsePolygonParam(params.poly);
-  if (polygonPoints.length >= 3) {
-    chips.push({ key: "poly", label: `Polygon-Suche: ${polygonPoints.length} Punkte` });
-  }
+  addText("sort", "Sortierung");
+  addNumber("perPage", "Anzeigen", (value) => `${value} pro Seite`);
 
   return chips;
 }
