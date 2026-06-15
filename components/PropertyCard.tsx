@@ -20,6 +20,7 @@ import {
   labelOccupancy,
   labelStatus,
 } from "@/lib/i18n/property-labels";
+import { mediaUrl, selectBestPropertyImage } from "@/lib/media-selection";
 
 type PropertyCardImage = {
   url: string;
@@ -75,9 +76,9 @@ export function PropertyCard({
   isFavorite?: boolean;
   locale?: Locale;
 }) {
-  const mainImage = property.images[0];
   const placeholderImage = getPropertyPlaceholder(property.propertyType, property.propertyTypeGroup);
-  const imageUrl = mainImage?.url || placeholderImage;
+  const mainImage = selectBestPropertyImage(property.images);
+  const imageUrl = mediaUrl(mainImage) || placeholderImage;
   const translated = pickPropertyTranslation(property, locale);
   const ui = getPublicUi(locale);
   const cardUi = cardLabels[locale];

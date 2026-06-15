@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { filterUsablePropertyImages, mediaUrl } from "@/lib/media-selection";
 
 type GalleryImage = {
   id: string;

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MouseEvent, useMemo, useState } from "react";
+import { filterUsablePropertyImages, mediaUrl } from "@/lib/media-selection";
 
 type ImageLike = {
   url?: string | null;
