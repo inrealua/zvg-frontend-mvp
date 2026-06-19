@@ -371,7 +371,6 @@ export async function PublicPropertiesPage({
           },
       },
       orderBy,
-      take: 1000,
     }),
     prisma.property.findMany({ 
       select: { state: true }, distinct: ["state"], orderBy: { state: "asc" } }),
@@ -427,7 +426,7 @@ export async function PublicPropertiesPage({
   const activeCount = allFilteredProperties.filter((property) => property.status === "ACTIVE").length;
   const cancelledCount = allFilteredProperties.filter((property) => property.status === "CANCELLED").length;
 
-  const mapProperties = allFilteredProperties.slice(0, 500).map((property) => {
+  const mapProperties = allFilteredProperties.map((property) => {
     const translated = pickPropertyTranslation(property, locale);
 
     return {
