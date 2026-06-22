@@ -14,6 +14,7 @@ import "./globals.css";
 import { Stage170aDetailsNewTabFix } from "@/components/Stage170aDetailsNewTabFix";
 import { Stage168iCalendarTermCountFix } from "@/components/Stage168iCalendarTermCountFix";
 import { Stage168gGermanObjectTextFix } from "@/components/Stage168gGermanObjectTextFix";
+import { Analytics } from '@vercel/analytics/next';
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -71,6 +72,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <LanguageRuntimeFix />
               <BackToTopButton />
               <FilterMiniApplyEnhancer />
+              <Analytics />
             </body>
     </html>
   );
