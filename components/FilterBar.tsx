@@ -469,7 +469,13 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
   function buildNextParams(form: HTMLFormElement): URLSearchParams {
     const formData = new FormData(form);
     const next = new URLSearchParams();
-    for (const [key, value] of formData.entries()) {
+    
+    // Polygon is controlled by the map, not by this form.
+    // Preserve it when applying price, type, area and other filters.
+    const currentParams = new URLSearchParams(window.location.search);
+    const activePolygon = currentParams.get("poly");
+    if (activePolygon) next.set("poly", activePolygon);
+for (const [key, value] of formData.entries()) {
       const text = String(value).trim();
       if (text.length > 0) next.append(key, text);
     }
