@@ -474,8 +474,10 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
 // Polygon is controlled by the map, not by this form.
     // Preserve it when applying price, type, area and other filters.
     const currentParams = new URLSearchParams(window.location.search);
-    const activePolygon = currentParams.get("poly");
-    if (activePolygon) next.set("poly", activePolygon);
+    for (const key of ["poly", "minLat", "maxLat", "minLng", "maxLng"]) {
+      const value = currentParams.get(key);
+      if (value) next.set(key, value);
+    }
 for (const [key, value] of formData.entries()) {
       const text = String(value).trim();
       if (text.length > 0) next.append(key, text);
