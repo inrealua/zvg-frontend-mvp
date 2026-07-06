@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
@@ -32,38 +32,38 @@ const labels = {
     "notRemoved": "Nicht weggefallen / unbekannt",
     "not_removed": "Nicht weggefallen / unbekannt",
     "removed": "Weggefallen",
-    "Не сняты / неизвестно": "Nicht weggefallen / unbekannt",
-    "Сняты": "Weggefallen",
-    "3-й и больше": "3. und weitere",
-    "2-й термин": "2. Termin",
-    "1-й термин": "1. Termin",
-    "Любой термин": "Jeder Termin",
-    "Любая": "Beliebig",
-    "Не важно": "Beliebig",
-    "Нет": "Nein",
-    "Да": "Ja",
+    "РќРµ СЃРЅСЏС‚С‹ / РЅРµРёР·РІРµСЃС‚РЅРѕ": "Nicht weggefallen / unbekannt",
+    "РЎРЅСЏС‚С‹": "Weggefallen",
+    "3-Р№ Рё Р±РѕР»СЊС€Рµ": "3. und weitere",
+    "2-Р№ С‚РµСЂРјРёРЅ": "2. Termin",
+    "1-Р№ С‚РµСЂРјРёРЅ": "1. Termin",
+    "Р›СЋР±РѕР№ С‚РµСЂРјРёРЅ": "Jeder Termin",
+    "Р›СЋР±Р°СЏ": "Beliebig",
+    "РќРµ РІР°Р¶РЅРѕ": "Beliebig",
+    "РќРµС‚": "Nein",
+    "Р”Р°": "Ja",
     "nein": "Nein",
     "ja": "Ja",
     "no": "Nein",
     "yes": "Ja",
     "2": "2. Termin",
-    "1": "1. Termin", selected: "ausgewählt", any: "Beliebig", search: "Suche", searchPlaceholder: "Ort, PLZ, Adresse, Aktenzeichen, Gericht", city: "Ort", allCities: "Alle Orte", postalCode: "PLZ", postalPlaceholder: "z. B. 09111", radius: "Umkreis", noRadius: "Kein Radius", court: "Amtsgericht", allCourts: "Alle Gerichte", status: "Status", allCurrent: "Alle aktuellen", state: "Bundesland", allStates: "Alle Bundesländer", propertyType: "Objektart", allTypes: "Alle Typen", usage: "Nutzung", anyUsage: "Jede Nutzung", marketValue: "Verkehrswert", livingArea: "Wohnfläche", plotArea: "Grundstück", dateFrom: "Termin ab", dateTo: "Termin bis", datePlaceholder: "JJJJ-MM-TT", heritage: "Denkmalschutz", valueLimits: "Wertgrenzen", attempt: "Termin-Nr.", submit: "Ergebnisse anzeigen", resetFilters: "Filter zurücksetzen" },
+    "1": "1. Termin", selected: "ausgewГ¤hlt", any: "Beliebig", search: "Suche", searchPlaceholder: "Ort, PLZ, Adresse, Aktenzeichen, Gericht", city: "Ort", allCities: "Alle Orte", postalCode: "PLZ", postalPlaceholder: "z. B. 09111", radius: "Umkreis", noRadius: "Kein Radius", court: "Amtsgericht", allCourts: "Alle Gerichte", status: "Status", allCurrent: "Alle aktuellen", state: "Bundesland", allStates: "Alle BundeslГ¤nder", propertyType: "Objektart", allTypes: "Alle Typen", usage: "Nutzung", anyUsage: "Jede Nutzung", marketValue: "Verkehrswert", livingArea: "WohnflГ¤che", plotArea: "GrundstГјck", dateFrom: "Termin ab", dateTo: "Termin bis", datePlaceholder: "JJJJ-MM-TT", heritage: "Denkmalschutz", valueLimits: "Wertgrenzen", attempt: "Termin-Nr.", submit: "Ergebnisse anzeigen", resetFilters: "Filter zurГјcksetzen" },
   ru: {
-    "Nicht weggefallen / unbekannt": "Не сняты / неизвестно",
-    "Weggefallen": "Сняты",
-    "3. und weitere": "3-й и больше",
-    "2. Termin": "2-й термин",
-    "1. Termin": "1-й термин",
-    "Jeder Termin": "Любой термин",
-    "Beliebig": "Любая",
-    "Nein": "Нет",
-    "Ja": "Да", selected: "выбрано", any: "Любая", search: "Поиск", searchPlaceholder: "Город, индекс, адрес, номер дела, суд", city: "Город", allCities: "Все города", postalCode: "Индекс", postalPlaceholder: "например: 09111", radius: "Радиус", noRadius: "Без радиуса", court: "Суд", allCourts: "Все суды", status: "Статус", allCurrent: "Все актуальные", state: "Федеральная земля", allStates: "Все земли", propertyType: "Тип объекта", allTypes: "Все типы", usage: "Использование", anyUsage: "Любое использование", marketValue: "Оценочная стоимость", livingArea: "Жилая площадь", plotArea: "Участок", dateFrom: "Торги от", dateTo: "Торги до", datePlaceholder: "ГГГГ-ММ-ДД", heritage: "Памятник архитектуры", valueLimits: "Ограничения стоимости", attempt: "№ термина", submit: "Показать результаты", resetFilters: "Сбросить фильтр" },
+    "Nicht weggefallen / unbekannt": "РќРµ СЃРЅСЏС‚С‹ / РЅРµРёР·РІРµСЃС‚РЅРѕ",
+    "Weggefallen": "РЎРЅСЏС‚С‹",
+    "3. und weitere": "3-Р№ Рё Р±РѕР»СЊС€Рµ",
+    "2. Termin": "2-Р№ С‚РµСЂРјРёРЅ",
+    "1. Termin": "1-Р№ С‚РµСЂРјРёРЅ",
+    "Jeder Termin": "Р›СЋР±РѕР№ С‚РµСЂРјРёРЅ",
+    "Beliebig": "Р›СЋР±Р°СЏ",
+    "Nein": "РќРµС‚",
+    "Ja": "Р”Р°", selected: "РІС‹Р±СЂР°РЅРѕ", any: "Р›СЋР±Р°СЏ", search: "РџРѕРёСЃРє", searchPlaceholder: "Р“РѕСЂРѕРґ, РёРЅРґРµРєСЃ, Р°РґСЂРµСЃ, РЅРѕРјРµСЂ РґРµР»Р°, СЃСѓРґ", city: "Р“РѕСЂРѕРґ", allCities: "Р’СЃРµ РіРѕСЂРѕРґР°", postalCode: "РРЅРґРµРєСЃ", postalPlaceholder: "РЅР°РїСЂРёРјРµСЂ: 09111", radius: "Р Р°РґРёСѓСЃ", noRadius: "Р‘РµР· СЂР°РґРёСѓСЃР°", court: "РЎСѓРґ", allCourts: "Р’СЃРµ СЃСѓРґС‹", status: "РЎС‚Р°С‚СѓСЃ", allCurrent: "Р’СЃРµ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ", state: "Р¤РµРґРµСЂР°Р»СЊРЅР°СЏ Р·РµРјР»СЏ", allStates: "Р’СЃРµ Р·РµРјР»Рё", propertyType: "РўРёРї РѕР±СЉРµРєС‚Р°", allTypes: "Р’СЃРµ С‚РёРїС‹", usage: "РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ", anyUsage: "Р›СЋР±РѕРµ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ", marketValue: "РћС†РµРЅРѕС‡РЅР°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ", livingArea: "Р–РёР»Р°СЏ РїР»РѕС‰Р°РґСЊ", plotArea: "РЈС‡Р°СЃС‚РѕРє", dateFrom: "РўРѕСЂРіРё РѕС‚", dateTo: "РўРѕСЂРіРё РґРѕ", datePlaceholder: "Р“Р“Р“Р“-РњРњ-Р”Р”", heritage: "РџР°РјСЏС‚РЅРёРє Р°СЂС…РёС‚РµРєС‚СѓСЂС‹", valueLimits: "РћРіСЂР°РЅРёС‡РµРЅРёСЏ СЃС‚РѕРёРјРѕСЃС‚Рё", attempt: "в„– С‚РµСЂРјРёРЅР°", submit: "РџРѕРєР°Р·Р°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚С‹", resetFilters: "РЎР±СЂРѕСЃРёС‚СЊ С„РёР»СЊС‚СЂ" },
   en: { selected: "selected", any: "Any", search: "Search", searchPlaceholder: "City, ZIP, address, case number, court", city: "City", allCities: "All cities", postalCode: "ZIP", postalPlaceholder: "e.g. 09111", radius: "Radius", noRadius: "No radius", court: "Court", allCourts: "All courts", status: "Status", allCurrent: "All current", state: "Federal state", allStates: "All states", propertyType: "Property type", allTypes: "All types", usage: "Use", anyUsage: "Any use", marketValue: "Market value", livingArea: "Living area", plotArea: "Plot size", dateFrom: "Auction from", dateTo: "Auction to", datePlaceholder: "YYYY-MM-DD", heritage: "Listed monument", valueLimits: "Value limits", attempt: "Auction no.", submit: "Show results", resetFilters: "Reset filters" },
 } as const;
 
 const optionLabels: Record<Locale, Record<string, string>> = {
-  de: { ACTIVE: "Aktiv", CANCELLED: "Aufgehoben", ARCHIVED: "Archiv", SOLD: "Verkauft", WOHNHAEUSER: "Wohnhäuser", WOHNUNGEN: "Wohnungen", GEWERBE: "Gewerbe", GRUNDSTUECKE: "Grundstücke", LAND_WALD: "Land / Wald", GARAGEN: "Garagen / Parken", SONSTIGE: "Sonstige", VACANT: "Frei", RENTED: "Vermietet", OWNER_OCCUPIED: "Eigennutzung", UNKNOWN: "Unbekannt", true: "Ja", false: "Nein", weggefallen: "Weggefallen", nicht_weggefallen: "Nicht weggefallen / unbekannt" },
-  ru: { ACTIVE: "Активно", CANCELLED: "Отменено", ARCHIVED: "Архив", SOLD: "Продано", WOHNHAEUSER: "Жилые дома", WOHNUNGEN: "Квартиры", GEWERBE: "Коммерция", GRUNDSTUECKE: "Участки", LAND_WALD: "Земля / лес", GARAGEN: "Гаражи / парковки", SONSTIGE: "Прочее", VACANT: "Свободен", RENTED: "Сдан в аренду", OWNER_OCCUPIED: "Используется собственником", UNKNOWN: "Неизвестно", true: "Да", false: "Нет", weggefallen: "Сняты", nicht_weggefallen: "Не сняты / неизвестно" },
+  de: { ACTIVE: "Aktiv", CANCELLED: "Aufgehoben", ARCHIVED: "Archiv", SOLD: "Verkauft", WOHNHAEUSER: "WohnhГ¤user", WOHNUNGEN: "Wohnungen", GEWERBE: "Gewerbe", GRUNDSTUECKE: "GrundstГјcke", LAND_WALD: "Land / Wald", GARAGEN: "Garagen / Parken", SONSTIGE: "Sonstige", VACANT: "Frei", RENTED: "Vermietet", OWNER_OCCUPIED: "Eigennutzung", UNKNOWN: "Unbekannt", true: "Ja", false: "Nein", weggefallen: "Weggefallen", nicht_weggefallen: "Nicht weggefallen / unbekannt" },
+  ru: { ACTIVE: "РђРєС‚РёРІРЅРѕ", CANCELLED: "РћС‚РјРµРЅРµРЅРѕ", ARCHIVED: "РђСЂС…РёРІ", SOLD: "РџСЂРѕРґР°РЅРѕ", WOHNHAEUSER: "Р–РёР»С‹Рµ РґРѕРјР°", WOHNUNGEN: "РљРІР°СЂС‚РёСЂС‹", GEWERBE: "РљРѕРјРјРµСЂС†РёСЏ", GRUNDSTUECKE: "РЈС‡Р°СЃС‚РєРё", LAND_WALD: "Р—РµРјР»СЏ / Р»РµСЃ", GARAGEN: "Р“Р°СЂР°Р¶Рё / РїР°СЂРєРѕРІРєРё", SONSTIGE: "РџСЂРѕС‡РµРµ", VACANT: "РЎРІРѕР±РѕРґРµРЅ", RENTED: "РЎРґР°РЅ РІ Р°СЂРµРЅРґСѓ", OWNER_OCCUPIED: "РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ СЃРѕР±СЃС‚РІРµРЅРЅРёРєРѕРј", UNKNOWN: "РќРµРёР·РІРµСЃС‚РЅРѕ", true: "Р”Р°", false: "РќРµС‚", weggefallen: "РЎРЅСЏС‚С‹", nicht_weggefallen: "РќРµ СЃРЅСЏС‚С‹ / РЅРµРёР·РІРµСЃС‚РЅРѕ" },
   en: { ACTIVE: "Active", CANCELLED: "Cancelled", ARCHIVED: "Archive", SOLD: "Sold", WOHNHAEUSER: "Residential houses", WOHNUNGEN: "Apartments", GEWERBE: "Commercial", GRUNDSTUECKE: "Land plots", LAND_WALD: "Land / forest", GARAGEN: "Garages / parking", SONSTIGE: "Other", VACANT: "Vacant", RENTED: "Rented", OWNER_OCCUPIED: "Owner-occupied", UNKNOWN: "Unknown", true: "Yes", false: "No", weggefallen: "Removed", nicht_weggefallen: "Not removed / unknown" },
 };
 
@@ -76,9 +76,9 @@ function getWertgrenzenOptions(locale: Locale): SelectOption[] {
       removed: "Wertgrenzen aufgehoben",
     },
     ru: {
-      any: "Любая",
-      active: "Ограничения действуют",
-      removed: "Ограничения сняты",
+      any: "Р›СЋР±Р°СЏ",
+      active: "РћРіСЂР°РЅРёС‡РµРЅРёСЏ РґРµР№СЃС‚РІСѓСЋС‚",
+      removed: "РћРіСЂР°РЅРёС‡РµРЅРёСЏ СЃРЅСЏС‚С‹",
     },
     en: {
       any: "Any",
@@ -124,7 +124,7 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
     text
       .trim()
       .toLowerCase()
-      .replace(/ё/g, "е")
+      .replace(/С‘/g, "Рµ")
       .replace(/[._\s]+/g, "-");
 
   const keyCandidates = [
@@ -141,11 +141,11 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
       "false": "Nein",
       "yes": "Ja",
       "no": "Nein",
-      "да": "Ja",
-      "нет": "Nein",
-      "не-важно": "Beliebig",
-      "любая": "Beliebig",
-      "любой": "Beliebig",
+      "РґР°": "Ja",
+      "РЅРµС‚": "Nein",
+      "РЅРµ-РІР°Р¶РЅРѕ": "Beliebig",
+      "Р»СЋР±Р°СЏ": "Beliebig",
+      "Р»СЋР±РѕР№": "Beliebig",
       "egal": "Beliebig",
       "beliebig": "Beliebig",
 
@@ -153,73 +153,73 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
       "cancelled": "Aufgehoben",
       "archived": "Archiv",
       "sold": "Verkauft",
-      "активно": "Aktiv",
-      "отменено": "Aufgehoben",
-      "архив": "Archiv",
-      "продано": "Verkauft",
-      "все-актуальные": "Alle aktuellen",
+      "Р°РєС‚РёРІРЅРѕ": "Aktiv",
+      "РѕС‚РјРµРЅРµРЅРѕ": "Aufgehoben",
+      "Р°СЂС…РёРІ": "Archiv",
+      "РїСЂРѕРґР°РЅРѕ": "Verkauft",
+      "РІСЃРµ-Р°РєС‚СѓР°Р»СЊРЅС‹Рµ": "Alle aktuellen",
       "alle-aktuellen": "Alle aktuellen",
       "all-current": "Alle aktuellen",
 
       "weggefallen": "Weggefallen",
       "removed": "Weggefallen",
-      "сняты": "Weggefallen",
+      "СЃРЅСЏС‚С‹": "Weggefallen",
       "nicht-weggefallen": "Nicht weggefallen / unbekannt",
       "nicht-weggefallen-unbekannt": "Nicht weggefallen / unbekannt",
       "not-removed": "Nicht weggefallen / unbekannt",
       "not-removed-unknown": "Nicht weggefallen / unbekannt",
-      "не-сняты-неизвестно": "Nicht weggefallen / unbekannt",
+      "РЅРµ-СЃРЅСЏС‚С‹-РЅРµРёР·РІРµСЃС‚РЅРѕ": "Nicht weggefallen / unbekannt",
 
       "1": "1. Termin",
       "2": "2. Termin",
       "3": "3. und weitere",
       "3plus": "3. und weitere",
-      "1-й-термин": "1. Termin",
-      "2-й-термин": "2. Termin",
-      "3-й-и-больше": "3. und weitere",
-      "любой-термин": "Jeder Termin",
+      "1-Р№-С‚РµСЂРјРёРЅ": "1. Termin",
+      "2-Р№-С‚РµСЂРјРёРЅ": "2. Termin",
+      "3-Р№-Рё-Р±РѕР»СЊС€Рµ": "3. und weitere",
+      "Р»СЋР±РѕР№-С‚РµСЂРјРёРЅ": "Jeder Termin",
       "jeder-termin": "Jeder Termin",
       "any-auction": "Jeder Termin",
     },
     ru: {
-      "": "Любая",
-      "true": "Да",
-      "false": "Нет",
-      "yes": "Да",
-      "no": "Нет",
-      "ja": "Да",
-      "nein": "Нет",
-      "egal": "Любая",
-      "beliebig": "Любая",
-      "any": "Любая",
+      "": "Р›СЋР±Р°СЏ",
+      "true": "Р”Р°",
+      "false": "РќРµС‚",
+      "yes": "Р”Р°",
+      "no": "РќРµС‚",
+      "ja": "Р”Р°",
+      "nein": "РќРµС‚",
+      "egal": "Р›СЋР±Р°СЏ",
+      "beliebig": "Р›СЋР±Р°СЏ",
+      "any": "Р›СЋР±Р°СЏ",
 
-      "active": "Активно",
-      "cancelled": "Отменено",
-      "archived": "Архив",
-      "sold": "Продано",
-      "aktiv": "Активно",
-      "aufgehoben": "Отменено",
-      "archiv": "Архив",
-      "verkauft": "Продано",
-      "alle-aktuellen": "Все актуальные",
-      "all-current": "Все актуальные",
+      "active": "РђРєС‚РёРІРЅРѕ",
+      "cancelled": "РћС‚РјРµРЅРµРЅРѕ",
+      "archived": "РђСЂС…РёРІ",
+      "sold": "РџСЂРѕРґР°РЅРѕ",
+      "aktiv": "РђРєС‚РёРІРЅРѕ",
+      "aufgehoben": "РћС‚РјРµРЅРµРЅРѕ",
+      "archiv": "РђСЂС…РёРІ",
+      "verkauft": "РџСЂРѕРґР°РЅРѕ",
+      "alle-aktuellen": "Р’СЃРµ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ",
+      "all-current": "Р’СЃРµ Р°РєС‚СѓР°Р»СЊРЅС‹Рµ",
 
-      "weggefallen": "Сняты",
-      "removed": "Сняты",
-      "nicht-weggefallen": "Не сняты / неизвестно",
-      "nicht-weggefallen-unbekannt": "Не сняты / неизвестно",
-      "not-removed": "Не сняты / неизвестно",
-      "not-removed-unknown": "Не сняты / неизвестно",
+      "weggefallen": "РЎРЅСЏС‚С‹",
+      "removed": "РЎРЅСЏС‚С‹",
+      "nicht-weggefallen": "РќРµ СЃРЅСЏС‚С‹ / РЅРµРёР·РІРµСЃС‚РЅРѕ",
+      "nicht-weggefallen-unbekannt": "РќРµ СЃРЅСЏС‚С‹ / РЅРµРёР·РІРµСЃС‚РЅРѕ",
+      "not-removed": "РќРµ СЃРЅСЏС‚С‹ / РЅРµРёР·РІРµСЃС‚РЅРѕ",
+      "not-removed-unknown": "РќРµ СЃРЅСЏС‚С‹ / РЅРµРёР·РІРµСЃС‚РЅРѕ",
 
-      "1": "1-й термин",
-      "2": "2-й термин",
-      "3": "3-й и больше",
-      "3plus": "3-й и больше",
-      "1-termin": "1-й термин",
-      "2-termin": "2-й термин",
-      "3-und-weitere": "3-й и больше",
-      "jeder-termin": "Любой термин",
-      "any-auction": "Любой термин",
+      "1": "1-Р№ С‚РµСЂРјРёРЅ",
+      "2": "2-Р№ С‚РµСЂРјРёРЅ",
+      "3": "3-Р№ Рё Р±РѕР»СЊС€Рµ",
+      "3plus": "3-Р№ Рё Р±РѕР»СЊС€Рµ",
+      "1-termin": "1-Р№ С‚РµСЂРјРёРЅ",
+      "2-termin": "2-Р№ С‚РµСЂРјРёРЅ",
+      "3-und-weitere": "3-Р№ Рё Р±РѕР»СЊС€Рµ",
+      "jeder-termin": "Р›СЋР±РѕР№ С‚РµСЂРјРёРЅ",
+      "any-auction": "Р›СЋР±РѕР№ С‚РµСЂРјРёРЅ",
     },
     en: {
       "": "Any",
@@ -227,11 +227,11 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
       "false": "No",
       "ja": "Yes",
       "nein": "No",
-      "да": "Yes",
-      "нет": "No",
+      "РґР°": "Yes",
+      "РЅРµС‚": "No",
       "egal": "Any",
       "beliebig": "Any",
-      "любая": "Any",
+      "Р»СЋР±Р°СЏ": "Any",
 
       "active": "Active",
       "cancelled": "Cancelled",
@@ -241,21 +241,21 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
       "aufgehoben": "Cancelled",
       "archiv": "Archive",
       "verkauft": "Sold",
-      "активно": "Active",
-      "отменено": "Cancelled",
-      "архив": "Archive",
-      "продано": "Sold",
+      "Р°РєС‚РёРІРЅРѕ": "Active",
+      "РѕС‚РјРµРЅРµРЅРѕ": "Cancelled",
+      "Р°СЂС…РёРІ": "Archive",
+      "РїСЂРѕРґР°РЅРѕ": "Sold",
       "alle-aktuellen": "All current",
-      "все-актуальные": "All current",
+      "РІСЃРµ-Р°РєС‚СѓР°Р»СЊРЅС‹Рµ": "All current",
 
       "weggefallen": "Removed",
       "removed": "Removed",
-      "сняты": "Removed",
+      "СЃРЅСЏС‚С‹": "Removed",
       "nicht-weggefallen": "Not removed / unknown",
       "nicht-weggefallen-unbekannt": "Not removed / unknown",
       "not-removed": "Not removed / unknown",
       "not-removed-unknown": "Not removed / unknown",
-      "не-сняты-неизвестно": "Not removed / unknown",
+      "РЅРµ-СЃРЅСЏС‚С‹-РЅРµРёР·РІРµСЃС‚РЅРѕ": "Not removed / unknown",
 
       "1": "1st auction",
       "2": "2nd auction",
@@ -264,11 +264,11 @@ function localizeOption(option: SelectOption, locale: Locale): SelectOption {
       "1-termin": "1st auction",
       "2-termin": "2nd auction",
       "3-und-weitere": "3rd and more",
-      "1-й-термин": "1st auction",
-      "2-й-термин": "2nd auction",
-      "3-й-и-больше": "3rd and more",
+      "1-Р№-С‚РµСЂРјРёРЅ": "1st auction",
+      "2-Р№-С‚РµСЂРјРёРЅ": "2nd auction",
+      "3-Р№-Рё-Р±РѕР»СЊС€Рµ": "3rd and more",
       "jeder-termin": "Any auction",
-      "любой-термин": "Any auction",
+      "Р»СЋР±РѕР№-С‚РµСЂРјРёРЅ": "Any auction",
     },
   };
 
@@ -372,14 +372,14 @@ function CityMultiSelect({ cities, selected, locale }: { cities: string[]; selec
               addFirstMatch();
             }
           }}
-          placeholder={locale === "de" ? "Stadt suchen..." : locale === "en" ? "Search city..." : "Найти город..."}
+          placeholder={locale === "de" ? "Stadt suchen..." : locale === "en" ? "Search city..." : "РќР°Р№С‚Рё РіРѕСЂРѕРґ..."}
         />
 
         {values.length > 0 ? (
           <div className="city-selected-pills-v168a">
             {values.map((city) => (
               <button key={city} type="button" onClick={() => toggle(city, false)}>
-                {city} ×
+                {city} Г—
               </button>
             ))}
           </div>
@@ -412,7 +412,7 @@ function DualRange({ label, minName, maxName, max, step, minDefault, maxDefault,
   const minPercent = (safeMin / max) * 100;
   const maxPercent = (safeMax / max) * 100;
   const isDefault = safeMin === 0 && safeMax === max;
-  const display = isDefault ? labels[locale].any : `${formatNumber(safeMin)}${suffix} — ${formatNumber(safeMax)}${suffix}`;
+  const display = isDefault ? labels[locale].any : `${formatNumber(safeMin)}${suffix} вЂ” ${formatNumber(safeMax)}${suffix}`;
   return (
     <div className="range-filter-v60">
       <div className="range-title-v60"><span>{label}</span><b>{display}</b></div>
@@ -434,7 +434,7 @@ function SingleRange({ label, name, max, step, defaultValue, suffix = "", locale
   const display = value > 0 ? `${formatNumber(value)}${suffix}` : labels[locale].noRadius;
   return (
     <div className="range-filter-v60">
-      <div className="range-title-v60"><span>{label}</span><b>0–{formatNumber(max)}{suffix}</b></div>
+      <div className="range-title-v60"><span>{label}</span><b>0вЂ“{formatNumber(max)}{suffix}</b></div>
       <RangeTrack start={0} end={percent} single>
         <input type="range" min="0" max={max} step={step} value={value} onChange={(event) => setValue(Math.max(0, Math.min(Number(event.target.value), max)))} aria-label={label} />
       </RangeTrack>
@@ -470,7 +470,8 @@ export function FilterBar({ states, courts, cities, compact = false }: FilterBar
     const formData = new FormData(form);
     const next = new URLSearchParams();
     
-    // Polygon is controlled by the map, not by this form.
+    
+// Polygon is controlled by the map, not by this form.
     // Preserve it when applying price, type, area and other filters.
     const currentParams = new URLSearchParams(window.location.search);
     const activePolygon = currentParams.get("poly");
@@ -493,6 +494,7 @@ for (const [key, value] of formData.entries()) {
 
   return (
     <form key={searchParams.toString()} className={compact ? "filters search-filter-v60 filters-compact" : "filters search-filter-v60"} onSubmit={onSubmit}>
+      <input type="hidden" name="poly" value={searchParams.get("poly") ?? ""} />
       <div className="search-filter-grid-v60">
         {/* Row 1: normal search fields */}
         <div className="field span-2">
@@ -521,9 +523,9 @@ for (const [key, value] of formData.entries()) {
 
         {/* Row 3: sliders */}
         <SingleRange label={t.radius} name="radiusKm" max={RADIUS_MAX} step={10} defaultValue={getInitialValue(searchParams, "radiusKm")} suffix=" km" locale={locale} />
-        <DualRange label={t.marketValue} minName="minPrice" maxName="maxPrice" max={PRICE_MAX} step={5000} minDefault={getInitialValue(searchParams, "minPrice")} maxDefault={getInitialValue(searchParams, "maxPrice")} suffix=" €" locale={locale} />
-        <DualRange label={t.livingArea} minName="minLivingArea" maxName="maxLivingArea" max={AREA_MAX} step={5} minDefault={getInitialValue(searchParams, "minLivingArea")} maxDefault={getInitialValue(searchParams, "maxLivingArea")} suffix=" m²" locale={locale} />
-        <DualRange label={t.plotArea} minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "maxPlotArea")} suffix=" m²" locale={locale} />
+        <DualRange label={t.marketValue} minName="minPrice" maxName="maxPrice" max={PRICE_MAX} step={5000} minDefault={getInitialValue(searchParams, "minPrice")} maxDefault={getInitialValue(searchParams, "maxPrice")} suffix=" в‚¬" locale={locale} />
+        <DualRange label={t.livingArea} minName="minLivingArea" maxName="maxLivingArea" max={AREA_MAX} step={5} minDefault={getInitialValue(searchParams, "minLivingArea")} maxDefault={getInitialValue(searchParams, "maxLivingArea")} suffix=" mВІ" locale={locale} />
+        <DualRange label={t.plotArea} minName="minPlotArea" maxName="maxPlotArea" max={PLOT_MAX} step={50} minDefault={getInitialValue(searchParams, "minPlotArea")} maxDefault={getInitialValue(searchParams, "maxPlotArea")} suffix=" mВІ" locale={locale} />
 
         {/* Row 4: date/status filters */}
         <div className="field span-1">

@@ -358,7 +358,10 @@ export async function PublicPropertiesPage({
     page: requestedPage,
     perPage: allowedPageSizesV57.includes(requestedPerPage) ? requestedPerPage : 12,
   };
-  const polygonPoints = parsePolygonParam(params.poly);
+  const rawPolygonParam = Array.isArray(params.poly)
+    ? params.poly[params.poly.length - 1]
+    : params.poly;
+  const polygonPoints = parsePolygonParam(rawPolygonParam);
   const copy = pageCopy(mode, siteText, locale);
 
   const [rawProperties, statesRaw, courtsRaw, citiesRaw, allCount, archiveCount] = await Promise.all([
