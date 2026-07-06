@@ -143,7 +143,7 @@ const localText = {
     allObjects: "Alle Objekte",
     radiusNoticePrefix: "Umkreissuche aktiv: Zentrum",
     radiusNoticeMiddle: "Radius",
-    radiusNoticeSuffix: "Die Ergebnisse sind nach Entfernung sortiert.",
+    radiusNoticeSuffix: "Die Ergebnisse verwenden die gewählte Sortierung nach Datum oder Preis.",
     polygonNoticePrefix: "Polygon-Suche aktiv: Die Liste zeigt nur Objekte innerhalb der gezeichneten Kartenfläche.",
     polygonPoints: "Polygonpunkte",
   },
@@ -157,7 +157,7 @@ const localText = {
     allObjects: "Все объекты",
     radiusNoticePrefix: "Активен поиск по радиусу: центр",
     radiusNoticeMiddle: "радиус",
-    radiusNoticeSuffix: "Результаты отсортированы по расстоянию.",
+    radiusNoticeSuffix: "Результаты используют выбранную сортировку по дате или цене.",
     polygonNoticePrefix: "Активен поиск по полигону: список показывает только объекты внутри выделенной области карты.",
     polygonPoints: "Точек полигона",
   },
@@ -171,7 +171,7 @@ const localText = {
     allObjects: "All properties",
     radiusNoticePrefix: "Radius search active: center",
     radiusNoticeMiddle: "radius",
-    radiusNoticeSuffix: "Results are sorted by distance.",
+    radiusNoticeSuffix: "Results use the selected date or price sorting.",
     polygonNoticePrefix: "Polygon search active: the list shows only properties inside the drawn map area.",
     polygonPoints: "Polygon points",
   },
@@ -396,7 +396,6 @@ export async function PublicPropertiesPage({
           };
         })
         .filter((item) => item.distance !== null && item.distance <= radiusFilter.radiusKm)
-        .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0))
     : rawProperties.map((property) => ({ property, distance: null as number | null }));
 
   const propertiesWithPolygon =
