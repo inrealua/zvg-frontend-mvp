@@ -52,11 +52,9 @@ export function LanguageSwitcher({ locale, currentLocale, labels, className }: P
 
   const active = normalizeLocale(locale || currentLocale);
   const query = searchParams?.toString();
-  const names: Record<Locale, string> = {
-    de: labels?.de || defaultLabels.de,
-    ru: labels?.ru || defaultLabels.ru,
-    en: labels?.en || defaultLabels.en,
-  };
+  // Public language names are intentionally hard-coded here.
+  // This prevents stale dictionaries/legacy labels from exposing Ukrainian in the menu.
+  const names: Record<Locale, string> = defaultLabels;
 
   useEffect(() => {
     function onClick(event: MouseEvent) {
