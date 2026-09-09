@@ -1,38 +1,24 @@
-# Site AI v3.0.4 — EN-only language cleanup
+# ZVG-DE Site AI v3.0.4 — полное удаление украинского языка
 
-Цель: публичные языки сайта строго DE / RU / EN. Украинский язык и legacy locale UK больше не используются.
+Публичные языки сайта после патча: DE / RU / EN.
 
-Что делает hotfix:
-- удаляет `UK` из Prisma enum после безопасной очистки старых UK-переводов;
-- добавляет `npm run locale:cleanup-uk` — сначала делает JSON-backup всех legacy UK-строк, затем удаляет только эти строки;
-- старые URL `/uk/...` и `/ua/...` автоматически перенаправляются на `/en/...`;
-- старые cookie `zvg_locale=uk` / `ua` трактуются как English;
-- переключатель языка остаётся только Deutsch / Русский / English;
-- doctor показывает количество legacy UK translation rows.
+Что делает патч:
+- LanguageSwitcher содержит только Deutsch / Русский / English;
+- `/uk` и `/ua` перенаправляются на соответствующий `/en` URL;
+- удаляются legacy строки `PropertyTranslation.locale=UK` отдельной безопасной командой;
+- после удаления UK из данных Prisma enum становится только DE/RU/EN;
+- doctor показывает количество legacy UK переводов.
 
-## Порядок установки
-
-1. Распаковать архив поверх `F:\ZVG-SITE-GIT`.
-2. Выполнить:
-
-```cmd
-cd /d F:\ZVG-SITE-GIT
-npm run locale:cleanup-uk
-npm run db:push
-npm run site:v3:doctor
-rmdir /s /q .next
-npm run build
-```
+Порядок:
+1. Распаковать ZIP поверх проекта.
+2. `npm run locale:purge-uk` — только dry-run.
+3. `npm run locale:purge-uk -- --execute --confirm REMOVE_UK`
+4. `npm run db:push`
+5. `rmdir /s /q .next`
+6. `npm run build`
+7. `npm run site:v3:doctor`
 
 Ожидается:
-
-```text
-Legacy UK translations found: N
-[OK] Backup written: ...\backups\legacy-uk-translations-....json
-[OK] Deleted legacy UK translations: N
-[OK] Verification passed: 0 UK rows remain.
-```
-
-После `db:push` Prisma enum снова содержит только `DE`, `RU`, `EN`.
-
-Не удаляет Property, User, SavedSearch или другие данные. Удаляются только строки `PropertyTranslation` с locale `UK`, которые пользователю не нужны.
+- `Legacy UK translations: 0`
+- `Public locales: DE / RU / EN only`
+- `DB schema: READY`

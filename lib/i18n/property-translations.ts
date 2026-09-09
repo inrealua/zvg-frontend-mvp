@@ -1,8 +1,6 @@
 import type { Locale } from "@/lib/i18n/config";
 
 export type DbLocale = "DE" | "RU" | "EN";
-// Public UI/import remains DE/RU/EN only.
-
 export type PropertyTranslationLike = {
   locale: DbLocale;
   title: string;
@@ -49,16 +47,10 @@ function jsonObject(value: unknown): Record<string, unknown> {
 export function pickPropertyTranslation<T extends { title:string; propertyType?:string|null; description?:string|null; locationDescription?:string|null }>(property: PropertyWithTranslations<T>, locale: Locale) {
   const dbLocale = localeToDbLocale(locale);
   const translations = property.translations || [];
-  // Ignore legacy UK rows completely. They exist only so Prisma can migrate the
-  // current production database without truncating old test translations.
-  const supportedTranslations = translations.filter(
-    (item): item is PropertyTranslationLike & { locale: DbLocale } =>
-      item.locale === "DE" || item.locale === "RU" || item.locale === "EN",
-  );
   const translation =
-    supportedTranslations.find((item) => item.locale === dbLocale) ||
-    supportedTranslations.find((item) => item.locale === "DE") ||
-    supportedTranslations[0];
+    translations.find((item) => item.locale === dbLocale) ||
+    translations.find((item) => item.locale === "DE") ||
+    translations[0];
   return {
     title: translation?.title || property.title,
     propertyType: translation?.propertyType || property.propertyType || null,
