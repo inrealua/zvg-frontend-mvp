@@ -1,52 +1,23 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
+import { getSiteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = getSiteUrl();
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: siteUrl,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1
-    },
-    {
-      url: `${siteUrl}/ueber-uns`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.5
-    },
-    {
-      url: `${siteUrl}/impressum`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2
-    },
-    {
-      url: `${siteUrl}/datenschutz`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.2
-    }
+    { url: siteUrl, lastModified: new Date(), changeFrequency: "daily", priority: 1 },
+    { url: `${siteUrl}/ueber-uns`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    { url: `${siteUrl}/impressum`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
+    { url: `${siteUrl}/datenschutz`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 }
   ];
 
   const properties = await prisma.property.findMany({
-    select: {
-      id: true,
-      updatedAt: true,
-      status: true
-    },
-    where: {
-      status: {
-        not: "ARCHIVED"
-      }
-    },
-    orderBy: {
-      updatedAt: "desc"
-    },
+    select: { id: true, updatedAt: true, status: true },
+    where: { publicationStatus: "PUBLISHED", status: { not: "ARCHIVED" } },
+    orderBy: { updatedAt: "desc" },
     take: 5000
   });
 

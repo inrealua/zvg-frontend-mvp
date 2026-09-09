@@ -231,7 +231,7 @@ function withArchiveMode(where: Prisma.PropertyWhereInput, mode: PageMode): Pris
   };
 
   return {
-    AND: [where, mode === "archive" ? archiveRule : currentRule],
+    AND: [where, { publicationStatus: "PUBLISHED" }, mode === "archive" ? archiveRule : currentRule],
   };
 }
 
@@ -253,6 +253,7 @@ async function resolveRadiusFilter(params: SearchParamRecord): Promise<RadiusFil
 
   const propertyWithCoordinates = await prisma.property.findFirst({
     where: {
+      publicationStatus: "PUBLISHED",
       OR: [
         { city: { contains: location } },
         { postalCode: { startsWith: location } },
@@ -375,11 +376,10 @@ export async function PublicPropertiesPage({
       },
       orderBy,
     }),
-    prisma.property.findMany({ 
-      select: { state: true }, distinct: ["state"], orderBy: { state: "asc" } }),
-    prisma.property.findMany({ select: { court: true }, distinct: ["court"], orderBy: { court: "asc" } }),
-    prisma.property.findMany({ select: { city: true }, distinct: ["city"], orderBy: { city: "asc" } }),
-    prisma.property.count(),
+    prisma.property.findMany({ where: { publicationStatus: "PUBLISHED" }, select: { state: true }, distinct: ["state"], orderBy: { state: "asc" } }),
+    prisma.property.findMany({ where: { publicationStatus: "PUBLISHED" }, select: { court: true }, distinct: ["court"], orderBy: { court: "asc" } }),
+    prisma.property.findMany({ where: { publicationStatus: "PUBLISHED" }, select: { city: true }, distinct: ["city"], orderBy: { city: "asc" } }),
+    prisma.property.count({ where: { publicationStatus: "PUBLISHED" } }),
     prisma.property.count({ where: withArchiveMode({}, "archive") }),
   ]);
 
