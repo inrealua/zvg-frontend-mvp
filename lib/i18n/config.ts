@@ -10,5 +10,6 @@ export function isLocale(value: string | undefined | null): value is Locale {
 }
 
 export function normalizeLocale(value: string | undefined | null): Locale {
+  if (value === "uk" || value === "ua") return "en";
   return isLocale(value) ? value : defaultLocale;
 }

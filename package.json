@@ -26,7 +26,8 @@
     "analysis:publish": "node scripts/analysis_publication.cjs",
     "catalog:backup": "node scripts/catalog_backup.cjs",
     "catalog:reset-ai-v3": "node scripts/catalog_reset_ai_v3.cjs",
-    "site:v3:doctor": "node scripts/site_v3_doctor.cjs"
+    "site:v3:doctor": "node scripts/site_v3_doctor.cjs",
+    "locale:cleanup-uk": "node scripts/remove_legacy_uk_locale.cjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1064.0",

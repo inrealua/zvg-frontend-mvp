@@ -1,12 +1,10 @@
 import type { Locale } from "@/lib/i18n/config";
 
 export type DbLocale = "DE" | "RU" | "EN";
-// The database temporarily keeps legacy UK rows until the old catalog is removed.
 // Public UI/import remains DE/RU/EN only.
-export type StoredDbLocale = DbLocale | "UK";
 
 export type PropertyTranslationLike = {
-  locale: StoredDbLocale;
+  locale: DbLocale;
   title: string;
   propertyType?: string | null;
   shortDescription?: string | null;

@@ -49,7 +49,6 @@ enum Locale {
   DE
   RU
   EN
-  UK // legacy database value only; public site/importer use DE/RU/EN
 }
 
 enum PublicationStatus {
