@@ -15,40 +15,35 @@ type Labels = {
 type Props = {
   locale?: Locale;
   currentLocale?: Locale;
-  labels?: Labels;
+  labels?: Labels; // kept for API compatibility; menu names below are intentionally fixed
   className?: string;
 };
 
-const LOCALES: readonly Locale[] = ["de", "ru", "en"];
-const defaultLabels: Record<Locale, string> = {
-  de: "Deutsch",
-  ru: "Русский",
-  en: "English",
-};
+const LANGUAGE_OPTIONS: ReadonlyArray<{ code: Locale; label: string }> = [
+  { code: "de", label: "Deutsch" },
+  { code: "ru", label: "Русский" },
+  { code: "en", label: "English" },
+];
 
 function normalizeLocale(value?: string): Locale {
-  const normalized = value?.toLowerCase();
-  if (normalized === "ru" || normalized === "en" || normalized === "de") return normalized;
-  if (normalized === "uk" || normalized === "ua") return "en";
+  if (value === "ru" || value === "en" || value === "de") return value;
   if (typeof window !== "undefined") {
-    const first = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
+    const first = window.location.pathname.split("/").filter(Boolean)[0];
     if (first === "ru" || first === "en" || first === "de") return first;
-    if (first === "uk" || first === "ua") return "en";
   }
   return "de";
 }
 
 function buildLocalePath(pathname: string, next: Locale) {
   const parts = pathname.split("/").filter(Boolean);
-  const first = parts[0]?.toLowerCase();
-  if (first === "ru" || first === "de" || first === "en" || first === "uk" || first === "ua") {
+  if (parts[0] === "ru" || parts[0] === "de" || parts[0] === "en") {
     parts[0] = next;
     return "/" + parts.join("/");
   }
   return "/" + next + (pathname === "/" ? "" : pathname);
 }
 
-export function LanguageSwitcher({ locale, currentLocale, labels, className }: Props) {
+export function LanguageSwitcher({ locale, currentLocale, className }: Props) {
   const router = useRouter();
   const pathname = usePathname() || "/";
   const searchParams = useSearchParams();
@@ -57,27 +52,19 @@ export function LanguageSwitcher({ locale, currentLocale, labels, className }: P
 
   const active = normalizeLocale(locale || currentLocale);
   const query = searchParams?.toString();
-  const names: Record<Locale, string> = {
-    de: labels?.de || defaultLabels.de,
-    ru: labels?.ru || defaultLabels.ru,
-    en: labels?.en || defaultLabels.en,
-  };
 
   useEffect(() => {
-    // Convert stale Ukrainian locale cookies from older deployments to English.
-    const cookie = document.cookie.match(/(?:^|;\s*)zvg_locale=([^;]+)/)?.[1]?.toLowerCase();
-    if (cookie === "uk" || cookie === "ua") {
-      document.cookie = "zvg_locale=en; path=/; max-age=31536000; SameSite=Lax";
-    }
-
     function onClick(event: MouseEvent) {
       if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
     }
+
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
     }
+
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
+
     return () => {
       document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onKey);
@@ -92,13 +79,14 @@ export function LanguageSwitcher({ locale, currentLocale, labels, className }: P
   }
 
   return (
-    <div className={className || "language-switcher-v94"} ref={wrapperRef}>
+    <div className={className || "language-switcher-v94"} ref={wrapperRef} data-language-switcher="de-ru-en">
       <button
         type="button"
         className="language-switcher-button-v94"
         onClick={() => setOpen((value) => !value)}
         aria-haspopup="menu"
         aria-expanded={open}
+        aria-label="Language"
       >
         <span>{active.toUpperCase()}</span>
         <span className="language-switcher-chevron-v94">⌄</span>
@@ -106,15 +94,16 @@ export function LanguageSwitcher({ locale, currentLocale, labels, className }: P
 
       {open ? (
         <div className="language-switcher-menu-v94" role="menu">
-          {LOCALES.map((item) => (
+          {LANGUAGE_OPTIONS.map((item) => (
             <button
               type="button"
               role="menuitem"
-              className={item === active ? "is-active" : ""}
-              key={item}
-              onClick={() => choose(item)}
+              className={item.code === active ? "is-active" : ""}
+              key={item.code}
+              data-locale={item.code}
+              onClick={() => choose(item.code)}
             >
-              {names[item]}
+              {item.label}
             </button>
           ))}
         </div>
