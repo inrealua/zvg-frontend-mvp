@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const LOCALES = ["ru", "de", "en"] as const;
+const LOCALES = ["de", "ru", "en"] as const;
 type Locale = (typeof LOCALES)[number];
 
 function isLocale(value: string | undefined): value is Locale {
-  return value === "ru" || value === "de" || value === "en";
+  return value === "de" || value === "ru" || value === "en";
 }
 
 function pickLocale(request: NextRequest): Locale {
-  const cookieLocale = request.cookies.get("zvg_locale")?.value;
+  const cookieLocale = request.cookies.get("zvg_locale")?.value?.toLowerCase();
+  // Legacy Ukrainian preference is intentionally migrated to English.
+  if (cookieLocale === "uk" || cookieLocale === "ua") return "en";
   if (isLocale(cookieLocale)) return cookieLocale;
 
   const accept = request.headers.get("accept-language")?.toLowerCase() || "";
-
   if (accept.startsWith("ru") || accept.includes(",ru")) return "ru";
   if (accept.startsWith("de") || accept.includes(",de")) return "de";
   return "en";
@@ -25,27 +26,24 @@ function isPublicFile(pathname: string) {
     pathname.startsWith("/favicon") ||
     pathname.startsWith("/robots") ||
     pathname.startsWith("/sitemap") ||
-    pathname.match(/\.[a-zA-Z0-9]+$/)
+    Boolean(pathname.match(/\.[a-zA-Z0-9]+$/))
   );
 }
 
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
-  if (isPublicFile(pathname)) {
-    return NextResponse.next();
-  }
+  if (isPublicFile(pathname)) return NextResponse.next();
 
-  const first = pathname.split("/").filter(Boolean)[0];
+  const firstRaw = pathname.split("/").filter(Boolean)[0]?.toLowerCase();
 
-  // Ukrainian was used only by an old internal data contract and is no longer
-  // a public site language. Redirect any legacy /uk or /ua URL to English.
-  if (first === "uk" || first === "ua") {
+  // Remove the old Ukrainian public locale completely. Any old /uk or /ua URL
+  // is permanently sent to the matching English URL.
+  if (firstRaw === "uk" || firstRaw === "ua") {
+    const rest = pathname.replace(/^\/(uk|ua)(?=\/|$)/i, "") || "";
     const url = request.nextUrl.clone();
-    const rest = pathname.replace(/^\/(?:uk|ua)(?=\/|$)/, "") || "/";
-    url.pathname = rest === "/" ? "/en" : "/en" + rest;
+    url.pathname = "/en" + rest;
     url.search = search;
-
     const response = NextResponse.redirect(url, 308);
     response.cookies.set("zvg_locale", "en", {
       path: "/",
@@ -55,13 +53,11 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
-  // User opens zvg-de.com -> redirect to language URL.
   if (pathname === "/") {
     const locale = pickLocale(request);
     const url = request.nextUrl.clone();
     url.pathname = "/" + locale;
     url.search = search;
-
     const response = NextResponse.redirect(url);
     response.cookies.set("zvg_locale", locale, {
       path: "/",
@@ -71,8 +67,7 @@ export function proxy(request: NextRequest) {
     return response;
   }
 
-  // Locale URLs exist as real pages, but nested locale URLs are internally rewritten:
-  // /ru/properties/123 -> /properties/123 with cookie/header locale ru.
+  const first = firstRaw;
   if (isLocale(first)) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-zvg-locale", first);
@@ -82,7 +77,6 @@ export function proxy(request: NextRequest) {
     rewriteUrl.pathname = nextPath;
     rewriteUrl.search = search;
 
-    // For exact /ru /de /en, do not rewrite. Real app/ru/page.tsx etc handle them.
     const response = nextPath === "/"
       ? NextResponse.next({ request: { headers: requestHeaders } })
       : NextResponse.rewrite(rewriteUrl, { request: { headers: requestHeaders } });
@@ -92,7 +86,6 @@ export function proxy(request: NextRequest) {
       sameSite: "lax",
       maxAge: 60 * 60 * 24 * 365,
     });
-
     return response;
   }
 

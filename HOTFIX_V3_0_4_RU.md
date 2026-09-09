@@ -1,24 +1,9 @@
-# ZVG-DE Site AI v3.0.4 — полное удаление украинского языка
+# ZVG-DE Site AI v3.0.4 — принудительно DE / RU / EN
 
-Публичные языки сайта после патча: DE / RU / EN.
+Публичные языки сайта: только German (DE), Russian (RU), English (EN).
 
-Что делает патч:
-- LanguageSwitcher содержит только Deutsch / Русский / English;
-- `/uk` и `/ua` перенаправляются на соответствующий `/en` URL;
-- удаляются legacy строки `PropertyTranslation.locale=UK` отдельной безопасной командой;
-- после удаления UK из данных Prisma enum становится только DE/RU/EN;
-- doctor показывает количество legacy UK переводов.
-
-Порядок:
-1. Распаковать ZIP поверх проекта.
-2. `npm run locale:purge-uk` — только dry-run.
-3. `npm run locale:purge-uk -- --execute --confirm REMOVE_UK`
-4. `npm run db:push`
-5. `rmdir /s /q .next`
-6. `npm run build`
-7. `npm run site:v3:doctor`
-
-Ожидается:
-- `Legacy UK translations: 0`
-- `Public locales: DE / RU / EN only`
-- `DB schema: READY`
+- LanguageSwitcher показывает только Deutsch / Русский / English.
+- старый cookie `zvg_locale=uk` или `ua` автоматически меняется на `en`;
+- старые URL `/uk/...` и `/ua/...` перенаправляются 308 на `/en/...`;
+- Prisma legacy enum UK не используется как публичный язык;
+- `node scripts/check_public_locales.cjs` проверяет исходники на публичные украинские locale references.

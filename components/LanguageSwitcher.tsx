@@ -19,6 +19,7 @@ type Props = {
   className?: string;
 };
 
+const LOCALES: readonly Locale[] = ["de", "ru", "en"];
 const defaultLabels: Record<Locale, string> = {
   de: "Deutsch",
   ru: "Русский",
@@ -26,17 +27,21 @@ const defaultLabels: Record<Locale, string> = {
 };
 
 function normalizeLocale(value?: string): Locale {
-  if (value === "ru" || value === "en" || value === "de") return value;
+  const normalized = value?.toLowerCase();
+  if (normalized === "ru" || normalized === "en" || normalized === "de") return normalized;
+  if (normalized === "uk" || normalized === "ua") return "en";
   if (typeof window !== "undefined") {
-    const first = window.location.pathname.split("/").filter(Boolean)[0];
+    const first = window.location.pathname.split("/").filter(Boolean)[0]?.toLowerCase();
     if (first === "ru" || first === "en" || first === "de") return first;
+    if (first === "uk" || first === "ua") return "en";
   }
   return "de";
 }
 
 function buildLocalePath(pathname: string, next: Locale) {
   const parts = pathname.split("/").filter(Boolean);
-  if (parts[0] === "ru" || parts[0] === "de" || parts[0] === "en") {
+  const first = parts[0]?.toLowerCase();
+  if (first === "ru" || first === "de" || first === "en" || first === "uk" || first === "ua") {
     parts[0] = next;
     return "/" + parts.join("/");
   }
@@ -59,17 +64,20 @@ export function LanguageSwitcher({ locale, currentLocale, labels, className }: P
   };
 
   useEffect(() => {
+    // Convert stale Ukrainian locale cookies from older deployments to English.
+    const cookie = document.cookie.match(/(?:^|;\s*)zvg_locale=([^;]+)/)?.[1]?.toLowerCase();
+    if (cookie === "uk" || cookie === "ua") {
+      document.cookie = "zvg_locale=en; path=/; max-age=31536000; SameSite=Lax";
+    }
+
     function onClick(event: MouseEvent) {
       if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
     }
-
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
     }
-
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
-
     return () => {
       document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onKey);
@@ -78,7 +86,6 @@ export function LanguageSwitcher({ locale, currentLocale, labels, className }: P
 
   function choose(next: Locale) {
     document.cookie = "zvg_locale=" + next + "; path=/; max-age=31536000; SameSite=Lax";
-
     const nextPath = buildLocalePath(pathname, next);
     router.push(nextPath + (query ? "?" + query : ""));
     setOpen(false);
@@ -99,7 +106,7 @@ export function LanguageSwitcher({ locale, currentLocale, labels, className }: P
 
       {open ? (
         <div className="language-switcher-menu-v94" role="menu">
-          {(["de", "ru", "en"] as Locale[]).map((item) => (
+          {LOCALES.map((item) => (
             <button
               type="button"
               role="menuitem"
