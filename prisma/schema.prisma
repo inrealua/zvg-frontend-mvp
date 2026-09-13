@@ -59,110 +59,111 @@ enum PublicationStatus {
   ARCHIVED
 }
 
-
 model Property {
-  id                       String            @id @default(cuid())
-  canonicalId              String?           @unique @db.VarChar(64)
-  publicationStatus        PublicationStatus @default(PUBLISHED)
-  analysisSchemaVersion    String?           @db.VarChar(100)
-  analysisVersion          String?           @db.VarChar(120)
-  sourceBatchId            String?           @db.VarChar(160)
-  analyzedAt               DateTime?
-  marketResearchedAt       DateTime?
+  id                    String            @id @default(cuid())
+  canonicalId           String?           @unique @db.VarChar(64)
+  publicationStatus     PublicationStatus @default(PUBLISHED)
+  analysisSchemaVersion String?           @db.VarChar(100)
+  analysisVersion       String?           @db.VarChar(120)
+  sourceBatchId         String?           @db.VarChar(160)
+  analyzedAt            DateTime?
+  marketResearchedAt    DateTime?
 
-  primarySourcePortal      String?           @db.VarChar(120)
-  primarySourceUrl         String?           @db.VarChar(1000)
-  officialVerkehrswertEur  Int?
-  analyzedMarketValueLowEur   Int?
-  analyzedMarketValueBaseEur  Int?
-  analyzedMarketValueHighEur  Int?
-  quickSale6mLowEur           Int?
-  quickSale6mBaseEur          Int?
-  quickSale6mHighEur          Int?
-  rentMonthlyColdLowEur       Int?
-  rentMonthlyColdBaseEur      Int?
-  rentMonthlyColdHighEur      Int?
-  renovationMinimalBaseEur    Int?
-  renovationStandardBaseEur   Int?
-  renovationFullBaseEur       Int?
-  renovationWorstCaseBaseEur  Int?
-  bidVeryAttractiveEur        Int?
-  bidReasonableEur             Int?
-  bidMaximumEur                Int?
-  doNotBuyAboveEur             Int?
-  investmentScore              Int?
-  investmentRecommendation     String?        @db.VarChar(40)
-  analysisConfidence           String?        @db.VarChar(60)
-  rooms                        Float?
-  units                        Int?
-  floor                        String?        @db.VarChar(120)
-  heating                      String?        @db.Text
-  conditionSummary             String?        @db.Text
-  securityDepositEur           Int?
-  valuationDate                DateTime?
-  versteigerungsvermerkDate    DateTime?
+  primarySourcePortal        String?   @db.VarChar(120)
+  primarySourceUrl           String?   @db.VarChar(1000)
+  officialVerkehrswertEur    Int?
+  analyzedMarketValueLowEur  Int?
+  analyzedMarketValueBaseEur Int?
+  analyzedMarketValueHighEur Int?
+  quickSale6mLowEur          Int?
+  quickSale6mBaseEur         Int?
+  quickSale6mHighEur         Int?
+  rentMonthlyColdLowEur      Int?
+  rentMonthlyColdBaseEur     Int?
+  rentMonthlyColdHighEur     Int?
+  renovationMinimalBaseEur   Int?
+  renovationStandardBaseEur  Int?
+  renovationFullBaseEur      Int?
+  renovationWorstCaseBaseEur Int?
+  bidVeryAttractiveEur       Int?
+  bidReasonableEur           Int?
+  bidMaximumEur              Int?
+  doNotBuyAboveEur           Int?
+  investmentScore            Int?
+  investmentRecommendation   String?   @db.VarChar(40)
+  analysisConfidence         String?   @db.VarChar(60)
+  rooms                      Float?
+  units                      Int?
+  floor                      String?   @db.VarChar(120)
+  heating                    String?   @db.Text
+  conditionSummary           String?   @db.Text
+  securityDepositEur         Int?
+  valuationDate              DateTime?
+  versteigerungsvermerkDate  DateTime?
 
-  lotsJson                     Json?
-  cadastralJson                Json?
-  marketJson                   Json?
-  renovationJson               Json?
-  constructionRisksJson        Json?
-  legalRisksJson               Json?
-  investmentJson               Json?
-  evidenceJson                 Json?
-  enrichmentJson               Json?
-  qualityGateJson              Json?
-  confidenceJson               Json?
-  warningsJson                 Json?
-  sourcesJson                  Json?
-  unknownsToVerifyJson         Json?
-  photoAssessmentJson          Json?
-  analysisRawJson              Json?
-  aktenzeichen             String
-  normalizedAktenzeichen   String
-  court                    String
-  state                    String
-  city                     String
-  postalCode               String
-  street                   String
-  houseNumber              String?
-  address                  String
-  latitude                 Float?
-  longitude                Float?
+  lotsJson               Json?
+  cadastralJson          Json?
+  marketJson             Json?
+  renovationJson         Json?
+  constructionRisksJson  Json?
+  legalRisksJson         Json?
+  investmentJson         Json?
+  evidenceJson           Json?
+  enrichmentJson         Json?
+  qualityGateJson        Json?
+  confidenceJson         Json?
+  warningsJson           Json?
+  sourcesJson            Json?
+  unknownsToVerifyJson   Json?
+  photoAssessmentJson    Json?
+  analysisRawJson        Json?
+  aktenzeichen           String
+  normalizedAktenzeichen String
+  court                  String
+  state                  String
+  city                   String
+  postalCode             String
+  street                 String
+  houseNumber            String?
+  address                String
+  latitude               Float?
+  longitude              Float?
 
-  title                    String
-  propertyType             String
-  propertyTypeGroup        PropertyTypeGroup
-  status                   PropertyStatus    @default(ACTIVE)
-  occupancyStatus          OccupancyStatus   @default(UNKNOWN)
+  title             String
+  propertyType      String
+  propertyTypeGroup PropertyTypeGroup
+  status            PropertyStatus    @default(ACTIVE)
+  occupancyStatus   OccupancyStatus   @default(UNKNOWN)
 
-  auctionDate              DateTime?
-  auctionTime              String?
-  auctionLocation          String?
-  marketValue              Int?
-  livingArea               Float?
-  usableArea               Float?
-  totalArea                Float?
-  plotArea                 Float?
-  yearBuilt                Int?
-  hasDenkmalschutz         Boolean           @default(false)
-  wertgrenzenWeggefallen   Boolean           @default(false)
-  auctionAttempt           Int               @default(1)
+  auctionDate            DateTime?
+  auctionTime            String?
+  auctionLocation        String?
+  marketValue            Int?
+  livingArea             Float?
+  usableArea             Float?
+  totalArea              Float?
+  plotArea               Float?
+  yearBuilt              Int?
+  hasDenkmalschutz       Boolean   @default(false)
+  wertgrenzenWeggefallen Boolean   @default(false)
+  auctionAttempt         Int       @default(1)
 
-  description              String            @db.Text
-  locationDescription      String?           @db.Text
-  cancellationText         String?           @db.Text
-  source                   String            @default("TEST_SEED")
-  sourceUrl                String?
-  lastSourceUpdate         DateTime?
+  description String @db.Text
 
-  images                   PropertyImage[]
-  documents                PropertyDocument[]
-  favorites                Favorite[]
-  translations             PropertyTranslation[]
+  analysisJson        Json?
+  locationDescription String?   @db.Text
+  cancellationText    String?   @db.Text
+  source              String    @default("TEST_SEED")
+  sourceUrl           String?
+  lastSourceUpdate    DateTime?
 
-  createdAt                DateTime          @default(now())
-  updatedAt                DateTime          @updatedAt
+  images       PropertyImage[]
+  documents    PropertyDocument[]
+  favorites    Favorite[]
+  translations PropertyTranslation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([state])
   @@index([court])
@@ -179,38 +180,38 @@ model Property {
 }
 
 model PropertyImage {
-  id          String    @id @default(cuid())
-  propertyId  String
-  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  url         String    @db.VarChar(1000)
-  alt         String?
-  isMain      Boolean   @default(false)
-  sortOrder   Int       @default(0)
-  sourceDocument String? @db.VarChar(500)
+  id             String   @id @default(cuid())
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url            String   @db.VarChar(1000)
+  alt            String?
+  isMain         Boolean  @default(false)
+  sortOrder      Int      @default(0)
+  sourceDocument String?  @db.VarChar(500)
   sourcePage     Int?
-  sha256         String? @db.VarChar(64)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  sha256         String?  @db.VarChar(64)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([propertyId])
 }
 
 model PropertyDocument {
-  id            String        @id @default(cuid())
-  propertyId    String
-  property      Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  url           String        @db.VarChar(1000)
-  filename      String
-  documentType  DocumentType  @default(OTHER)
-  sourceUrl     String?       @db.VarChar(1000)
-  sourcePortal  String?       @db.VarChar(120)
-  originalFilename String?    @db.VarChar(500)
-  sha256        String?       @db.VarChar(64)
-  titleDe       String?       @db.VarChar(500)
-  titleRu       String?       @db.VarChar(500)
-  titleEn       String?       @db.VarChar(500)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id               String       @id @default(cuid())
+  propertyId       String
+  property         Property     @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url              String       @db.VarChar(1000)
+  filename         String
+  documentType     DocumentType @default(OTHER)
+  sourceUrl        String?      @db.VarChar(1000)
+  sourcePortal     String?      @db.VarChar(120)
+  originalFilename String?      @db.VarChar(500)
+  sha256           String?      @db.VarChar(64)
+  titleDe          String?      @db.VarChar(500)
+  titleRu          String?      @db.VarChar(500)
+  titleEn          String?      @db.VarChar(500)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
   @@index([propertyId])
 }
@@ -229,28 +230,28 @@ model User {
 }
 
 model Session {
-  id            String   @id @default(cuid())
-  sessionToken  String   @unique @db.VarChar(191)
-  userId        String
-  expires       DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @db.VarChar(191)
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expires])
 }
 
 model Favorite {
-  id          String    @id @default(cuid())
-  userId      String
-  propertyId  String
-  note        String?   @db.Text
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  property    Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
+  id         String   @id @default(cuid())
+  userId     String
+  propertyId String
+  note       String?  @db.Text
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
 
   @@unique([userId, propertyId])
   @@index([userId])
@@ -258,58 +259,56 @@ model Favorite {
 }
 
 model SavedSearch {
-  id                    String    @id @default(cuid())
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name                  String?
-  filtersUrl            String    @db.VarChar(2000)
-  filtersHash           String
-  humanReadableSummary  String    @db.VarChar(1000)
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                 String?
+  filtersUrl           String   @db.VarChar(2000)
+  filtersHash          String
+  humanReadableSummary String   @db.VarChar(1000)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 
   @@unique([userId, filtersHash])
   @@index([userId])
 }
 
 model PropertyTranslation {
-  id                   String    @id @default(cuid())
-  propertyId           String
-  locale               Locale
+  id         String @id @default(cuid())
+  propertyId String
+  locale     Locale
 
   title                   String
   propertyType            String?
-  shortDescription        String?   @db.Text
-  description             String    @db.Text
-  longDescription         String?   @db.LongText
-  buildingAndLayout       String?   @db.Text
-  conditionAndRenovation  String?   @db.Text
-  useAndOccupancy         String?   @db.Text
-  plotAndAccess           String?   @db.Text
-  locationAndSurroundings String?   @db.Text
-  specialFeatures         String?   @db.Text
-  auctionAndLegalNotes    String?   @db.Text
-  locationDescription     String?   @db.Text
-  recommendationSummary   String?   @db.Text
-  marketSummary           String?   @db.Text
-  renovationSummary       String?   @db.Text
-  riskSummary             String?   @db.Text
+  shortDescription        String? @db.Text
+  description             String  @db.Text
+  longDescription         String? @db.LongText
+  buildingAndLayout       String? @db.Text
+  conditionAndRenovation  String? @db.Text
+  useAndOccupancy         String? @db.Text
+  plotAndAccess           String? @db.Text
+  locationAndSurroundings String? @db.Text
+  specialFeatures         String? @db.Text
+  auctionAndLegalNotes    String? @db.Text
+  locationDescription     String? @db.Text
+  recommendationSummary   String? @db.Text
+  marketSummary           String? @db.Text
+  renovationSummary       String? @db.Text
+  riskSummary             String? @db.Text
   localizedFieldsJson     Json?
   prosJson                Json?
   consJson                Json?
   checksBeforeAuctionJson Json?
 
-  property             Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @default(now()) @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([propertyId, locale])
   @@index([locale])
   @@index([propertyId])
 }
-
-
 
 enum ImportStatus {
   SUCCESS
@@ -318,25 +317,24 @@ enum ImportStatus {
 }
 
 model ImportLog {
-  id            String        @id @default(cuid())
-  source        String        @default("ADMIN_IMPORT")
-  mode          String        @default("JSON")
-  status        ImportStatus  @default(SUCCESS)
-  totalItems    Int           @default(0)
-  createdItems  Int           @default(0)
-  updatedItems  Int           @default(0)
-  skippedItems  Int           @default(0)
-  failedItems   Int           @default(0)
-  errorMessage  String?       @db.Text
-  logJson       Json?
-  startedAt     DateTime      @default(now())
-  finishedAt    DateTime?
-  createdAt     DateTime      @default(now())
+  id           String       @id @default(cuid())
+  source       String       @default("ADMIN_IMPORT")
+  mode         String       @default("JSON")
+  status       ImportStatus @default(SUCCESS)
+  totalItems   Int          @default(0)
+  createdItems Int          @default(0)
+  updatedItems Int          @default(0)
+  skippedItems Int          @default(0)
+  failedItems  Int          @default(0)
+  errorMessage String?      @db.Text
+  logJson      Json?
+  startedAt    DateTime     @default(now())
+  finishedAt   DateTime?
+  createdAt    DateTime     @default(now())
 
   @@index([createdAt])
   @@index([status])
 }
-
 
 model PostalCode {
   code      String   @id @db.VarChar(5)

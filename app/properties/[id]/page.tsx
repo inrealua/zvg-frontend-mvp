@@ -7,6 +7,7 @@ import { PropertyDetailMap } from "@/components/PropertyDetailMap";
 import { PropertyGallery } from "@/components/PropertyGallery";
 import { PropertyInvestmentAnalysis } from "@/components/PropertyInvestmentAnalysis";
 import { prisma } from "@/lib/prisma";
+import { PropertyAnalysisPanel } from "@/components/PropertyAnalysisPanel";
 import { formatArea, formatDateTime, formatEuro, shortAddress, statusClass } from "@/lib/format";
 import { labelGroup, labelOccupancy, labelStatus } from "@/lib/i18n/property-labels";
 import { getCurrentUser } from "@/lib/user-auth";
@@ -76,6 +77,8 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
     <div className="detail-grid"><section className="panel">
       <PropertyGallery title={translated.title} images={property.images.map(image=>({id:image.id,url:image.url,alt:image.alt}))}/>
       <div className="info-section" id="description"><h2>{ui.description}</h2><p className="description">{translated.description}</p>{translated.longDescription && translated.longDescription!==translated.description?<><h3>{ll.long}</h3><p className="description">{translated.longDescription}</p></>:null}</div>
+
+            <PropertyAnalysisPanel analysis={property.analysisJson} />
       {richSections.map(([title,body])=><div className="info-section rich-object-section" key={title}><h2>{title}</h2><p className="description">{body}</p></div>)}
       {property.cancellationText?<div className="warning-box"><b>{ui.cancelled}</b><p>{property.cancellationText}</p></div>:null}
       <PropertyInvestmentAnalysis locale={locale} translated={translated} property={property}/>
