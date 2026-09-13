@@ -65,6 +65,7 @@ export default async function AdminPage({ searchParams }: { searchParams: AdminS
         </div>
         <div className="admin-actions-inline">
           <Link href="/admin/dashboard" className="btn btn-soft">Dashboard</Link>
+          <Link href="/admin/analysis" className="btn btn-soft">AI-анализ</Link>
           <Link href="/admin/import" className="btn btn-soft">Импорт JSON/CSV</Link>
           <Link href="/admin/import/logs" className="btn btn-soft">Логи импорта</Link>
           <Link href="/admin/properties/new" className="btn btn-primary">+ Добавить объект</Link>

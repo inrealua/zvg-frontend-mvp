@@ -30,10 +30,10 @@ export async function POST(request: NextRequest, context: FavoriteRouteContext) 
   const { propertyId } = await context.params;
   const property = await prisma.property.findUnique({
     where: { id: propertyId },
-    select: { id: true },
+    select: { id: true, publicationStatus: true },
   });
 
-  if (!property) return noStoreJson({ error: "Property not found" }, { status: 404 });
+  if (!property || property.publicationStatus !== "PUBLISHED") return noStoreJson({ error: "Property not found" }, { status: 404 });
 
   await prisma.favorite.upsert({
     where: { userId_propertyId: { userId: user.id, propertyId } },

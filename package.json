@@ -20,7 +20,14 @@
     "zvgscout:import-dataset": "node scripts/zvgscout_import_dataset.cjs",
     "zvgscout:import-dataset:dry": "cross-env ZVGSCOUT_DRY_RUN=1 node scripts/zvgscout_import_dataset.cjs",
     "zvg:import-normalized-db": "node scripts/import_normalized_zvg_to_db.cjs",
-    "zvg:import-normalized-db:dry": "cross-env ZVG_DRY_RUN=1 node scripts/import_normalized_zvg_to_db.cjs --dry-run"
+    "zvg:import-normalized-db:dry": "cross-env ZVG_DRY_RUN=1 node scripts/import_normalized_zvg_to_db.cjs --dry-run",
+    "analysis:import": "node scripts/import_analysis_results.cjs",
+    "analysis:import:dry": "node scripts/import_analysis_results.cjs --dry-run",
+    "analysis:publish": "node scripts/analysis_publication.cjs",
+    "catalog:backup": "node scripts/catalog_backup.cjs",
+    "catalog:reset-ai-v3": "node scripts/catalog_reset_ai_v3.cjs",
+    "site:v3:doctor": "node scripts/site_v3_doctor.cjs",
+    "locale:purge-uk": "node scripts/purge_uk_locale.cjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1064.0",

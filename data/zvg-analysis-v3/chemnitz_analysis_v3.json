@@ -1,0 +1,337 @@
+[
+  {
+    "caseKey": "23K93/2024",
+    "aktenzeichen": "0023 K 0093/2024",
+    "base": {
+      "title": "Eigentumswohnung mit Balkon in Chemnitz-Zentrum",
+      "propertyType": "Eigentumswohnung",
+      "livingArea": 73.29,
+      "plotArea": null,
+      "yearBuilt": 1950,
+      "occupancyStatus": "VACANT",
+      "marketValue": 64500,
+      "source": "ZVG-Portal / ZVG-DE Analyse"
+    },
+    "translations": {
+      "DE": {
+        "title": "Eigentumswohnung mit Balkon in Chemnitz-Zentrum",
+        "propertyType": "Eigentumswohnung",
+        "description": "Zum Aufruf kommt Sondereigentum Nr. 1 in der Reitbahnstraße 25 in 09111 Chemnitz. Die Wohnung liegt im Erdgeschoss, verfügt laut veröffentlichten Unterlagen über ca. 73,29 m² Wohnfläche, Balkon, Kellerraum und eine Kammer im Dachgeschoss. Zum Wohnungseigentum gehört ein Miteigentumsanteil von 84/1.000 am 959 m² großen Gesamtgrundstück. Das Gebäude stammt etwa aus dem Jahr 1950 und wurde nach den verfügbaren Angaben um 2006 modernisiert. Die Einheit wird als leerstehend geführt.",
+        "locationDescription": "Zentrale Lage in Chemnitz, Stadtteil Zentrum. Markt- und Mietindikatoren werden in der ZVG-DE Analyse separat von den gerichtlichen Verfahrensdaten ausgewiesen."
+      },
+      "RU": {
+        "title": "Квартира с балконом в центре Хемница",
+        "propertyType": "Квартира",
+        "description": "На торги выставлено отдельное право собственности на квартиру № 1 по адресу Reitbahnstraße 25, 09111 Chemnitz. Квартира находится на первом жилом уровне (Erdgeschoss) и, согласно опубликованным материалам, имеет около 73,29 м² жилой площади, балкон, подвальное помещение и отдельную кладовую/комнату на мансардном уровне. Доля в общем имуществе — 84/1 000 от общего участка 959 м². Дом ориентировочно 1950 года, по доступным данным модернизировался примерно в 2006 году. Квартира указана как свободная.",
+        "locationDescription": "Центральная часть Хемница, район Zentrum. Рыночные и арендные ориентиры в блоке анализа ZVG-DE отделены от официальных данных судебной процедуры."
+      },
+      "EN": {
+        "title": "Apartment with balcony in central Chemnitz",
+        "propertyType": "Apartment",
+        "description": "The auction concerns separate ownership unit No. 1 at Reitbahnstraße 25, 09111 Chemnitz. The apartment is on the ground floor and, according to the published material, has about 73.29 m² of living area, a balcony, a cellar room and an additional attic storage room. It carries an 84/1,000 co-ownership share in the 959 m² overall parcel. The building dates from around 1950 and available information indicates modernization around 2006. The unit is reported vacant.",
+        "locationDescription": "Central Chemnitz, Zentrum district. ZVG-DE presents market and rent indicators separately from the official court-procedure data."
+      }
+    },
+    "analysis": {
+      "schemaVersion": "v3.0",
+      "officialValueEUR": 64500,
+      "market": {
+        "lowEUR": 85000,
+        "highEUR": 105000,
+        "midpointEUR": 95000,
+        "confidence": "medium",
+        "marketRentEurM2": { "low": 6.1, "high": 6.5 },
+        "estimatedColdRentMonthlyEUR": { "low": 447, "high": 476 },
+        "method": {
+          "de": "As-is-Spanne aus aktuellen Angebotsindikatoren für Eigentumswohnungen in Chemnitz-Zentrum (September 2026) mit Abschlägen für Erdgeschoss, Baualter, unbekannten Innenzustand, WEG-Risiken und ZVG-Unsicherheit. Kein Verkehrswertgutachten.",
+          "ru": "Диапазон as-is рассчитан по актуальным индикаторам предложения квартир в Chemnitz-Zentrum за сентябрь 2026 года с понижающими поправками на первый этаж, возраст дома, неизвестное внутреннее состояние, риски WEG и специфику ZVG. Это не официальная оценка Verkehrswert.",
+          "en": "The as-is range uses current September 2026 asking-price indicators for apartments in Chemnitz-Zentrum, discounted for ground-floor position, building age, unknown interior condition, WEG exposure and auction uncertainty. It is not a formal valuation."
+        }
+      },
+      "renovation": {
+        "lowEUR": 15000,
+        "highEUR": 35000,
+        "confidence": "medium",
+        "basis": {
+          "de": "Schätzung für Arbeiten innerhalb der Wohnung. Gemeinschaftseigentum, Sonderumlagen und verborgene Schäden sind nicht enthalten.",
+          "ru": "Оценка относится к работам внутри квартиры. Общедомовые работы WEG, Sonderumlage и скрытые дефекты не включены.",
+          "en": "Estimate covers works inside the apartment only. WEG common-property works, special assessments and hidden defects are excluded."
+        },
+        "scenarios": [
+          {
+            "key": "cosmetic",
+            "label": { "de": "Kosmetisch", "ru": "Косметический", "en": "Cosmetic" },
+            "lowEUR": 8000,
+            "highEUR": 15000,
+            "note": { "de": "Maler, Boden, kleinere Reparaturen.", "ru": "Покраска, полы, мелкие работы.", "en": "Painting, flooring and minor repairs." }
+          },
+          {
+            "key": "standard",
+            "label": { "de": "Standard", "ru": "Стандарт", "en": "Standard" },
+            "lowEUR": 15000,
+            "highEUR": 35000,
+            "note": { "de": "Innenausbau inkl. Reserve für Elektrik/Sanitär je nach Zustand.", "ru": "Внутренние работы с резервом на электрику/сантехнику по фактическому состоянию.", "en": "Interior modernization with an allowance for electrical/plumbing work depending on condition." }
+          },
+          {
+            "key": "reserve",
+            "label": { "de": "Risikoreserve", "ru": "Резерв риска", "en": "Risk reserve" },
+            "lowEUR": 35000,
+            "highEUR": 50000,
+            "note": { "de": "Nur falls Innenzustand deutlich schlechter als erwartet ist; WEG-Maßnahmen weiterhin nicht enthalten.", "ru": "Если внутреннее состояние существенно хуже ожидаемого; общедомовые работы WEG всё равно не включены.", "en": "Only if the interior is materially worse than expected; WEG common-property works remain excluded." }
+          }
+        ]
+      },
+      "facts": [
+        { "label": { "de": "Wohnfläche", "ru": "Жилая площадь", "en": "Living area" }, "value": "73,29 m²", "source": "ZVG-Unterlagen / Sekundärabgleich" },
+        { "label": { "de": "Etage", "ru": "Этаж", "en": "Floor" }, "value": { "de": "Erdgeschoss", "ru": "Erdgeschoss", "en": "Ground floor" }, "source": "Grundbuch-/Objektangaben" },
+        { "label": { "de": "Balkon", "ru": "Балкон", "en": "Balcony" }, "value": { "de": "Ja", "ru": "Да", "en": "Yes" }, "source": "Objektangaben" },
+        { "label": { "de": "Nebenräume", "ru": "Доп. помещения", "en": "Ancillary rooms" }, "value": { "de": "Keller + Kammer im DG", "ru": "Подвал + кладовая на DG", "en": "Cellar + attic storage" }, "source": "Grundbuch-/Objektangaben" },
+        { "label": { "de": "Baujahr", "ru": "Год постройки", "en": "Year built" }, "value": { "de": "ca. 1950", "ru": "ок. 1950", "en": "c. 1950" }, "source": "Objektangaben" },
+        { "label": { "de": "Modernisierung", "ru": "Модернизация", "en": "Modernization" }, "value": { "de": "ca. 2006", "ru": "ок. 2006", "en": "c. 2006" }, "source": "Objektangaben" },
+        { "label": { "de": "Nutzung", "ru": "Использование", "en": "Occupancy" }, "value": { "de": "leerstehend", "ru": "свободна", "en": "vacant" }, "source": "Objektangaben" },
+        { "label": { "de": "Miteigentumsanteil", "ru": "Доля в общем имуществе", "en": "Co-ownership share" }, "value": "84/1.000", "source": "Grundbuchangaben" },
+        { "label": { "de": "Gesamtgrundstück", "ru": "Общий участок", "en": "Overall parcel" }, "value": "959 m²", "source": "Grundbuchangaben; nicht als eigene Grundstücksfläche der Wohnung zu verstehen" }
+      ],
+      "legalRisk": {
+        "level": "medium",
+        "items": {
+          "de": [
+            "Teilungserklärung, Gemeinschaftsordnung und genaue Abgrenzung des Sondereigentums prüfen.",
+            "Hausgeld, Wirtschaftsplan, Instandhaltungsrücklage, Beschlusssammlung und mögliche Sonderumlagen prüfen.",
+            "Grundbuchrechte und im Zuschlag bestehen bleibende Rechte anhand der Verfahrensakte verifizieren.",
+            "Leerstand ist positiv, muss vor dem Termin jedoch aktuell bestätigt werden."
+          ],
+          "ru": [
+            "Проверить Teilungserklärung, Gemeinschaftsordnung и точные границы Sondereigentum.",
+            "Проверить Hausgeld, Wirtschaftsplan, резерв WEG, решения собственников и возможные Sonderumlagen.",
+            "Проверить права в Grundbuch и права, которые могут сохраниться после Zuschlag.",
+            "Свободное состояние является плюсом, но его нужно актуально подтвердить перед торгами."
+          ],
+          "en": [
+            "Review the declaration of division, community rules and the exact scope of the separate ownership.",
+            "Check service charges, budget, WEG reserve, owners' resolutions and possible special assessments.",
+            "Verify land-register rights and any rights remaining after the award against the court file.",
+            "Vacancy is positive but should be reconfirmed immediately before the auction."
+          ]
+        }
+      },
+      "constructionRisk": {
+        "level": "medium",
+        "items": {
+          "de": [
+            "Innenzustand von Bad, Elektrik, Sanitär, Fenstern und Oberflächen anhand Gutachten/Fotos und möglichst Besichtigung bewerten.",
+            "Bei Baujahr ca. 1950 Zustand von Dach, Fassade, Leitungen und Heizung als Gemeinschaftseigentum prüfen.",
+            "Modernisierung um 2006 bedeutet nicht automatisch, dass alle technischen Gewerke erneuert wurden.",
+            "WEG-Sonderumlagen können den tatsächlichen Kapitalbedarf deutlich erhöhen."
+          ],
+          "ru": [
+            "Оценить по Gutachten/фото состояние ванной, электрики, сантехники, окон и отделки; при возможности осмотреть объект.",
+            "Для дома примерно 1950 года проверить крышу, фасад, общие коммуникации и отопление как Gemeinschaftseigentum.",
+            "Модернизация около 2006 года не означает автоматическую замену всех инженерных систем.",
+            "Sonderumlage WEG может существенно увеличить общий бюджет."
+          ],
+          "en": [
+            "Assess the bathroom, electrics, plumbing, windows and finishes from the appraisal/photos and, if possible, inspection.",
+            "For a c.1950 building, check roof, façade, common services and heating as common property.",
+            "Modernization around 2006 does not necessarily mean all technical systems were renewed.",
+            "WEG special assessments could materially increase total capital requirements."
+          ]
+        }
+      },
+      "positives": {
+        "de": ["Leerstand erleichtert eine Neuvermietung oder Eigennutzung nach Zuschlag.", "Zentrale Lage und Balkon verbessern die Vermietbarkeit.", "Gerichtlicher Verkehrswert liegt deutlich unter aktuellen Angebotsindikatoren des Stadtteils; das ist jedoch kein garantierter Kaufabschlag."],
+        "ru": ["Свободное состояние упрощает новую аренду или собственное использование после Zuschlag.", "Центральная локация и балкон поддерживают ликвидность аренды.", "Судебный Verkehrswert заметно ниже текущих индикаторов предложения района, но это не означает гарантированную скидку при покупке."],
+        "en": ["Vacancy simplifies reletting or owner occupation after the award.", "Central location and balcony support rental appeal.", "The court Verkehrswert is materially below current local asking-price indicators, but this does not guarantee a purchase discount."]
+      },
+      "cautions": {
+        "de": ["Aktuellen Zustand der Wohnung nicht aus Baujahr/Modernisierungsjahr ableiten.", "WEG-Unterlagen vor Gebot beschaffen.", "Termin und Verfahrensstatus am Auktionstag nochmals amtlich prüfen."],
+        "ru": ["Не делать вывод о текущем состоянии только по году постройки/модернизации.", "Получить документы WEG до ставки.", "В день торгов повторно проверить официальный статус и время процедуры."],
+        "en": ["Do not infer current condition from build/modernization year alone.", "Obtain WEG documents before bidding.", "Reconfirm the official auction status and time on the auction date."]
+      },
+      "sources": [
+        { "label": "ZVG-Portal – Bekanntmachung", "role": "primary / court", "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109378&zvg_id=41003" },
+        { "label": "ZVG-Portal – Exposé", "role": "primary / court", "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109379&zvg_id=41003" },
+        { "label": "ZVG-Portal – Foto-PDF", "role": "primary / court", "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109380&zvg_id=41003" },
+        { "label": "Immowelt – Kaufpreise Chemnitz-Zentrum 09/2026", "role": "market evidence", "date": "2026-09-01", "url": "https://www.immowelt.de/immobilienpreise/chemnitz-09111/zentrum-9111/nbh2de91302335" },
+        { "label": "Immowelt – Mietpreise Chemnitz 09/2026", "role": "rent evidence", "date": "2026-09-01", "url": "https://www.immowelt.de/immobilienpreise/mietpreise/sachsen/chemnitz-09111/ad08de9805" },
+        { "label": "ImmoScout24 – Mietpreise Zentrum 2026", "role": "rent cross-check", "url": "https://www.immobilienscout24.de/immobilienpreise/sachsen/chemnitz/zentrum/mietspiegel" },
+        { "label": "Hinterland-Immo – ZVG data cross-check", "role": "secondary cross-check", "url": "https://hinterland-immo.de/objekte/4647" }
+      ],
+      "disclaimer": {
+        "de": "Die ZVG-DE Markt- und Renovierungsschätzungen sind indikativ, keine formelle Immobilienbewertung und keine Rechts-/Bauprüfung. Für Gebote sind ausschließlich die amtlichen Unterlagen, der tatsächliche Zustand und eigene fachliche Prüfung maßgeblich.",
+        "ru": "Рыночная оценка и бюджет ремонта ZVG-DE носят ориентировочный характер и не являются официальной оценкой, юридическим или строительным заключением. Для ставки решающими являются официальные документы, фактическое состояние и собственная профессиональная проверка.",
+        "en": "ZVG-DE market and renovation estimates are indicative only and are not a formal valuation, legal opinion or building survey. Bidding decisions must rely on official documents, actual condition and independent professional due diligence."
+      }
+    }
+  },
+  {
+    "caseKey": "15K184/2024",
+    "aktenzeichen": "0015 K 0184/2024",
+    "base": {
+      "title": "Wohn- und Geschäftshaus mit 9 Wohnungen in Waldheim",
+      "propertyType": "Wohn- und Geschäftshaus",
+      "livingArea": 555,
+      "plotArea": 1450,
+      "yearBuilt": 1889,
+      "occupancyStatus": "RENTED",
+      "marketValue": 165000,
+      "source": "ZVG-Portal / ZVG-DE Analyse"
+    },
+    "translations": {
+      "DE": {
+        "title": "Wohn- und Geschäftshaus mit 9 Wohnungen in Waldheim",
+        "propertyType": "Wohn- und Geschäftshaus",
+        "description": "Versteigert wird das Wohn- und Geschäftshaus Talstraße 6 in 04736 Waldheim. Das Eckgebäude stammt vermutlich aus der Zeit um 1889, ist voll unterkellert und umfasst Erdgeschoss, 1. und 2. Obergeschoss sowie ein teilweise ausgebautes Dachgeschoss. Verfügbare Quellen nennen voraussichtlich eine Gewerbeeinheit und neun Wohnungen sowie rund 555 m² relevante Wohn-/Nutzfläche auf einem 1.450 m² großen Grundstück. Nach den verfügbaren Angaben besteht Sanierungsbedarf; eine Innenbesichtigung war im zugänglichen älteren Objektmaterial nicht möglich. Die Nutzung wird als teilweise vermietet geführt.",
+        "locationDescription": "Waldheim im Landkreis Mittelsachsen. Für ein gemischt genutztes Altbauobjekt dieser Größe sind Mieterträge, Leerstand, Gewerbenutzung und Sanierungsstau entscheidender als ein pauschaler Quadratmeterpreis."
+      },
+      "RU": {
+        "title": "Жилой и коммерческий дом на 9 квартир в Waldheim",
+        "propertyType": "Жилой и коммерческий дом",
+        "description": "На торги выставлен жилой и коммерческий дом Talstraße 6, 04736 Waldheim. Угловое здание ориентировочно 1889 года, полностью с подвалом; включает первый этаж, два верхних этажа и частично используемый мансардный уровень. Доступные источники указывают предположительно 1 коммерческое помещение и 9 квартир, около 555 м² релевантной жилой/полезной площади и участок 1 450 м². По доступным сведениям объект требует ремонта; внутренний осмотр в доступном более старом материале не проводился. Объект указан как частично сданный в аренду.",
+        "locationDescription": "Waldheim, Landkreis Mittelsachsen. Для смешанного старого доходного дома такого размера решающее значение имеют фактический rent roll, вакантность, коммерческая аренда и реальный объём Sanierungsstau, а не средняя цена за м²."
+      },
+      "EN": {
+        "title": "Mixed-use building with 9 apartments in Waldheim",
+        "propertyType": "Residential and commercial building",
+        "description": "The auction concerns the mixed-use building at Talstraße 6, 04736 Waldheim. The corner building dates from around 1889, is fully basemented and comprises ground floor, first and second upper floors and a partly developed attic. Available sources indicate approximately one commercial unit and nine apartments, about 555 m² of relevant residential/usable area and a 1,450 m² parcel. Available information states that renovation is required; no interior inspection was possible in the accessible older property material. The property is reported as partly rented.",
+        "locationDescription": "Waldheim, Mittelsachsen district. For a mixed-use investment property of this age and size, actual rent roll, vacancy, commercial tenancy and renovation backlog are more important than a generic price per square metre."
+      }
+    },
+    "analysis": {
+      "schemaVersion": "v3.0",
+      "officialValueEUR": 165000,
+      "market": {
+        "lowEUR": 120000,
+        "highEUR": 190000,
+        "midpointEUR": 155000,
+        "confidence": "low",
+        "marketRentEurM2": { "low": 5.67, "high": 5.98 },
+        "estimatedColdRentMonthlyEUR": null,
+        "method": {
+          "de": "As-is-Investmentspanne: lokale Preis-/Mietindikatoren werden nur als Kontext genutzt. Wegen Altbau, Mischnutzung, teilweiser Vermietung, fehlender Innenbesichtigung und erheblicher CAPEX-Unsicherheit basiert die Einschätzung primär auf Risikoabschlägen und einem ertragsorientierten Plausibilitätsrahmen. Der gerichtliche Verkehrswert wurde nicht als Marktwertanker verwendet.",
+          "ru": "Диапазон as-is для инвестиционного объекта: локальные цены и аренда используются только как контекст. Из-за возраста здания, смешанного использования, частичной аренды, отсутствия внутреннего осмотра и высокой неопределённости CAPEX оценка основана прежде всего на риск-корректировках и проверке через потенциальный доход. Судебный Verkehrswert не использовался как якорь рыночной оценки.",
+          "en": "As-is investment range: local price/rent indicators are used only as context. Because of age, mixed use, partial tenancy, lack of interior inspection and major CAPEX uncertainty, the estimate relies mainly on risk discounts and an income-based plausibility range. The court Verkehrswert was not used as the market-value anchor."
+        }
+      },
+      "renovation": {
+        "lowEUR": 280000,
+        "highEUR": 650000,
+        "confidence": "very_low",
+        "basis": {
+          "de": "Sehr grobe CAPEX-Spanne für ein gemischt genutztes Gebäude von ca. 1889 ohne Innenbesichtigung. Brandschutz, Tragwerk, Haustechnik, Schadstoffe und genehmigungsrechtliche Themen können die Spanne deutlich verändern.",
+          "ru": "Очень предварительный диапазон CAPEX для смешанного здания примерно 1889 года без внутреннего осмотра. Пожарная безопасность, конструктив, инженерия, возможные вредные материалы и разрешительные вопросы могут резко изменить бюджет.",
+          "en": "Very preliminary CAPEX range for a c.1889 mixed-use building without interior inspection. Fire safety, structure, building services, hazardous materials and permitting issues can materially change the budget."
+        },
+        "scenarios": [
+          {
+            "key": "stabilize",
+            "label": { "de": "Stabilisieren", "ru": "Стабилизация", "en": "Stabilization" },
+            "lowEUR": 120000,
+            "highEUR": 220000,
+            "note": { "de": "Nur dringende Arbeiten und Sicherung; keine Vollmodernisierung.", "ru": "Только срочные работы и приведение в безопасное состояние, без полной модернизации.", "en": "Urgent works and stabilization only; not a full modernization." }
+          },
+          {
+            "key": "standard",
+            "label": { "de": "Umfassende Modernisierung", "ru": "Комплексная модернизация", "en": "Comprehensive modernization" },
+            "lowEUR": 280000,
+            "highEUR": 500000,
+            "note": { "de": "Breiter Ansatz für Gebäudehülle, Haustechnik und Einheiten; abhängig vom Innenzustand.", "ru": "Широкий бюджет на оболочку здания, инженерные системы и помещения; сильно зависит от состояния внутри.", "en": "Broad allowance for envelope, building services and units; strongly dependent on interior condition." }
+          },
+          {
+            "key": "heavy",
+            "label": { "de": "Schwerer Sanierungsfall", "ru": "Тяжёлый сценарий", "en": "Heavy refurbishment" },
+            "lowEUR": 500000,
+            "highEUR": 900000,
+            "note": { "de": "Falls Tragwerk, Dach, Feuchte, Brandschutz oder Haustechnik umfassend betroffen sind.", "ru": "Если серьёзно затронуты конструктив, крыша, влага, пожарная безопасность или инженерные системы.", "en": "If structure, roof, moisture, fire safety or building services require extensive intervention." }
+          }
+        ]
+      },
+      "facts": [
+        { "label": { "de": "Einheiten", "ru": "Помещения", "en": "Units" }, "value": { "de": "vorauss. 9 Wohnungen + 1 Gewerbe", "ru": "предп. 9 квартир + 1 коммерческое", "en": "approx. 9 apartments + 1 commercial" }, "source": "verfügbare Objektangaben" },
+        { "label": { "de": "Relevante Fläche", "ru": "Релевантная площадь", "en": "Relevant area" }, "value": "ca. 555 m²", "source": "ZVG-/Objektangaben" },
+        { "label": { "de": "Grundstück", "ru": "Участок", "en": "Parcel" }, "value": "1.450 m²", "source": "Grundbuchangaben" },
+        { "label": { "de": "Baujahr", "ru": "Год постройки", "en": "Year built" }, "value": { "de": "ca. 1889", "ru": "ок. 1889", "en": "c. 1889" }, "source": "Objektangaben" },
+        { "label": { "de": "Geschosse", "ru": "Этажность", "en": "Floors" }, "value": { "de": "KG, EG, 1. OG, 2. OG, teilw. DG", "ru": "подвал, EG, 1. OG, 2. OG, частично DG", "en": "basement, ground, 1st, 2nd, partly attic" }, "source": "Objektangaben" },
+        { "label": { "de": "Nutzung", "ru": "Использование", "en": "Occupancy" }, "value": { "de": "teilweise vermietet", "ru": "частично сдан", "en": "partly rented" }, "source": "aktuelle Sekundärdarstellung der ZVG-Daten" },
+        { "label": { "de": "Innenbesichtigung", "ru": "Внутренний осмотр", "en": "Interior inspection" }, "value": { "de": "nicht möglich / nicht bestätigt", "ru": "не проводился / не подтверждён", "en": "not possible / not confirmed" }, "source": "zugängliches älteres Objektmaterial" },
+        { "label": { "de": "Grundbuch", "ru": "Grundbuch", "en": "Land register" }, "value": "Waldheim Blatt 1669 · Flurstück 390/1", "source": "ZVG-Daten" }
+      ],
+      "legalRisk": {
+        "level": "high",
+        "items": {
+          "de": [
+            "Vollständigen Mietspiegel/Rent Roll für alle 9 Wohnungen und die Gewerbeeinheit prüfen: Mieten, Rückstände, Kautionen, Laufzeiten und Leerstände.",
+            "Gewerbemietvertrag separat prüfen; Kündigungs- und Betriebskostenregelungen können den Ertrag wesentlich beeinflussen.",
+            "Grundbuch, Baulasten, Wegerechte, Denkmalschutz und genehmigte Nutzungen vor Gebot verifizieren.",
+            "Bei teilweise vermietetem Objekt ist eine freie Übergabe nicht zu erwarten; bestehende Mietverhältnisse bleiben grundsätzlich relevant.",
+            "Aktuellen Status der Wertgrenzen ausschließlich anhand der aktuellen amtlichen Bekanntmachung/Verfahrensakte prüfen; Drittportale widersprechen sich teilweise."
+          ],
+          "ru": [
+            "Проверить полный rent roll по всем 9 квартирам и коммерческому помещению: аренды, задолженности, депозиты, сроки и вакантность.",
+            "Отдельно проверить коммерческий Mietvertrag: условия расторжения и Betriebskosten могут существенно менять доходность.",
+            "До ставки проверить Grundbuch, Baulasten, сервитуты, Denkmalschutz и законность фактического использования помещений.",
+            "При частичной аренде свободная передача объекта не ожидается; существующие Mietverhältnisse сохраняют значение.",
+            "Актуальный статус Wertgrenzen проверять только по свежей официальной Bekanntmachung/материалам дела: сторонние порталы дают противоречивые данные."
+          ],
+          "en": [
+            "Verify the full rent roll for all nine apartments and the commercial unit: rents, arrears, deposits, lease terms and vacancies.",
+            "Review the commercial lease separately; termination and operating-cost provisions may materially affect income.",
+            "Check the land register, building encumbrances, easements, heritage status and permitted uses before bidding.",
+            "With partial tenancy, vacant possession should not be assumed; existing tenancies remain relevant.",
+            "Verify the current value-limit status only from the latest official notice/court file; third-party portals show inconsistent information."
+          ]
+        }
+      },
+      "constructionRisk": {
+        "level": "very_high",
+        "items": {
+          "de": [
+            "Baujahr ca. 1889 und ausgewiesener Sanierungsbedarf: Dach, Fassade, Tragwerk, Kellerfeuchte und Entwässerung prioritär prüfen.",
+            "Elektrik, Trink-/Abwasser, Heizung, Brandschutz und Fluchtwege können erheblichen Investitionsbedarf verursachen.",
+            "Teilweise ausgebautes Dachgeschoss: Genehmigung, Brandschutz und rechtmäßige Nutzung prüfen.",
+            "Fehlende Innenbesichtigung erhöht das Risiko verdeckter Schäden erheblich.",
+            "Bei Altbau dieser Epoche Schadstoffe und historische Baustoffe in die technische Due Diligence einbeziehen."
+          ],
+          "ru": [
+            "Дом примерно 1889 года и заявленный Sanierungsbedarf: в первую очередь проверить крышу, фасад, конструктив, влажность подвала и водоотведение.",
+            "Электрика, водоснабжение/канализация, отопление, пожарная безопасность и пути эвакуации могут потребовать крупных вложений.",
+            "Частично используемый DG: проверить разрешение, пожарную безопасность и законность использования.",
+            "Отсутствие внутреннего осмотра резко увеличивает риск скрытых дефектов.",
+            "Для старого здания этого периода включить в техническую проверку потенциальные вредные материалы и исторические конструкции."
+          ],
+          "en": [
+            "With a c.1889 build date and stated renovation need, prioritize roof, façade, structure, basement moisture and drainage checks.",
+            "Electrical, water/waste, heating, fire protection and escape routes may require major investment.",
+            "For the partly developed attic, verify permits, fire safety and lawful use.",
+            "Lack of interior inspection materially increases hidden-defect risk.",
+            "For a building of this age, include potential hazardous materials and historic construction methods in technical due diligence."
+          ]
+        }
+      },
+      "positives": {
+        "de": ["Großes Grundstück und mehrere Einheiten bieten Entwicklungspotenzial.", "Wohn- plus Gewerbenutzung ermöglicht diversifizierte Erträge, wenn Mietverträge und Zustand tragfähig sind.", "Waldheim weist 2026 einen niedrigen absoluten Miet-/Kaufpreis auf, was die Einstiegssumme begrenzt."],
+        "ru": ["Большой участок и несколько помещений дают потенциал развития.", "Сочетание жилой и коммерческой аренды может диверсифицировать доход при нормальных договорах и состоянии.", "В Waldheim в 2026 году низкий абсолютный уровень аренды и цен, что ограничивает входную сумму."],
+        "en": ["Large parcel and multiple units provide development potential.", "Residential plus commercial use can diversify income if leases and condition are sound.", "Waldheim has low absolute rent and purchase-price levels in 2026, limiting the nominal entry cost."]
+      },
+      "cautions": {
+        "de": ["Ohne Rent Roll keine belastbare Renditerechnung.", "Ohne Innenbesichtigung keine belastbare Sanierungskalkulation.", "Vor Gebot Bauakte/Brandschutz/Genehmigungen für Gewerbe und DG prüfen."],
+        "ru": ["Без rent roll нельзя достоверно считать доходность.", "Без внутреннего осмотра нельзя надёжно оценить ремонт.", "Перед ставкой проверить Bauakte, пожарную безопасность и разрешения на Gewerbe/DG."],
+        "en": ["No reliable yield calculation without the rent roll.", "No reliable renovation budget without interior inspection.", "Check building file, fire safety and permits for commercial/attic use before bidding."]
+      },
+      "sources": [
+        { "label": "ZVG-Portal – Exposé", "role": "primary / court", "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109615&zvg_id=41094" },
+        { "label": "ZVG-Portal – Foto-PDF", "role": "primary / court", "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109616&zvg_id=41094" },
+        { "label": "Hinterland-Immo – current ZVG data cross-check", "role": "secondary cross-check", "url": "https://hinterland-immo.de/objekte/7086" },
+        { "label": "Versteigerungspool – older object detail", "role": "historical enrichment", "url": "https://versteigerungspool.de/zwangsversteigerungen/wohn-geschaeftshaus.1212935" },
+        { "label": "Immowelt – Kaufpreise Waldheim 09/2026", "role": "market context", "date": "2026-09-01", "url": "https://www.immowelt.de/immobilienpreise/sachsen/waldheim-04736/ad08de9903" },
+        { "label": "Immowelt – Mietpreise Waldheim 09/2026", "role": "rent context", "date": "2026-09-01", "url": "https://www.immowelt.de/immobilienpreise/mietpreise/sachsen/waldheim-04736/ad08de9903" },
+        { "label": "ImmoScout24 – Mietpreise Waldheim 2026", "role": "rent cross-check", "url": "https://www.immobilienscout24.de/immobilienpreise/sachsen/mittelsachsen-kreis/waldheim/mietspiegel" }
+      ],
+      "disclaimer": {
+        "de": "Die ZVG-DE Markt- und Renovierungsschätzungen sind indikativ, keine formelle Immobilienbewertung und keine Rechts-/Bauprüfung. Für dieses Objekt ist die Unsicherheit wegen fehlender Innenbesichtigung besonders hoch.",
+        "ru": "Рыночная оценка и бюджет ремонта ZVG-DE являются ориентировочными и не заменяют официальную оценку, юридическую или строительную экспертизу. Для этого объекта неопределённость особенно высока из-за отсутствия внутреннего осмотра.",
+        "en": "ZVG-DE market and renovation estimates are indicative only and do not replace a formal valuation, legal opinion or building survey. Uncertainty is particularly high here because no interior inspection is available."
+      }
+    }
+  }
+]

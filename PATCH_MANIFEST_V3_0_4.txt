@@ -1,0 +1,10 @@
+components/LanguageSwitcher.tsx
+lib/i18n/config.ts
+lib/i18n/dictionaries.ts
+lib/i18n/property-translations.ts
+prisma/schema.prisma
+proxy.ts
+scripts/purge_uk_locale.cjs
+scripts/site_v3_doctor.cjs
+package.json
+HOTFIX_V3_0_4_RU.md

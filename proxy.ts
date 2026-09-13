@@ -9,6 +9,7 @@ function isLocale(value: string | undefined): value is Locale {
 
 function pickLocale(request: NextRequest): Locale {
   const cookieLocale = request.cookies.get("zvg_locale")?.value;
+  if (cookieLocale === "uk" || cookieLocale === "ua") return "en";
   if (isLocale(cookieLocale)) return cookieLocale;
 
   const accept = request.headers.get("accept-language")?.toLowerCase() || "";
@@ -37,6 +38,21 @@ export function proxy(request: NextRequest) {
   }
 
   const first = pathname.split("/").filter(Boolean)[0];
+
+  // Retire legacy Ukrainian URLs. Preserve the rest of the path/query and migrate to English.
+  if (first === "uk" || first === "ua") {
+    const url = request.nextUrl.clone();
+    const rest = pathname.replace(new RegExp("^/" + first + "(?=/|$)"), "") || "/";
+    url.pathname = "/en" + (rest === "/" ? "" : rest);
+    url.search = search;
+    const response = NextResponse.redirect(url);
+    response.cookies.set("zvg_locale", "en", {
+      path: "/",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365,
+    });
+    return response;
+  }
 
   // User opens zvg-de.com -> redirect to language URL.
   if (pathname === "/") {

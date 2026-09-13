@@ -36,7 +36,7 @@ function normalizeLocale(value?: string): Locale {
 
 function buildLocalePath(pathname: string, next: Locale) {
   const parts = pathname.split("/").filter(Boolean);
-  if (parts[0] === "ru" || parts[0] === "de" || parts[0] === "en") {
+  if (parts[0] === "ru" || parts[0] === "de" || parts[0] === "en" || parts[0] === "uk" || parts[0] === "ua") {
     parts[0] = next;
     return "/" + parts.join("/");
   }

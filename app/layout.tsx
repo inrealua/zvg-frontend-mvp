@@ -14,11 +14,12 @@ import "./globals.css";
 import { Stage170aDetailsNewTabFix } from "@/components/Stage170aDetailsNewTabFix";
 import { Stage168iCalendarTermCountFix } from "@/components/Stage168iCalendarTermCountFix";
 import { Stage168gGermanObjectTextFix } from "@/components/Stage168gGermanObjectTextFix";
+import { getSiteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
