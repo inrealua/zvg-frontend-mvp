@@ -9,7 +9,6 @@ import {
 } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/config";
 import { defaultLocale } from "@/lib/i18n/config";
-import { getPropertyPlaceholder } from "@/lib/propertyPlaceholder";
 import {
   pickPropertyTranslation,
   type PropertyTranslationLike,
@@ -20,7 +19,6 @@ import {
   labelOccupancy,
   labelStatus,
 } from "@/lib/i18n/property-labels";
-import { mediaUrl, selectBestPropertyImage } from "@/lib/media-selection";
 
 type PropertyCardImage = {
   url: string;
@@ -48,10 +46,6 @@ export type PropertyCardData = {
   auctionAttempt: number;
   wertgrenzenWeggefallen: boolean;
   hasDenkmalschutz: boolean;
-  investmentScore?: number | null;
-  investmentRecommendation?: string | null;
-  bidMaximumEur?: number | null;
-  analyzedMarketValueBaseEur?: number | null;
   images: PropertyCardImage[];
   translations?: PropertyTranslationLike[];
 };
@@ -80,9 +74,7 @@ export function PropertyCard({
   isFavorite?: boolean;
   locale?: Locale;
 }) {
-  const placeholderImage = getPropertyPlaceholder(property.propertyType, property.propertyTypeGroup);
-  const mainImage = selectBestPropertyImage(property.images);
-  const imageUrl = mediaUrl(mainImage) || placeholderImage;
+  const mainImage = property.images[0];
   const translated = pickPropertyTranslation(property, locale);
   const ui = getPublicUi(locale);
   const cardUi = cardLabels[locale];
@@ -94,11 +86,11 @@ export function PropertyCard({
         href={`/properties/${property.id}`}
         aria-label={`${ui.details}: ${translated.title}`}
       >
-        <img
-          src={imageUrl}
-          alt={mainImage?.alt ?? translated.title}
-          loading="lazy"
-        />
+        {mainImage ? (
+          <img src={mainImage.url} alt={mainImage.alt ?? translated.title} />
+        ) : (
+          <div className="image-placeholder">{ui.noPhoto}</div>
+        )}
         <span className={`status-badge image-badge ${statusClass(property.status)}`}>
           {labelStatus(property.status, locale)}
         </span>
@@ -132,13 +124,6 @@ export function PropertyCard({
           <div className="kpi"><b>{property.auctionAttempt}</b><br />{ui.attempt}</div>
         </div>
 
-        {property.investmentScore != null || property.bidMaximumEur != null ? (
-          <div className="property-card-analysis">
-            {property.investmentScore != null ? <span className="score">AI {property.investmentScore}/100 · {property.investmentRecommendation || "—"}</span> : null}
-            {property.bidMaximumEur != null ? <span className="maxbid">{locale === "ru" ? "Макс. ставка" : locale === "en" ? "Max. bid" : "Max. Gebot"}: {formatEuro(property.bidMaximumEur)}</span> : null}
-          </div>
-        ) : null}
-
         <div className="tag-row">
           <span>{property.state}</span>
           <span>{property.postalCode} {property.city}</span>
@@ -148,7 +133,6 @@ export function PropertyCard({
         </div>
 
         <div className="card-footer">
-          <span className="meta">{ui.source}: {property.investmentScore != null ? "ZVG-DE AI" : "DB"}</span>
           <div className="card-actions">
             <FavoriteButton propertyId={property.id} initialIsFavorite={isFavorite} compact />
             <Link className="btn btn-soft" href={`/properties/${property.id}`}>{ui.details}</Link>

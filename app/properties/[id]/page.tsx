@@ -7,7 +7,6 @@ import { PropertyDetailMap } from "@/components/PropertyDetailMap";
 import { PropertyGallery } from "@/components/PropertyGallery";
 import { PropertyInvestmentAnalysis } from "@/components/PropertyInvestmentAnalysis";
 import { prisma } from "@/lib/prisma";
-import { PropertyAnalysisPanel } from "@/components/PropertyAnalysisPanel";
 import { formatArea, formatDateTime, formatEuro, shortAddress, statusClass } from "@/lib/format";
 import { labelGroup, labelOccupancy, labelStatus } from "@/lib/i18n/property-labels";
 import { getCurrentUser } from "@/lib/user-auth";
@@ -62,6 +61,7 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
   const richSections = [
     [ui.building, translated.buildingAndLayout], [ui.condition, translated.conditionAndRenovation], [ui.occupancy, translated.useAndOccupancy], [ui.plotAccess, translated.plotAndAccess], [ui.surroundings, translated.locationAndSurroundings], [ui.special, translated.specialFeatures], [ui.legalNotes, translated.auctionAndLegalNotes],
   ].filter((x): x is [string,string] => Boolean(x[1]));
+  const hasAnalysis = Boolean(property.analysisVersion || property.analysisJson || property.investmentScore != null || property.analyzedMarketValueBaseEur != null || property.bidMaximumEur != null);
 
   return <main className="detail-page"><div className="container">
     {property.publicationStatus !== "PUBLISHED" ? <div className="analysis-review-banner">{ll.preview} · {property.publicationStatus}</div> : null}
@@ -71,17 +71,16 @@ export default async function PropertyPage({ params }: PropertyPageProps) {
       {property.publicationStatus === "PUBLISHED" ? <div className="detail-actions"><FavoriteButton propertyId={property.id} initialIsFavorite={Boolean(favorite)} /></div> : null}<PropertyDetailActions title={translated.title}/>
     </section>
 
-    <nav className="quick-nav" aria-label="Detail navigation"><a href="#gallery">{ll.photos}</a><a href="#description">{ui.description}</a>{property.analysisVersion?<a href="#analysis">{ui.analysis}</a>:null}<a href="#auction">{ui.auction}</a><a href="#features">{ui.features}</a><a href="#map">{ui.map}</a><a href="#documents">{ui.documents}</a></nav>
+    <nav className="quick-nav" aria-label="Detail navigation"><a href="#gallery">{ll.photos}</a><a href="#description">{ui.description}</a>{hasAnalysis?<a href="#analysis">{ui.analysis}</a>:null}<a href="#auction">{ui.auction}</a><a href="#features">{ui.features}</a><a href="#map">{ui.map}</a><a href="#documents">{ui.documents}</a></nav>
     <div className="detail-summary-grid"><div className="summary-tile"><span>{ui.auctionDate}</span><b>{formatDateTime(property.auctionDate,property.auctionTime)}</b></div><div className="summary-tile"><span>{ui.livingArea}</span><b>{formatArea(property.livingArea)}</b></div><div className="summary-tile"><span>{ui.plotArea}</span><b>{formatArea(property.plotArea)}</b></div><div className="summary-tile"><span>{ui.use}</span><b>{localizedText("occupancy", labelOccupancy(property.occupancyStatus, locale))}</b></div></div>
 
     <div className="detail-grid"><section className="panel">
       <PropertyGallery title={translated.title} images={property.images.map(image=>({id:image.id,url:image.url,alt:image.alt}))}/>
       <div className="info-section" id="description"><h2>{ui.description}</h2><p className="description">{translated.description}</p>{translated.longDescription && translated.longDescription!==translated.description?<><h3>{ll.long}</h3><p className="description">{translated.longDescription}</p></>:null}</div>
 
-            <PropertyAnalysisPanel analysis={property.analysisJson} />
       {richSections.map(([title,body])=><div className="info-section rich-object-section" key={title}><h2>{title}</h2><p className="description">{body}</p></div>)}
       {property.cancellationText?<div className="warning-box"><b>{ui.cancelled}</b><p>{property.cancellationText}</p></div>:null}
-      <PropertyInvestmentAnalysis locale={locale} translated={translated} property={property}/>
+      <PropertyInvestmentAnalysis locale={locale} translated={translated} property={property} legacyAnalysis={property.analysisJson}/>
 
       <div className="info-section" id="documents"><h2>{ui.documents}</h2>{property.documents.length===0?<p className="meta">{ui.noDocuments}</p>:<table className="document-table"><thead><tr><th>{ui.type}</th><th>{ui.file}</th><th>{ui.action}</th></tr></thead><tbody>{property.documents.map(document=><tr key={document.id}><td>{docTitle(document,locale)}</td><td>{document.originalFilename||document.filename}{document.sourcePortal?<small className="document-source">{document.sourcePortal}</small>:null}</td><td><a className="document-link" href={document.url} target="_blank" rel="noreferrer">{ui.open}</a></td></tr>)}</tbody></table>}</div>
     </section>
