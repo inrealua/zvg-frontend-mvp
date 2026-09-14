@@ -13541,3 +13541,7 @@ main .auction-calendar-day[data-stage168i-has-events="true"].is-selected {
 @media(max-width:560px){.zvg-analysis-panel{padding:18px;border-radius:17px}.zvg-analysis-kpis,.zvg-renovation-grid,.zvg-facts-grid{grid-template-columns:1fr}.zvg-analysis-head{display:block}.zvg-analysis-version{display:inline-block;margin-top:8px}.zvg-analysis-kpi{min-height:0}}
 /* ZVG-DE ANALYSIS V3 END */
 
+/* ZVG-DE ANALYSIS V4 PROVENANCE */
+.zvg-provenance{display:inline-block;margin-top:7px;margin-right:6px;padding:3px 7px;border-radius:999px;font-style:normal;font-size:.62rem;font-weight:800;letter-spacing:.04em;background:#eef2f0;color:#526159}
+.zvg-provenance.primary_fact{background:#e5f4e9;color:#245c35}.zvg-provenance.secondary_fact{background:#fff0cf;color:#795812}.zvg-provenance.zvg_de_analysis{background:#e8eef8;color:#344f79}
+

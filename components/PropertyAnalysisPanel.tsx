@@ -40,6 +40,7 @@ type AnalysisData = {
     label?: LocalizedText;
     value?: LocalizedText;
     source?: string;
+    provenanceLevel?: string;
   }>;
   legalRisk?: {
     level?: string;
@@ -213,7 +214,7 @@ export async function PropertyAnalysisPanel({ analysis }: { analysis: unknown })
           <p className="zvg-analysis-kicker">{c.kicker}</p>
           <h2>{c.title}</h2>
         </div>
-        <span className="zvg-analysis-version">{data.schemaVersion || "v1"}</span>
+        <span className="zvg-analysis-version">{data.schemaVersion || "v4"}</span>
       </div>
 
       <div className="zvg-analysis-kpis">
@@ -277,6 +278,7 @@ export async function PropertyAnalysisPanel({ analysis }: { analysis: unknown })
               <div className="zvg-fact" key={`${text(fact.label, locale)}-${index}`}>
                 <span>{text(fact.label, locale)}</span>
                 <b>{text(fact.value, locale) || "—"}</b>
+                {fact.provenanceLevel ? <em className={`zvg-provenance ${String(fact.provenanceLevel).toLowerCase()}`}>{fact.provenanceLevel}</em> : null}
                 {fact.source ? <small>{c.source}: {fact.source}</small> : null}
               </div>
             ))}

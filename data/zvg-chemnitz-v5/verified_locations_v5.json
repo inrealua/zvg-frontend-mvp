@@ -1,0 +1,319 @@
+{
+  "version": "5.0",
+  "generatedFrom": "verified successful V4.2/V4.3 outputs",
+  "locations": {
+    "0023K0093/2024": {
+      "latitude": 50.82848,
+      "longitude": 12.9243,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Reitbahnstraße 25, 09111 Chemnitz"
+    },
+    "0024K0291/2024": {
+      "latitude": 50.838801,
+      "longitude": 12.932851,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Gießerstraße 4, 09130 Chemnitz"
+    },
+    "0024K0292/2024": {
+      "latitude": 50.84623,
+      "longitude": 12.932207,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "August-Bebel-Straße 5, 09113 Chemnitz"
+    },
+    "0015K0188/2023": {
+      "latitude": 50.598015,
+      "longitude": 13.295667,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "In der Gasse 7, 09496 Marienberg"
+    },
+    "0023K0112/2023": {
+      "latitude": 50.439904,
+      "longitude": 12.697134,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Eibenstocker Straße 91, 08349 Johanngeorgenstadt"
+    },
+    "0024K0061/2024": {
+      "latitude": 50.843156,
+      "longitude": 12.901917,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Luisenplatz 24, 09113 Chemnitz"
+    },
+    "0024K0062/2024": {
+      "latitude": 50.843156,
+      "longitude": 12.901917,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Luisenplatz 24, 09113 Chemnitz"
+    },
+    "0024K0059/2024": {
+      "latitude": 50.843358,
+      "longitude": 12.901405,
+      "precision": "multi_address_centroid",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Tannenstraße 4 und 6, 09113 Chemnitz"
+    },
+    "0024K0060/2024": {
+      "latitude": 50.843358,
+      "longitude": 12.901405,
+      "precision": "multi_address_centroid",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Tannenstraße 4 und 6, 09113 Chemnitz"
+    },
+    "0023K0466/2020": {
+      "latitude": 50.828072,
+      "longitude": 13.298706,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Neue Hauptstraße 172, 09618 Brand-Erbisdorf"
+    },
+    "0015K0200/2024": {
+      "latitude": 51.007279,
+      "longitude": 13.338581,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Meißner Straße 124, 09629 Reinsberg"
+    },
+    "0027K0015/2025": {
+      "latitude": 50.864187,
+      "longitude": 12.94833,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Glösaer Straße 28, 09131 Chemnitz"
+    },
+    "0027K0202/2023": {
+      "latitude": 51.074968,
+      "longitude": 12.89972,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Leipziger Straße 47, 09326 Geringswalde"
+    },
+    "0023K0124/2024": {
+      "latitude": 50.681859,
+      "longitude": 12.820664,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Gasse 20, 08297 Zwönitz"
+    },
+    "0024K0037/2024": {
+      "latitude": 50.817878,
+      "longitude": 12.950663,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Heimgarten 83, 09127 Chemnitz"
+    },
+    "0015K0240/2024": {
+      "latitude": 50.817692,
+      "longitude": 12.936887,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Vettersstraße 55, 09126 Chemnitz"
+    },
+    "0027K0009/2025": {
+      "latitude": 50.821973,
+      "longitude": 12.942912,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Clausstraße 43, 09126 Chemnitz"
+    },
+    "0027K0248/2024": {
+      "latitude": 50.819114,
+      "longitude": 12.922498,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Altchemnitzer Straße 40, 09120 Chemnitz"
+    },
+    "0023K0052/2024": {
+      "latitude": 50.825862,
+      "longitude": 12.926365,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Reitbahnstraße 53, 09111 Chemnitz"
+    },
+    "0023K0036/2024": {
+      "latitude": 50.738756,
+      "longitude": 12.850661,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Meinersdorfer Straße 8, 09387 Jahnsdorf/Erzgeb."
+    },
+    "0027K0246/2024": {
+      "latitude": 50.855487,
+      "longitude": 12.929682,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Blankenauer Straße 62, 09113 Chemnitz"
+    },
+    "0027K0298/2024": {
+      "latitude": 51.086777,
+      "longitude": 13.14701,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Dorfweg 5, 04741 Roßwein"
+    },
+    "0023K0232/2022": {
+      "latitude": 50.781466,
+      "longitude": 12.857668,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Hauptstraße 138, 09221 Neukirchen/Erzgeb."
+    },
+    "0023K0234/2022": {
+      "latitude": 50.932187,
+      "longitude": 12.70017,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Schillerstraße 2, 09322 Penig"
+    },
+    "0015K0184/2024": {
+      "latitude": 51.071556,
+      "longitude": 13.029753,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Talstraße 6, 04736 Waldheim"
+    },
+    "0015K0212/2024": {
+      "latitude": 51.072224,
+      "longitude": 13.029852,
+      "precision": "parcel",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Talstraße, 04736 Waldheim"
+    },
+    "0027K0094/2025": {
+      "latitude": 50.886142,
+      "longitude": 12.87458,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Untere Hauptstraße 86, 09228 Chemnitz"
+    },
+    "0027K0279/2024": {
+      "latitude": 50.654117,
+      "longitude": 13.445984,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Bahnhofstraße 18, 09548 Kurort Seiffen"
+    },
+    "0023K0170/2023": {
+      "latitude": 51.009422,
+      "longitude": 13.339466,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Pfarrberg 8, 09629 Reinsberg"
+    },
+    "0024K0186/2023": {
+      "latitude": 50.828765,
+      "longitude": 12.893974,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Michaelstraße 37, 09116 Chemnitz"
+    },
+    "0024K0098/2025": {
+      "latitude": 50.828799,
+      "longitude": 12.893855,
+      "precision": "multi_address_centroid",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Michaelstraße 37, 39, 09116 Chemnitz"
+    },
+    "0023K0138/2025": {
+      "latitude": 51.186927,
+      "longitude": 13.07535,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Am Töllschützer Berg 1, 04749 Jahnatal"
+    },
+    "0023K0025/2023": {
+      "latitude": 50.879609,
+      "longitude": 12.857472,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Röhrsdorfer Straße 3, 09228 Chemnitz"
+    },
+    "0024K0217/2023": {
+      "latitude": 50.850053,
+      "longitude": 12.933997,
+      "precision": "parcel",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Straße der Nationen 146a (inoff.), 09113 Chemnitz"
+    },
+    "0024K0295/2024": {
+      "latitude": 50.958849,
+      "longitude": 13.119723,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Berthelsdorfer Straße 11a, 09661 Hainichen"
+    },
+    "0027K0275/2024": {
+      "latitude": 50.975014,
+      "longitude": 12.873272,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Dorfstraße 97, 09306 Königshain-Wiederau"
+    },
+    "0027K0280/2024": {
+      "latitude": 50.975014,
+      "longitude": 12.873272,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Dorfstraße 97, 09306 Königshain-Wiederau"
+    },
+    "0023K0277/2018": {
+      "latitude": 50.613584,
+      "longitude": 12.724576,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Untere Bahnhofstraße 3, 08294 Lößnitz"
+    },
+    "0023K0201/2024": {
+      "latitude": 50.840544,
+      "longitude": 12.947061,
+      "precision": "house_number",
+      "provider": "ZVG-DE verified V4.2/V4.3 seed",
+      "verifiedFromPriorRun": true,
+      "address": "Heinrich-Schütz-Straße 86, 09130 Chemnitz"
+    }
+  },
+  "failures": []
+}
