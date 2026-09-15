@@ -1,0 +1,81 @@
+{
+  "schema": "zvg-de.ai-policy.v1",
+  "project": "ZVG-DE",
+  "projectVersion": "5.0.0",
+  "primaryCollector": "ChatGPT",
+  "sourceOfTruth": "website_ai_control_files",
+  "requiredSources": [
+    "https://www.zvg-portal.de/",
+    "https://zvsachsen.de/",
+    "https://www.zvg.com/",
+    "https://versteigerungspool.de/"
+  ],
+  "workflow": [
+    "COURT_DISCOVERY",
+    "COURT_BASE",
+    "BASE_GATE",
+    "ANALYSIS",
+    "ANALYSIS_GATE",
+    "IMPORT",
+    "PUBLISHED"
+  ],
+  "base": {
+    "marketAnalysisAllowed": false,
+    "mustCheckAllRequiredSources": true,
+    "mustCrossSourceDeduplicate": true,
+    "mustCollectOriginalDocuments": true,
+    "mustCollectOriginalPhotos": true,
+    "mustResolveCaseStructureOrMarkUnknown": true,
+    "mustStoreEvidence": true,
+    "mustStoreConflicts": true,
+    "mustStoreGeoPrecision": true
+  },
+  "factStatuses": [
+    "FACT",
+    "INFERENCE",
+    "UNKNOWN",
+    "VERIFY",
+    "CONFLICT"
+  ],
+  "geoPrecisions": [
+    "house_number",
+    "parcel",
+    "street",
+    "locality",
+    "approximate",
+    "unknown"
+  ],
+  "caseModel": [
+    "auction_case",
+    "lots",
+    "properties",
+    "cadastral_parcels"
+  ],
+  "analysis": {
+    "publicLanguages": [
+      "de",
+      "en",
+      "ru"
+    ],
+    "renovationScenarios": [
+      "minimal",
+      "standard",
+      "full",
+      "worstCase"
+    ],
+    "recommendations": [
+      "BUY",
+      "CONSIDER",
+      "HIGH_RISK",
+      "SKIP"
+    ],
+    "mustResearchCurrentMarket": true,
+    "mustResearchRent": true,
+    "mustAnalyzeConstructionRisks": true,
+    "mustAnalyzeLegalRisks": true,
+    "mustCalculateInvestmentModel": true,
+    "mustCalculateMaximumBidFromEconomics": true,
+    "forbidAuctionSubjectAsComparable": true,
+    "forbidVerkehrswertAsMarketValueProof": true
+  }
+}

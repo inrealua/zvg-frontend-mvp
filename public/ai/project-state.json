@@ -1,0 +1,50 @@
+{
+  "schema": "zvg-de.project-state.v1",
+  "project": "ZVG-DE",
+  "projectVersion": "5.0.0",
+  "aiControlVersion": "1.0.0",
+  "updatedAt": "2026-09-15T09:01:07.033Z",
+  "legacySite": {
+    "note": "Legacy Property catalog cleared. New v5 court-by-court BASE/ANALYSIS pipeline is authoritative.",
+    "observedActiveProperties": 0,
+    "observedAt": "2026-09-15",
+    "clearedAt": "2026-09-15T08:59:36.711Z",
+    "clearedBy": "RESET_ZVG_OLD_CATALOG_V1_1"
+  },
+  "nextTask": {
+    "taskId": "court-base-ag-chemnitz-v1",
+    "type": "COURT_BASE",
+    "courtId": "ag-chemnitz",
+    "status": "READY"
+  },
+  "courts": [
+    {
+      "id": "ag-chemnitz",
+      "name": "Amtsgericht Chemnitz",
+      "status": "BASE_IN_PROGRESS",
+      "baseVersion": null,
+      "analysisVersion": null
+    },
+    {
+      "id": "ag-zwickau",
+      "name": "Amtsgericht Zwickau",
+      "status": "QUEUED",
+      "baseVersion": null,
+      "analysisVersion": null
+    },
+    {
+      "id": "ag-leipzig",
+      "name": "Amtsgericht Leipzig",
+      "status": "QUEUED",
+      "baseVersion": null,
+      "analysisVersion": null
+    },
+    {
+      "id": "ag-dresden",
+      "name": "Amtsgericht Dresden",
+      "status": "QUEUED",
+      "baseVersion": null,
+      "analysisVersion": null
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "zvg-de.tasks.v1",
+  "updatedAt": "2026-09-15T10:10:00+02:00",
+  "queue": [
+    {
+      "priority": 1,
+      "taskId": "court-base-ag-chemnitz-v1",
+      "type": "COURT_BASE",
+      "courtId": "ag-chemnitz",
+      "status": "READY",
+      "instruction": "Build a complete evidence/base package for Amtsgericht Chemnitz under ZVG-DE Project Master v5."
+    },
+    {
+      "priority": 2,
+      "taskId": "court-base-ag-zwickau-v1",
+      "type": "COURT_BASE",
+      "courtId": "ag-zwickau",
+      "status": "QUEUED"
+    },
+    {
+      "priority": 3,
+      "taskId": "court-base-ag-leipzig-v1",
+      "type": "COURT_BASE",
+      "courtId": "ag-leipzig",
+      "status": "QUEUED"
+    },
+    {
+      "priority": 4,
+      "taskId": "court-base-ag-dresden-v1",
+      "type": "COURT_BASE",
+      "courtId": "ag-dresden",
+      "status": "QUEUED"
+    }
+  ]
+}

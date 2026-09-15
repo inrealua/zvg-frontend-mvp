@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zvg-de.com/ai/schemas/analysis-result.schema.json",
+  "title": "ZVG-DE Analysis Result v5",
+  "type": "object",
+  "required": [
+    "schema",
+    "canonicalId",
+    "projectVersion",
+    "inputBaseHash",
+    "analyzedAt",
+    "marketResearchedAt",
+    "market",
+    "renovation",
+    "constructionRisks",
+    "legalRisks",
+    "investment",
+    "recommendation",
+    "content"
+  ],
+  "properties": {
+    "schema": {
+      "const": "zvg-de.analysis-result.v5"
+    },
+    "canonicalId": {
+      "type": "string"
+    },
+    "projectVersion": {
+      "type": "string"
+    },
+    "inputBaseHash": {
+      "type": "string"
+    },
+    "analyzedAt": {
+      "type": "string"
+    },
+    "marketResearchedAt": {
+      "type": "string"
+    },
+    "market": {
+      "type": "object"
+    },
+    "renovation": {
+      "type": "object"
+    },
+    "constructionRisks": {
+      "type": "array"
+    },
+    "legalRisks": {
+      "type": "array"
+    },
+    "investment": {
+      "type": "object"
+    },
+    "recommendation": {
+      "type": "object"
+    },
+    "content": {
+      "type": "object",
+      "required": [
+        "de",
+        "en",
+        "ru"
+      ],
+      "properties": {
+        "de": {
+          "type": "object"
+        },
+        "en": {
+          "type": "object"
+        },
+        "ru": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

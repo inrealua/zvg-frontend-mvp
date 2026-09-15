@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zvg-de.com/ai/schemas/court-base.schema.json",
+  "title": "ZVG-DE Court Base Manifest",
+  "type": "object",
+  "required": [
+    "schema",
+    "projectVersion",
+    "court",
+    "createdAt",
+    "sourcesChecked",
+    "canonicalCases",
+    "baseGate"
+  ],
+  "properties": {
+    "schema": {
+      "const": "zvg-de.court-base.v1"
+    },
+    "projectVersion": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "court": {
+      "type": "object",
+      "required": [
+        "courtId",
+        "name"
+      ],
+      "properties": {
+        "courtId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "sourcesChecked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sourceCoverage": {
+      "type": "object"
+    },
+    "canonicalCases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "canonicalId",
+          "aktenzeichen"
+        ],
+        "additionalProperties": true
+      }
+    },
+    "baseGate": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "PASS",
+            "VERIFY",
+            "FAIL"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

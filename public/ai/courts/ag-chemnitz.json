@@ -1,0 +1,44 @@
+{
+  "schema": "zvg-de.court-state.v1",
+  "courtId": "ag-chemnitz",
+  "courtName": "Amtsgericht Chemnitz",
+  "country": "DE",
+  "state": "Sachsen",
+  "status": "READY_FOR_BASE",
+  "task": "COURT_BASE",
+  "projectVersion": "5.0.0",
+  "baseSchemaVersion": "1.0.0",
+  "requiredSources": [
+    {
+      "id": "zvg-portal",
+      "baseUrl": "https://www.zvg-portal.de/",
+      "required": true
+    },
+    {
+      "id": "zvsachsen",
+      "baseUrl": "https://zvsachsen.de/",
+      "required": true
+    },
+    {
+      "id": "zvg-com",
+      "baseUrl": "https://www.zvg.com/",
+      "required": true
+    },
+    {
+      "id": "versteigerungspool",
+      "baseUrl": "https://versteigerungspool.de/",
+      "required": true
+    }
+  ],
+  "discovery": {
+    "startedAt": "2026-09-15T10:10:00+02:00",
+    "completedAt": null,
+    "canonicalCaseCount": null,
+    "sourceCoverage": {},
+    "notes": [
+      "New v5 court-base rebuild. Existing production objects are evidence leads only, not authoritative BASE records."
+    ]
+  },
+  "basePackage": null,
+  "analysisPackage": null
+}

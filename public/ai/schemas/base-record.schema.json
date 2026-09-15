@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zvg-de.com/ai/schemas/base-record.schema.json",
+  "title": "ZVG-DE Base Record",
+  "type": "object",
+  "required": [
+    "schema",
+    "canonicalId",
+    "projectVersion",
+    "court",
+    "auction",
+    "lots",
+    "properties",
+    "cadastral",
+    "sources",
+    "documents",
+    "photos",
+    "facts",
+    "geo",
+    "warnings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "zvg-de.base-record.v1"
+    },
+    "canonicalId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectVersion": {
+      "type": "string"
+    },
+    "court": {
+      "type": "object"
+    },
+    "auction": {
+      "type": "object"
+    },
+    "lots": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "cadastral": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "facts": {
+      "type": "object"
+    },
+    "geo": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "lon": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "precision": {
+          "enum": [
+            "house_number",
+            "parcel",
+            "street",
+            "locality",
+            "approximate",
+            "unknown"
+          ]
+        },
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidence": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [
+        "precision"
+      ],
+      "additionalProperties": true
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": true
+}
