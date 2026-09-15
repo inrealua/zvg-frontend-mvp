@@ -78,7 +78,7 @@ export default async function AiControlPage() {
       <section style={{...card, marginBottom:28}}>
         <h2 style={{marginTop:0}}>Machine-readable sources</h2>
         <ul style={{lineHeight:1.9, marginBottom:0}}>
-          <li><a href="/ai/ZVG_PROJECT_MASTER.md">ZVG_PROJECT_MASTER.md</a></li>
+          <li><a href="/ai/MASTER_PROMPT.md"><strong>MASTER_PROMPT.md</strong></a> — canonical AI instructions</li>\n          <li><a href="/ai/bootstrap.json">bootstrap.json</a></li>\n          <li><a href="/ai/ZVG_PROJECT_MASTER.md">ZVG_PROJECT_MASTER.md</a></li>
           <li><a href="/ai/project-state.json">project-state.json</a></li>
           <li><a href="/ai/project-policy.json">project-policy.json</a></li>
           <li><a href="/ai/tasks.json">tasks.json</a></li>

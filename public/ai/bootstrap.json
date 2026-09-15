@@ -1,0 +1,20 @@
+{
+  "schema": "zvg-de.ai-bootstrap.v1",
+  "project": "ZVG-DE",
+  "projectVersion": "5.1.0",
+  "promptVersion": "2.0.0",
+  "canonicalPrompt": "https://zvg-de.com/ai/MASTER_PROMPT.md",
+  "loadOrder": [
+    "https://zvg-de.com/ai/MASTER_PROMPT.md",
+    "https://zvg-de.com/ai/project-policy.json",
+    "https://zvg-de.com/ai/project-state.json",
+    "https://zvg-de.com/ai/tasks.json",
+    "COURT_STATE_FROM_NEXT_TASK",
+    "https://zvg-de.com/ai/schemas/court-base.schema.json",
+    "https://zvg-de.com/ai/schemas/base-record.schema.json",
+    "https://zvg-de.com/ai/schemas/analysis-result.schema.json"
+  ],
+  "canonicalUserCommandRu": "Открой https://zvg-de.com/ai/ и выполни следующее задание ZVG-DE.",
+  "executionRule": "Load canonical prompt and control files, resolve nextTask, then execute without asking the user to restate project rules.",
+  "fallbackRule": "If a control file is inaccessible, identify it explicitly and do not invent its contents."
+}

@@ -1,7 +1,7 @@
 {
   "schema": "zvg-de.ai-policy.v1",
   "project": "ZVG-DE",
-  "projectVersion": "5.0.0",
+  "projectVersion": "5.1.0",
   "primaryCollector": "ChatGPT",
   "sourceOfTruth": "website_ai_control_files",
   "requiredSources": [
@@ -77,5 +77,16 @@
     "mustCalculateMaximumBidFromEconomics": true,
     "forbidAuctionSubjectAsComparable": true,
     "forbidVerkehrswertAsMarketValueProof": true
-  }
+  },
+  "promptVersion": "2.0.0",
+  "bootstrapUrl": "https://zvg-de.com/ai/bootstrap.json",
+  "canonicalPromptUrl": "https://zvg-de.com/ai/MASTER_PROMPT.md",
+  "bootstrapSequence": [
+    "MASTER_PROMPT.md",
+    "project-policy.json",
+    "project-state.json",
+    "tasks.json",
+    "current court state",
+    "schemas"
+  ]
 }
