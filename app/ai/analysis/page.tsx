@@ -43,11 +43,11 @@ export default async function AnalysisPage(){
     <section style={{...card,marginTop:22}}>
       <div style={{display:"flex",justifyContent:"space-between",gap:12,alignItems:"center",flexWrap:"wrap"}}>
         <h2 style={{margin:0}}>Workers</h2>
-        <div style={{color:"#697970"}}>Open one URL in each ChatGPT account</div>
+        <div style={{color:"#697970"}}>Each successful import rotates that worker's URL</div>
       </div>
       <div style={{overflowX:"auto",marginTop:12}}>
         <table style={{width:"100%",borderCollapse:"collapse"}}>
-          <thead><tr>{["Worker","Batch","Current task","Status","Task URL"].map(x=><th key={x} style={{...cell,textAlign:"left"}}>{x}</th>)}</tr></thead>
+          <thead><tr>{["Worker","Batch","Current task","Status","Current Worker URL"].map(x=><th key={x} style={{...cell,textAlign:"left"}}>{x}</th>)}</tr></thead>
           <tbody>{s.workers.map((w:any)=><tr key={w.workerId}>
             <td style={cell}><b>{w.workerName}</b><div style={{fontSize:11,color:"#77857d"}}>{w.workerId}</div></td>
             <td style={cell}>{w.maxBatchSize}</td>
@@ -58,7 +58,7 @@ export default async function AnalysisPage(){
         </table>
       </div>
       <p style={{color:"#6b7972",marginBottom:0,fontSize:13}}>
-        Opening a worker URL is idempotent: it returns the worker’s existing ASSIGNED task; if none exists, it atomically claims the next available batch.
+        While a batch is ASSIGNED, reopening its URL returns the same task. After successful import or Release, the worker token rotates and this page shows a NEW URL for the next cycle. The previous URL becomes invalid.
       </p>
     </section>
 

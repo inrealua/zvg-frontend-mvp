@@ -317,7 +317,8 @@ export async function releaseAnalysisTask(taskId:string) {
     }
     if(t.workerId){
       await tx.$executeRawUnsafe(
-        "UPDATE zvg_ai_worker SET currentTaskId=NULL WHERE workerId=? AND currentTaskId=?",
+        /* WORKER_URL_ROTATION_RELEASE_V1 */
+        "UPDATE zvg_ai_worker SET currentTaskId=NULL,workerToken=LOWER(HEX(RANDOM_BYTES(24))),updatedAt=NOW() WHERE workerId=? AND currentTaskId=?",
         t.workerId,taskId
       );
     }
