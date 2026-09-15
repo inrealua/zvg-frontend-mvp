@@ -88,7 +88,7 @@ export default async function AiControlPage() {
           <ul style={{lineHeight:1.9,marginBottom:0}}>
             <li><a href="/ai/MASTER_PROMPT.md">MASTER_PROMPT.md</a></li>
             <li><a href="/api/ai/project-state">/api/ai/project-state</a></li>
-            <li><a href="/api/ai/next-task">/api/ai/next-task</a></li>
+            <li><a href="/ai/next-task.json"><strong>/ai/next-task.json</strong></a> — minimal public READY task</li>\n            <li><a href="/api/ai/next-task">/api/ai/next-task</a></li>
             {s.nextTask ? <li><a href={s.nextTask.taskUrl}>{s.nextTask.taskUrl}</a></li> : null}
           </ul>
         </section>

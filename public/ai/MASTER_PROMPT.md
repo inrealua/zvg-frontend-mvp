@@ -147,3 +147,56 @@ For COURT_MONITOR:
 AI answer with ZIP = RESULT_READY outside the site.
 Successful importer acceptance = task DONE.
 Only then does the website expose the next READY task.
+
+
+## QUEUE BOOTSTRAP & COURT COUNT RECONCILIATION v2.2
+
+### Preferred machine endpoint
+
+For every ZVG-DE request, first try:
+
+`https://zvg-de.com/ai/next-task.json`
+
+This endpoint is the minimal public source of truth for the current READY task.
+If the human `/ai/` page is unavailable to the web client but this JSON endpoint is reachable,
+use this JSON task and then load its `machineTaskUrl`.
+
+Never infer the next court from chat history when the endpoint is reachable.
+
+### HARD completeness invariant for COURT_BASE
+
+A COURT_BASE result MUST reconcile its inventory against the CURRENT court count shown by
+the official ZVG-Portal search for that Amtsgericht.
+
+Before returning `resultStatus=COMPLETE`:
+
+1. Read the current total count on ZVG-Portal for the court.
+2. Enumerate ALL result pages, not only page 1 or a cached secondary snapshot.
+3. Deduplicate only after all official rows have been enumerated.
+4. Store:
+   - `officialCurrentCount`
+   - `enumeratedOfficialRows`
+   - `canonicalCaseCount`
+   - `reconciliationStatus`
+5. `reconciliationStatus=MATCHED` is required for COMPLETE.
+6. If counts differ, do NOT silently finish the task. Return VERIFY/INCOMPLETE and identify
+   every missing, duplicate, cancelled, merged or otherwise explained row.
+
+Secondary portals may help discovery, but a stale secondary count must never be used to
+declare the official court inventory complete.
+
+### Result package requirement
+
+Every COURT_BASE `court_manifest.json` must contain:
+
+```json
+{
+  "sourceCountReconciliation": {
+    "officialCurrentCount": 0,
+    "enumeratedOfficialRows": 0,
+    "canonicalCaseCount": 0,
+    "status": "MATCHED"
+  }
+}
+```
+
