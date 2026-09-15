@@ -51,6 +51,7 @@ export default async function AiControlPage() {
 
         <section style={{...card,marginBottom:28}}>
           <h2 style={{marginTop:0}}>Workflow</h2>
+          <p><a href="/ai/analysis"><strong>Open Saxony Analysis Queue →</strong></a></p>
           <p style={{lineHeight:1.65}}>
             <b>1. INITIAL_BASE:</b> one lightweight COURT_BASE task per court → import result ZIP → next court becomes READY.
             {" "}<b>2. ANALYSIS:</b> the site creates batches of max. 5 BASE-ready cases for deep analysis.

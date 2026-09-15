@@ -200,3 +200,46 @@ Every COURT_BASE `court_manifest.json` must contain:
 }
 ```
 
+
+
+## SAXONY ANALYSIS MULTIWORKER PILOT v1
+
+Project mode may be `SAXONY_ANALYSIS_PILOT`.
+
+For parallel deep analysis, each ChatGPT account receives one private worker URL:
+
+`https://zvg-de.com/ai/workers/<TOKEN>/next-task.json`
+
+Worker rules:
+
+1. Open the worker URL.
+2. It returns the worker's existing ASSIGNED batch or atomically claims a new one.
+3. Analyze ONLY the exact `canonicalIds` in that task.
+4. Default batch size is 3. Never enlarge the batch yourself.
+5. Read original documents and inspect all relevant photos. If originals are not already stored under the case artifact URL, retrieve them from the original source portals using Aktenzeichen/address.
+6. Perform full Stage-2 analysis:
+   - evidence conflict resolution;
+   - construction risks;
+   - legal risks;
+   - minimal / standard / full / worstCase renovation;
+   - current market and rental research;
+   - investment model;
+   - veryAttractiveBid / reasonableBid / maximumBid / doNotBuyAbove;
+   - Investment Score and BUY / CONSIDER / HIGH_RISK / SKIP;
+   - public content DE / EN / RU.
+7. Return exactly one ZIP named by the task.
+8. Root must contain `task_result_manifest.json` and `batch_result_manifest.json`.
+9. Every assigned object must contain `objects/<canonicalId>/analysis_result.json`.
+10. A task remains ASSIGNED until its ZIP is successfully imported.
+11. Never work on another worker's task.
+12. UNKNOWN / VERIFY is preferable to invented precision.
+
+Status model for Stage 2:
+- ANALYSIS_REQUIRED
+- ASSIGNED
+- ANALYZED
+- STALE
+- BLOCKED
+- NOT_REQUIRED
+
+If BASE changes materially after analysis, the object must become STALE and be re-analyzed.
