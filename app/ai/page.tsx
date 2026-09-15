@@ -67,14 +67,21 @@ export default async function AiControlPage() {
           <div style={{overflowX:"auto",marginTop:12,maxHeight:620}}>
             <table style={{width:"100%",borderCollapse:"collapse"}}>
               <thead style={{position:"sticky",top:0,background:"#fff"}}>
-                <tr>{["#","Amtsgericht","BASE","Cases","Analysis","Monitor"].map(x=><th key={x} style={{textAlign:"left",padding:"10px 8px",borderBottom:"1px solid #dfe7e2"}}>{x}</th>)}</tr>
+                <tr>{["#","Amtsgericht","BASE","Official Termine","Active","Aufgehoben","Cases","Reconciliation","Analysis","Monitor"].map(x=><th key={x} style={{textAlign:"left",padding:"10px 8px",borderBottom:"1px solid #dfe7e2"}}>{x}</th>)}</tr>
               </thead>
               <tbody>
                 {s.courts.map((c:any,i:number)=><tr key={c.courtId}>
                   <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>{i+1}</td>
                   <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}><b>{c.courtName}</b><div style={{fontSize:12,color:"#7b8982"}}>{c.courtId} · {c.state || ""}</div></td>
                   <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}><span style={pill(c.baseStatus)}>{c.baseStatus}</span></td>
+                  <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>{c.officialTermCount ?? "—"}</td>
+                  <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>{c.activeTermCount ?? "—"}</td>
+                  <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>{c.cancelledTermCount ?? "—"}</td>
                   <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>{c.baseCaseCount || "—"}</td>
+                  <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>
+                    <div><span style={pill(c.reconciliationStatus === "MATCHED" || String(c.reconciliationStatus||"").startsWith("MATCHED") ? "DONE" : "WAITING")}>{c.reconciliationStatus || "VERIFY"}</span></div>
+                    <div style={{fontSize:11,color:"#7b8982",marginTop:4}}>{c.officialCountCheckedAt ? String(c.officialCountCheckedAt).slice(0,10) : "not audited"}</div>
+                  </td>
                   <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>{c.analysisDoneCount}/{c.analysisTotalCount || 0}</td>
                   <td style={{padding:"9px 8px",borderBottom:"1px solid #edf2ef"}}>{c.lastMonitorAt ? String(c.lastMonitorAt).slice(0,10) : "—"}</td>
                 </tr>)}

@@ -100,6 +100,8 @@ export async function getProjectState() {
     ),
     prisma.$queryRawUnsafe<any[]>(
       `SELECT courtId,courtName,state,sortOrder,baseStatus,baseVersion,baseCaseCount,
+              officialTermCount,activeTermCount,cancelledTermCount,enumeratedOfficialRows,
+              reconciliationStatus,officialCountCheckedAt,
               analysisDoneCount,analysisTotalCount,lastMonitorAt,monitorEnabled
        FROM zvg_ai_court
        ORDER BY sortOrder,courtName`
@@ -139,6 +141,12 @@ export async function getProjectState() {
     courts: courts.map((c:any) => ({
       ...c,
       baseCaseCount: Number(c.baseCaseCount || 0),
+      officialTermCount: c.officialTermCount == null ? null : Number(c.officialTermCount),
+      activeTermCount: c.activeTermCount == null ? null : Number(c.activeTermCount),
+      cancelledTermCount: c.cancelledTermCount == null ? null : Number(c.cancelledTermCount),
+      enumeratedOfficialRows: c.enumeratedOfficialRows == null ? null : Number(c.enumeratedOfficialRows),
+      reconciliationStatus: c.reconciliationStatus || null,
+      officialCountCheckedAt: c.officialCountCheckedAt || null,
       analysisDoneCount: Number(c.analysisDoneCount || 0),
       analysisTotalCount: Number(c.analysisTotalCount || 0),
       monitorEnabled: Boolean(c.monitorEnabled),
