@@ -1,3 +1,5 @@
+import { ZvgAnalysisFrontendPolishV228 } from "@/components/ZvgAnalysisFrontendPolishV228";
+import { GoogleAnalyticsV228 } from "@/components/GoogleAnalyticsV228";
 import { Stage111LabelRuntime } from "@/components/Stage111LabelRuntime";
 import { HeaderMobileI18nStage92 } from "@/components/HeaderMobileI18nStage92";
 import { TargetedPolishStage90 } from "@/components/TargetedPolishStage90";
@@ -72,7 +74,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <LanguageRuntimeFix />
               <BackToTopButton />
               <FilterMiniApplyEnhancer />
-            </body>
+                  <GoogleAnalyticsV228 />
+      <ZvgAnalysisFrontendPolishV228 />
+</body>
     </html>
   );
 }
