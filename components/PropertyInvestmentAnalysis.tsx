@@ -2,6 +2,39 @@
 import type { Locale } from "@/lib/i18n/config";
 import { formatEuro } from "@/lib/format";
 
+
+// ZVG_DE_LOCALIZED_RISK_V211
+function zvgRiskLocale(value: unknown): "de" | "ru" | "en" {
+  const raw=String(value ?? "de").toLowerCase();
+  if(raw.startsWith("ru")) return "ru";
+  if(raw.startsWith("en")) return "en";
+  return "de";
+}
+function zvgLocalizeRiskItem(risk: any, localeValue: unknown): any {
+  if(!risk || typeof risk!=="object") return risk;
+  const lc=zvgRiskLocale(localeValue);
+  const suffix=lc==="ru" ? "Ru" : lc==="en" ? "En" : "De";
+  const loc=risk?.localized?.[lc] ?? risk?.i18n?.[lc] ?? {};
+  const pick=(field:string)=>{
+    const direct=risk?.[`${field}${suffix}`];
+    const localized=loc?.[field];
+    const fallback=risk?.[field];
+    return localized ?? direct ?? fallback;
+  };
+  return {
+    ...risk,
+    component: pick("component"),
+    title: pick("title"),
+    summary: pick("summary"),
+    verificationAction: pick("verificationAction"),
+  };
+}
+function zvgLocalizeRiskArray(value: any, localeValue: unknown): any[] {
+  const arr=Array.isArray(value) ? value : [];
+  return arr.map((risk)=>zvgLocalizeRiskItem(risk,localeValue));
+}
+
+
 type Translation = {
   recommendationSummary?: string | null;
   marketSummary?: string | null;
@@ -156,8 +189,8 @@ export function PropertyInvestmentAnalysis({locale,translated,property,legacyAna
   const excluded=asArray(market.excludedSubjectListings);
   const evidence=asArray(property.evidenceJson);
   const unknowns=asArray(property.unknownsToVerifyJson);
-  const constructionRisks=normalizeRiskRows(property.constructionRisksJson,asObject(legacy.constructionRisk),locale);
-  const legalRisks=normalizeRiskRows(property.legalRisksJson,asObject(legacy.legalRisk),locale);
+  const constructionRisks=zvgLocalizeRiskArray(normalizeRiskRows(property.constructionRisksJson,asObject(legacy.constructionRisk),locale), locale);
+  const legalRisks=zvgLocalizeRiskArray(normalizeRiskRows(property.legalRisksJson,asObject(legacy.legalRisk),locale), locale);
   const pros=translated.pros?.length?translated.pros:localizedLegacyList(legacy.positives,locale);
   const cons=translated.cons?.length?translated.cons:[];
   const legacyChecks=localizedLegacyList(legacy.cautions,locale);
